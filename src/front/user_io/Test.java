@@ -1,7 +1,12 @@
 package front.user_io;
 
+import front.user_io.dao.UserQuery;
+import front.user_io.domain.User;
 import utils.JDBCUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Fun:
@@ -15,4 +20,21 @@ public class Test {
         String name = template.queryForObject(sql, String.class);
         System.out.println(name);
     }
+
+    @org.junit.Test
+    public void test2(){
+        int i = new UserQuery().userConfi("username", "admin");
+        System.out.println(i);
+    }
+
+    @org.junit.Test
+    public void test3(){
+        Date dNow = new Date( );
+        SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        String format = ft.format(dNow);
+        User user = new User(1, "a", "a", "a", "a", "a", "a", "a", format, "");
+        int i = new UserQuery().insertUser(user);
+        System.out.println(i);
+    }
+
 }
