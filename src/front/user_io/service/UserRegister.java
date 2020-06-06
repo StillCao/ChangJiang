@@ -38,9 +38,11 @@ public class UserRegister  extends HttpServlet{
 
         //4.向前端响应数据response对象
         if (i == 1){
-            resp.getWriter().append("true");
+            resp.getWriter().append("注册成功：200");
+            resp.setStatus(200);
         }else{
-            resp.getWriter().append("false");
+            resp.getWriter().append("注册失败：400");
+            resp.setStatus(400);
         }
 
 
