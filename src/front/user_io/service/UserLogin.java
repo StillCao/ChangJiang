@@ -10,9 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
-import java.util.Map;
 
 
 @WebServlet("/userLogin")
@@ -41,6 +39,7 @@ public class UserLogin extends HttpServlet{
 
         }else{
             //用户信息有误，登录失败
+            resp.setStatus(400);
             resp.getWriter().append("账号名或密码有误");
         }
 

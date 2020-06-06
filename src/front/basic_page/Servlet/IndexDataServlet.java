@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import front.basic_page.Dao.QueryData;
 import front.basic_page.Domain.BasicInfo;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;

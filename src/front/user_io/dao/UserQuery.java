@@ -38,7 +38,7 @@ public class UserQuery {
     }
 
     /**
-     * 3.用户登录判断
+     * 3.用户登录判断-->用户量小，否则不要在数据库中做比较。
      * @param userName
      * @param password
      * @return 1，0
