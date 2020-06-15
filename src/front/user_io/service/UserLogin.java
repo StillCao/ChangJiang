@@ -1,5 +1,7 @@
 package front.user_io.service;
 
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import front.user_io.dao.UserQuery;
 import front.user_io.domain.User;
 
@@ -39,7 +41,9 @@ public class UserLogin extends HttpServlet{
         if (i == 1){
             //4.1用户登录成功，返回用户信息
             List<User> user = uq.queryUser(userName);
-            resp.getWriter().append(user.get(0).toString());
+            ObjectMapper mapper = new ObjectMapper();
+            String result = mapper.writeValueAsString(user);
+            resp.getWriter().append(result);
 
             //4.2通过设置cookie来存储用户的登陆时间。客户端会话技术
             //获取Cookie数组
