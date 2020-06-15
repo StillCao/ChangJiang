@@ -25,7 +25,7 @@ public class NewsContent extends HttpServlet {
         int id = Integer.parseInt(idString);
 
         //2.根据id查询新闻数据。
-        News_Total news = new QueryNews().newsContent(id);
+        List<News_Total> news = new QueryNews().newsContent(id);
 
         //3.将记录以json格式返回给前端。
         ObjectMapper mapper = new ObjectMapper();

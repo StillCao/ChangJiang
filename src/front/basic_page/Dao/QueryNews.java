@@ -53,9 +53,9 @@ public class QueryNews {
      * @param id
      * @return News_Total
      */
-    public News_Total newsContent(int id){
+    public List<News_Total> newsContent(int id){
         String sql = "select * from news where id = ? ;";
-        News_Total news = template.queryForObject(sql, News_Total.class, id);
+        List<News_Total> news = template.query(sql, new BeanPropertyRowMapper(News_Total.class), id);
         return news;
     }
 }
