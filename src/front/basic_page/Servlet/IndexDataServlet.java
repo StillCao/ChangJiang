@@ -50,7 +50,10 @@ public class IndexDataServlet extends HttpServlet {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                String by = new String(buffer);
+                String by = "";
+                if (buffer != null) {
+                    by = new String(buffer);
+                }
 //                System.out.println(by);
                 basicInfo.setImage(by);
 //                System.out.println(basicInfo.toString());
@@ -66,5 +69,8 @@ public class IndexDataServlet extends HttpServlet {
 
     }
 
-
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        this.doPost(req, resp);
+    }
 }
