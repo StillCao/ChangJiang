@@ -5,6 +5,11 @@ import front.basic_page.Dao.QueryData;
 import front.basic_page.Domain.BasicInfo;
 import front.basic_page.Domain.News;
 
+import javax.servlet.ServletOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 public class QueryDataTest {
@@ -18,6 +23,9 @@ public class QueryDataTest {
     @org.junit.Test
     public void queryLatest8BasicInfo() {
         List<BasicInfo> basicInfos = new QueryData().QueryLatest8BasicInfo();
+
         System.out.println(basicInfos);
     }
+
+
 }
