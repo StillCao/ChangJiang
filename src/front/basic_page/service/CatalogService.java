@@ -35,7 +35,7 @@ public class CatalogService {
                 int indexx = Level2sJson.indexOf(level2);
                 ((JSONObject) level2).put("label", typeLevel2s.get(indexx).getT2_name());
             });
-            ((JSONObject) level1).put("TypeLevel2", Level2sJson);
+            ((JSONObject) level1).put("children", Level2sJson);
         });
         return Level1sJson.toJSONString();
     }
