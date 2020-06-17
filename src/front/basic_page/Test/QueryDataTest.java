@@ -2,9 +2,7 @@ package front.basic_page.Test;
 
 
 import front.basic_page.Dao.QueryData;
-import front.basic_page.Domain.BasicInfo;
-import front.basic_page.Domain.BasicInfoPos;
-import front.basic_page.Domain.News;
+import front.basic_page.Domain.*;
 
 import javax.servlet.ServletOutputStream;
 import java.io.File;
@@ -43,6 +41,18 @@ public class QueryDataTest {
     public void QueryBasicInfoByTagLevel1() {
         List<BasicInfoPos> basicInfoPos = new QueryData().QueryBasicInfoByTagLevel1(4);
         System.out.println(basicInfoPos);
+    }
+
+    @org.junit.Test
+    public void QueryTagLevel1All() {
+        List<TypeLevel1> typeLevel1s = new QueryData().QueryTagLevel1All();
+        System.out.println(typeLevel1s);
+    }
+
+    @org.junit.Test
+    public void QueryTagLevel2By1Id() {
+        List<TypeLevel2> typeLevel2s = new QueryData().QueryTagLevel2By1Id(1);
+        System.out.println(typeLevel2s);
     }
 
 
