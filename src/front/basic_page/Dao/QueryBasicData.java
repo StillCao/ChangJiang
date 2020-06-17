@@ -22,7 +22,7 @@ public class QueryBasicData {
      * @return
      */
     public User queryUserById(int u_id) {
-        String sql = "select * from user where id = ? ;";
+        String sql = "select * from user where u_id = ? ;";
         List<User> userList = template.query(sql, new BeanPropertyRowMapper<>(User.class), u_id);
         User user = userList.get(0);
         return user;
