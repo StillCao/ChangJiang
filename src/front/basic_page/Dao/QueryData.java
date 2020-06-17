@@ -1,11 +1,13 @@
 package front.basic_page.Dao;
 
 import front.basic_page.Domain.BasicInfo;
+import front.basic_page.Domain.BasicInfoPos;
 import front.basic_page.Domain.News;
 import utils.JDBCUtils;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class QueryData {
@@ -28,25 +30,45 @@ public class QueryData {
     }
 
     /**
-     * 根据二级标签名查询对应的基础数据
+     * 根据二级标签ID查询对应的基础数据
      *
-     * @param tagName 二级标签名
+     * @param tagId 二级标签ID
      * @return 所有属于二级标签名的数据
      */
-    public List<BasicInfo> QueryBasicInfoByTagLevel2(String tagName) {
-        return null;
+    public List<BasicInfoPos> QueryBasicInfoByTagLevel2(int tagId) {
+        String sql = "SELECT * from basic_info where da_type = ?";
+        return template.query(sql, new BeanPropertyRowMapper<>(BasicInfoPos.class), tagId);
     }
 
     /**
-     * 根据一级标签查询对应的基础数据
+     * 根据一级标签ID查询对应的基础数据
      *
-     * @param tagName 一级标签名
+     * @param tagId 一级标签ID
      * @return 所有属于一级标签名的数据
      */
-    public List<BasicInfo> QueryBasicInfoByTagLevel1(String tagName) {
-        return null;
+    public List<BasicInfoPos> QueryBasicInfoByTagLevel1(int tagId) {
+        //先查询一级标签对应的二级标签数组
+        List<Integer> integers = QueryTagLevel2IdBy1Id(tagId);
+
+        List<BasicInfoPos> basicInfoPos = new ArrayList<>();
+        integers.forEach(integer -> {
+            basicInfoPos.addAll(QueryBasicInfoByTagLevel2(integer));
+        });
+
+        return basicInfoPos;
     }
 
+    /**
+     * 根据一级标签ID查询对应的二级标签ID
+     *
+     * @param tagId 一级标签ID
+     * @return 二级标签ID数组
+     */
+
+    public List<Integer> QueryTagLevel2IdBy1Id(int tagId) {
+        String sql = "SELECT id from da_type2 where t1_id = ?";
+        return template.queryForList(sql, Integer.class, tagId);
+    }
 
 
 }

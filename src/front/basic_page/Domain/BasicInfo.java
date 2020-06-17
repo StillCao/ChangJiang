@@ -1,8 +1,5 @@
 package front.basic_page.Domain;
 
-import java.sql.Blob;
-import java.sql.ResultSet;
-
 public class BasicInfo {
     private int id;
     private String name;
