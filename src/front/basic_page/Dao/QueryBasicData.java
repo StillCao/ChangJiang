@@ -31,7 +31,7 @@ public class QueryBasicData {
      * @return
      */
     public BasicData queryBasicDataById(int id) {
-        String sql = "select id,name,sploc,docname,up_time,point1_lat,point1_lon,point2_lat,point2_lon,topic_w1,topic_w2,topic_w3,topic_cfi,da_summ,data_size,up_id,da_type from basic_info where id = ? ;";
+        String sql = "select id,name,sploc,docname,up_time,point1_lat,point1_lon,point2_lat,point2_lon,topic_w1,topic_w2,topic_w3,topic_cfi,da_summ,da_size,up_id,da_type from basic_info where id = ? ;";
         BasicData basicData = template.queryForObject(sql, BasicData.class, id);
         return basicData;
     }
