@@ -2,8 +2,11 @@ package front.basic_page.Dao;
 
 import front.basic_page.Domain.BasicData;
 import front.basic_page.Domain.User;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import utils.JDBCUtils;
+
+import java.util.List;
 
 /**
  * Fun:
@@ -20,7 +23,8 @@ public class QueryBasicData {
      */
     public User queryUserById(int u_id) {
         String sql = "select * from user where id = ? ;";
-        User user = template.queryForObject(sql, User.class, u_id);
+        List<User> userList = template.query(sql, new BeanPropertyRowMapper<>(User.class), u_id);
+        User user = userList.get(0);
         return user;
     }
 
@@ -31,8 +35,9 @@ public class QueryBasicData {
      * @return
      */
     public BasicData queryBasicDataById(int id) {
-        String sql = "select id,name,sploc,docname,up_time,point1_lat,point1_lon,point2_lat,point2_lon,topic_w1,topic_w2,topic_w3,topic_cfi,da_summ,data_size,up_id,da_type from basic_info where id = ? ;";
-        BasicData basicData = template.queryForObject(sql, BasicData.class, id);
+        String sql = "select id,name,sploc,docname,up_time,point1_lat,point1_lon,point2_lat,point2_lon,topic_w1,topic_w2,topic_w3,topic_cfi,da_summ,da_size,up_id,da_type from basic_info where id = ? ;";
+        List<BasicData> basicDataList = template.query(sql, new BeanPropertyRowMapper<>(BasicData.class), id);
+        BasicData basicData = basicDataList.get(0);
         return basicData;
     }
 }
