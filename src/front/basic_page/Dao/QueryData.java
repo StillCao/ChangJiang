@@ -1,11 +1,9 @@
 package front.basic_page.Dao;
 
-import front.basic_page.Domain.BasicInfo;
-import front.basic_page.Domain.BasicInfoPos;
-import front.basic_page.Domain.News;
-import utils.JDBCUtils;
+import front.basic_page.Domain.*;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import utils.JDBCUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,6 +66,28 @@ public class QueryData {
     public List<Integer> QueryTagLevel2IdBy1Id(int tagId) {
         String sql = "SELECT id from da_type2 where t1_id = ?";
         return template.queryForList(sql, Integer.class, tagId);
+    }
+
+    /**
+     * 查询所有的一级标签
+     * @return
+     */
+    public List<TypeLevel1> QueryTagLevel1All(){
+        String sql = "SELECT * from da_type1";
+        return template.query(sql,new BeanPropertyRowMapper<>(TypeLevel1.class));
+    }
+
+
+    /**
+     * 根据一级标签ID查询对应的二级标签
+     *
+     * @param tagId 一级标签ID
+     * @return 二级标签ID数组
+     */
+
+    public List<TypeLevel2> QueryTagLevel2By1Id(int tagId) {
+        String sql = "SELECT * from da_type2 where t1_id = ?";
+        return template.query(sql, new BeanPropertyRowMapper<>(TypeLevel2.class), tagId);
     }
 
 
