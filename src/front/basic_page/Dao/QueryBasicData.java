@@ -1,0 +1,38 @@
+package front.basic_page.Dao;
+
+import front.basic_page.Domain.BasicData;
+import front.basic_page.Domain.User;
+import org.springframework.jdbc.core.JdbcTemplate;
+import utils.JDBCUtils;
+
+/**
+ * Fun:
+ * Created by CW on 2020/6/17 4:50 下午
+ */
+public class QueryBasicData {
+    JdbcTemplate template = new JdbcTemplate(JDBCUtils.getDataSource());
+
+    /**
+     * 1.根据id,查询用户信息
+     *
+     * @param u_id
+     * @return
+     */
+    public User queryUserById(int u_id) {
+        String sql = "select * from user where id = ? ;";
+        User user = template.queryForObject(sql, User.class, u_id);
+        return user;
+    }
+
+    /**
+     * 2.根据id,查询该条数据的详细信息
+     *
+     * @param id
+     * @return
+     */
+    public BasicData queryBasicDataById(int id) {
+        String sql = "select id,name,sploc,docname,up_time,point1_lat,point1_lon,point2_lat,point2_lon,topic_w1,topic_w2,topic_w3,topic_cfi,da_summ,data_size,up_id,da_type from basic_info where id = ? ;";
+        BasicData basicData = template.queryForObject(sql, BasicData.class, id);
+        return basicData;
+    }
+}
