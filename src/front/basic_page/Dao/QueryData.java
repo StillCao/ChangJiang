@@ -39,6 +39,28 @@ public class QueryData {
     }
 
     /**
+     * 根据二级标签ID查询对应的基础数据
+     *
+     * @param tagId 二级标签ID
+     * @return 所有属于二级标签名的数据
+     */
+    public List<BasicData> QueryBasicInfoByTagLevel2Id(int tagId) {
+        String sql = "SELECT * from basic_info where da_type = ?";
+        return template.query(sql, new BeanPropertyRowMapper<>(BasicData.class), tagId);
+    }
+
+    /**
+     * 根据二级标签ID查询对应的基础数据,限制n条数据
+     *
+     * @param tagId 二级标签ID
+     * @return 所有属于二级标签名的数据,限制n条数据
+     */
+    public List<BasicData> QueryBasicByTag2IdLimit(int tagId,int num) {
+        String sql = "SELECT * from basic_info where da_type = ? limit ?";
+        return template.query(sql, new BeanPropertyRowMapper<>(BasicData.class), tagId ,num);
+    }
+
+    /**
      * 根据一级标签ID查询对应的基础数据
      *
      * @param tagId 一级标签ID
@@ -57,6 +79,24 @@ public class QueryData {
     }
 
     /**
+     * 根据一级标签ID查询对应的基础数据
+     *
+     * @param tagId 一级标签ID
+     * @return 所有属于一级标签名的数据
+     */
+    public List<BasicData> QueryBasicInfoByTagLevel1Id(int tagId) {
+        //先查询一级标签对应的二级标签数组
+        List<Integer> integers = QueryTagLevel2IdBy1Id(tagId);
+
+        List<BasicData> basicData = new ArrayList<>();
+        integers.forEach(integer -> {
+            basicData.addAll(QueryBasicInfoByTagLevel2Id(integer));
+        });
+
+        return basicData;
+    }
+
+    /**
      * 根据一级标签ID查询对应的二级标签ID
      *
      * @param tagId 一级标签ID
@@ -70,11 +110,12 @@ public class QueryData {
 
     /**
      * 查询所有的一级标签
+     *
      * @return
      */
-    public List<TypeLevel1> QueryTagLevel1All(){
+    public List<TypeLevel1> QueryTagLevel1All() {
         String sql = "SELECT * from da_type1";
-        return template.query(sql,new BeanPropertyRowMapper<>(TypeLevel1.class));
+        return template.query(sql, new BeanPropertyRowMapper<>(TypeLevel1.class));
     }
 
 
@@ -89,6 +130,7 @@ public class QueryData {
         String sql = "SELECT * from da_type2 where t1_id = ?";
         return template.query(sql, new BeanPropertyRowMapper<>(TypeLevel2.class), tagId);
     }
+
 
 
 }
