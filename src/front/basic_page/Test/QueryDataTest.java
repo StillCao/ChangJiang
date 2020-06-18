@@ -1,6 +1,7 @@
 package front.basic_page.Test;
 
 
+import com.alibaba.fastjson.JSONObject;
 import front.basic_page.Dao.QueryData;
 import front.basic_page.Domain.*;
 import front.basic_page.service.IndexDataShowService;
@@ -11,6 +12,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.jar.Attributes;
 
 public class QueryDataTest {
 
@@ -66,6 +68,46 @@ public class QueryDataTest {
     public void QueryBasicByTag2IdLimit() {
         List<BasicData> typeLevel2s = new QueryData().QueryBasicByTag2IdLimit(9,5);
         System.out.println(typeLevel2s.size());
+    }
+
+
+    @org.junit.Test
+    public void QueryRelateByKeyId() {
+        List<RelateKeyNData> relateKeyNData = new QueryData().QueryRelateByKeyId(1);
+        System.out.println(relateKeyNData);
+    }
+
+    @org.junit.Test
+    public void QueryRelateByValueIdLimit() {
+        List<RelateKeyNData> relateKeyNData = new QueryData().QueryRelateByValueIdLimit(1,10);
+        System.out.println(relateKeyNData.size());
+    }
+
+    @org.junit.Test
+    public void QueryAttrValueById() {
+        Attr_value attr_value = new QueryData().QueryAttrValueById(1);
+        System.out.println(attr_value);
+    }
+
+    @org.junit.Test
+    public void QueryAttrValueByKeyId() {
+        List<Attr_value> attr_value = new QueryData().QueryAttrValueByKeyId(1);
+        System.out.println(attr_value);
+    }
+
+    @org.junit.Test
+    public void QueryAttrValueByKeyIdLimit() {
+        List<Attr_value> attr_value = new QueryData().QueryAttrValueByKeyId(1,10);
+        System.out.println(attr_value);
+    }
+
+    @org.junit.Test
+    public void Json() {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.fluentPut("hha",123123);
+        jsonObject.fluentPut("hha",1);
+        jsonObject.fluentPut("hha",2);
+        System.out.println(jsonObject.toJSONString());
     }
 
 

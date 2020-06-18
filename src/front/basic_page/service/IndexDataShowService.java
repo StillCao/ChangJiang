@@ -4,8 +4,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import front.basic_page.Dao.QueryBasicData;
 import front.basic_page.Dao.QueryData;
+import front.basic_page.Domain.Attr_value;
 import front.basic_page.Domain.BasicData;
-import front.basic_page.Domain.BasicInfo;
 import front.basic_page.Domain.TypeLevel1;
 import front.basic_page.Domain.TypeLevel2;
 
@@ -23,7 +23,7 @@ import java.util.List;
 public class IndexDataShowService {
 
     //返回各个一级类型下的 num 条数据, url是当前项目的url地址
-    public String getLevel1Data5(int num ,String url) {
+    public String getLevel1Data5(int num, String url) {
         QueryData queryData = new QueryData();
         QueryBasicData queryBasicData = new QueryBasicData();
 
@@ -44,7 +44,7 @@ public class IndexDataShowService {
             }
             JSONArray jsonArray = (JSONArray) JSONArray.toJSON(basicDataSub);
             List<BasicData> finalBasicDataSub = basicDataSub;
-            jsonArray.forEach(jsonObject->{         //转化成jsonArray添加处理后的image字段
+            jsonArray.forEach(jsonObject -> {         //转化成jsonArray添加处理后的image字段
                 int index = jsonArray.indexOf(jsonObject);
                 BasicData basic = finalBasicDataSub.get(index);
                 String picRealPath = queryBasicData.queryImage(basic.getId());
@@ -55,12 +55,34 @@ public class IndexDataShowService {
                     picContextPath = url + "/" + picHalfPath;
                 }
                 System.out.println(picContextPath);
-                ((JSONObject) jsonObject).put("image",picContextPath);
+                ((JSONObject) jsonObject).put("image", picContextPath);
             });
 
-            resultObject.put(level1.getT1_name(),jsonArray);
+            resultObject.put(level1.getT1_name(), jsonArray);
         });
 
         return resultObject.toJSONString();
+    }
+
+    /**
+     *
+     * @param num   主题词类型下主题词值限制条数
+     * @param type  主题词类型 1、2、3
+     * @return  主题词值加上属于主题词值的数据记录条数
+     */
+    public String getSubjectData(int num, int type) {
+        QueryData queryData = new QueryData();
+
+        List<Attr_value> attr_valueList = queryData.QueryAttrValueByKeyId(type,num);
+        JSONArray attrValueJsonArray = (JSONArray) JSONArray.toJSON(attr_valueList);
+
+        attrValueJsonArray.forEach(attrValueJson -> {
+            int index = attrValueJsonArray.indexOf(attrValueJson);
+            Attr_value attr_value = attr_valueList.get(index);
+            int dataNum = queryData.QueryRelateCountByValueId(attr_value.getV_id());
+            ((JSONObject) attrValueJson).put("num", dataNum);
+        });
+
+        return attrValueJsonArray.toJSONString();
     }
 }

@@ -53,11 +53,11 @@ public class QueryData {
      * 根据二级标签ID查询对应的基础数据,限制n条数据
      *
      * @param tagId 二级标签ID
-     * @return 所有属于二级标签名的数据,限制n条数据
+     * @return 所有属于二级标签名的数据, 限制n条数据
      */
-    public List<BasicData> QueryBasicByTag2IdLimit(int tagId,int num) {
+    public List<BasicData> QueryBasicByTag2IdLimit(int tagId, int num) {
         String sql = "SELECT * from basic_info where da_type = ? limit ?";
-        return template.query(sql, new BeanPropertyRowMapper<>(BasicData.class), tagId ,num);
+        return template.query(sql, new BeanPropertyRowMapper<>(BasicData.class), tagId, num);
     }
 
     /**
@@ -131,6 +131,63 @@ public class QueryData {
         return template.query(sql, new BeanPropertyRowMapper<>(TypeLevel2.class), tagId);
     }
 
+    /**
+     * @param key_id 主题词类型Id
+     * @return 对应主题词Id 的主题词值ID和数据ID
+     */
+    public List<RelateKeyNData> QueryRelateByKeyId(int key_id) {
+        String sql = "Select * from rela_chart where at_key_id = ?";
+        return template.query(sql, new BeanPropertyRowMapper<>(RelateKeyNData.class), key_id);
+    }
+
+    /**
+     * @param val_id 主题词值Id
+     * @param num    限制条数
+     * @return 对应主题词Id 的主题词值ID和数据ID
+     */
+    public List<RelateKeyNData> QueryRelateByValueIdLimit(int val_id, int num) {
+        String sql = "Select * from rela_chart where at_val_id = ? limit ?";
+        return template.query(sql, new BeanPropertyRowMapper<>(RelateKeyNData.class), val_id, num);
+    }
+
+
+    /**
+     * @param val_id 主题词值Id
+     * @return 对应主题词Id 的主题词值ID和数据ID
+     */
+    public Integer QueryRelateCountByValueId(int val_id) {
+        String sql = "Select count(*) from rela_chart where at_val_id = ? ";
+        return template.queryForObject(sql, Integer.class, val_id);
+    }
+
+
+    /**
+     * @param value_id 主题词值ID
+     * @return 根据主题词值ID 查主题词值
+     */
+    public Attr_value QueryAttrValueById(int value_id) {
+        String sql = "Select * from attr_value where v_id = ?";
+        return template.queryForObject(sql, new BeanPropertyRowMapper<>(Attr_value.class), value_id);
+    }
+
+    /**
+     * @param key_id 主题词类型ID
+     * @return 主题词类型ID 查主题词值
+     */
+    public List<Attr_value> QueryAttrValueByKeyId(int key_id) {
+        String sql = "Select * from attr_value where v_id_k = ?";
+        return template.query(sql, new BeanPropertyRowMapper<>(Attr_value.class), key_id);
+    }
+
+
+    /**
+     * @param key_id 主题词类型ID
+     * @return 主题词类型ID 查主题词值 限制num条
+     */
+    public List<Attr_value> QueryAttrValueByKeyId(int key_id, int num) {
+        String sql = "Select * from attr_value where v_id_k = ? limit ?";
+        return template.query(sql, new BeanPropertyRowMapper<>(Attr_value.class), key_id, num);
+    }
 
 
 }
