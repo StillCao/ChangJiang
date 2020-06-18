@@ -3,6 +3,7 @@ package front.basic_page.Test;
 
 import front.basic_page.Dao.QueryData;
 import front.basic_page.Domain.*;
+import front.basic_page.service.IndexDataShowService;
 
 import javax.servlet.ServletOutputStream;
 import java.io.File;
@@ -54,6 +55,19 @@ public class QueryDataTest {
         List<TypeLevel2> typeLevel2s = new QueryData().QueryTagLevel2By1Id(1);
         System.out.println(typeLevel2s);
     }
+
+    @org.junit.Test
+    public void QueryBasicInfoByTagLevel2Id() {
+        List<BasicData> typeLevel2s = new QueryData().QueryBasicInfoByTagLevel2Id(9);
+        System.out.println(typeLevel2s.size());
+    }
+
+    @org.junit.Test
+    public void QueryBasicByTag2IdLimit() {
+        List<BasicData> typeLevel2s = new QueryData().QueryBasicByTag2IdLimit(9,5);
+        System.out.println(typeLevel2s.size());
+    }
+
 
 
 }

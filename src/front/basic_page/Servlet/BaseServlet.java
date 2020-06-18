@@ -18,7 +18,7 @@ public class BaseServlet extends HttpServlet {
             //拿到字节码对象中的方法
             Method clazzMethod = this.getClass().getMethod(method, HttpServletRequest.class, HttpServletResponse.class);
             //执行方法
-            clazzMethod.invoke(this,req,resp);
+            clazzMethod.invoke(this, req, resp);
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
