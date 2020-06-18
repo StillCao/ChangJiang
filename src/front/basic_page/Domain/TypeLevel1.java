@@ -11,6 +11,7 @@ package front.basic_page.Domain;
 public class TypeLevel1 {
     private int id;
     private String t1_name;
+    private String t1_code;
 
     public int getId() {
         return id;
@@ -28,11 +29,20 @@ public class TypeLevel1 {
         this.t1_name = t1_name;
     }
 
+    public String getT1_code() {
+        return t1_code;
+    }
+
+    public void setT1_code(String t1_code) {
+        this.t1_code = t1_code;
+    }
+
     @Override
     public String toString() {
         return "TypeLevel1{" +
                 "id=" + id +
                 ", t1_name='" + t1_name + '\'' +
+                ", t1_code='" + t1_code + '\'' +
                 '}';
     }
 }

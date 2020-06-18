@@ -36,6 +36,7 @@ public class CatalogService {
             Level2sJson.forEach(level2 -> {
                 int indexx = Level2sJson.indexOf(level2);
                 ((JSONObject) level2).put("label", typeLevel2s.get(indexx).getT2_name());
+                ((JSONObject) level2).put("num",  queryData.QueryBasicInfoCountByTagLevel2Id(typeLevel2s.get(indexx).getId()));
             });
             ((JSONObject) level1).put("children", Level2sJson);
         });
