@@ -50,6 +50,17 @@ public class QueryData {
     }
 
     /**
+     * 根据二级标签ID查询对应的基础数据条数
+     *
+     * @param tagId 二级标签ID
+     * @return 所有属于二级标签名的数据条数
+     */
+    public Integer QueryBasicInfoCountByTagLevel2Id(int tagId) {
+        String sql = "SELECT count(*) from basic_info where da_type = ?";
+        return template.queryForObject(sql, Integer.class, tagId);
+    }
+
+    /**
      * 根据二级标签ID查询对应的基础数据,限制n条数据
      *
      * @param tagId 二级标签ID
@@ -76,6 +87,18 @@ public class QueryData {
         });
 
         return basicInfoPos;
+    }
+
+    /**
+     * 根据一级标签ID查询对应的基础数据条数
+     *
+     * @param tagId 一级标签ID
+     * @return 所有属于一级标签名的数据条数
+     */
+    public Integer QueryBasicInfoCountByTagLevel1(int tagId) {
+        //先查询一级标签对应的二级标签数组
+        List<Integer> integers = QueryTagLevel2IdBy1Id(tagId);
+        return integers.stream().mapToInt(this::QueryBasicInfoCountByTagLevel2Id).sum();
     }
 
     /**
