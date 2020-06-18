@@ -102,12 +102,8 @@ public class QueryDataTest {
     }
 
     @org.junit.Test
-    public void Json() {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.fluentPut("hha",123123);
-        jsonObject.fluentPut("hha",1);
-        jsonObject.fluentPut("hha",2);
-        System.out.println(jsonObject.toJSONString());
+    public void QueryBasicInfoCountByTagLevel1() {
+        System.out.println(new QueryData().QueryBasicInfoCountByTagLevel1(6));
     }
 
 

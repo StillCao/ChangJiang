@@ -29,6 +29,8 @@ public class CatalogService {
             int index = Level1sJson.indexOf(level1);
             int id = typeLevel1s.get(index).getId();
             ((JSONObject) level1).put("label", typeLevel1s.get(index).getT1_name());
+            ((JSONObject) level1).put("num", queryData.QueryBasicInfoCountByTagLevel1(id));
+
             List<TypeLevel2> typeLevel2s = queryData.QueryTagLevel2By1Id(id);
             JSONArray Level2sJson = (JSONArray) JSONArray.toJSON(typeLevel2s);
             Level2sJson.forEach(level2 -> {
