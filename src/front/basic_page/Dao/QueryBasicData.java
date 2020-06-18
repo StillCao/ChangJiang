@@ -40,4 +40,15 @@ public class QueryBasicData {
         BasicData basicData = basicDataList.get(0);
         return basicData;
     }
+
+    /**
+     * 3.根据id,查询缩略图
+     * @param id
+     * @return 缩略图的id
+     */
+    public String queryImage(int id ){
+        String sql = "select image from basic_info where id = ? ;";
+        String imageUrl = template.queryForObject(sql, String.class, id);
+        return imageUrl;
+    }
 }
