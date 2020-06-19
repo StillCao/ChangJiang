@@ -49,12 +49,16 @@ public class IndexDataShowService {
                 BasicData basic = finalBasicDataSub.get(index);
                 String picRealPath = queryBasicData.queryImage(basic.getId());
                 String picContextPath = "";
-                String[] picPathSplits = picRealPath.split("长江地学\\\\");
-                if (picPathSplits.length == 2) {
-                    String picHalfPath = picPathSplits[1].replace("\\", "/");
-                    picContextPath = url + "/" + picHalfPath;
+                if (picRealPath != null) {
+                    if (picRealPath.contains("长江地学\\\\")) {
+                        String[] picPathSplits = picRealPath.split("长江地学\\\\");
+                        if (picPathSplits.length == 2) {
+                            String picHalfPath = picPathSplits[1].replace("\\", "/");
+                            picContextPath = url + "/" + picHalfPath;
+                        }
+                        System.out.println(picContextPath);
+                    }
                 }
-                System.out.println(picContextPath);
                 ((JSONObject) jsonObject).put("image", picContextPath);
             });
 
@@ -65,15 +69,14 @@ public class IndexDataShowService {
     }
 
     /**
-     *
-     * @param num   主题词类型下主题词值限制条数
-     * @param type  主题词类型 1、2、3
-     * @return  主题词值加上属于主题词值的数据记录条数
+     * @param num  主题词类型下主题词值限制条数
+     * @param type 主题词类型 1、2、3
+     * @return 主题词值加上属于主题词值的数据记录条数
      */
     public String getSubjectData(int num, int type) {
         QueryData queryData = new QueryData();
 
-        List<Attr_value> attr_valueList = queryData.QueryAttrValueByKeyId(type,num);
+        List<Attr_value> attr_valueList = queryData.QueryAttrValueByKeyId(type, num);
         JSONArray attrValueJsonArray = (JSONArray) JSONArray.toJSON(attr_valueList);
 
         attrValueJsonArray.forEach(attrValueJson -> {
