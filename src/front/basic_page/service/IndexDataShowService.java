@@ -50,7 +50,7 @@ public class IndexDataShowService {
                 String picRealPath = queryBasicData.queryImage(basic.getId());
                 String picContextPath = "";
                 if (picRealPath != null) {
-                    if (picRealPath.contains("长江地学\\\\")) {
+                    if (picRealPath.contains("长江地学\\")) {
                         String[] picPathSplits = picRealPath.split("长江地学\\\\");
                         if (picPathSplits.length == 2) {
                             String picHalfPath = picPathSplits[1].replace("\\", "/");
