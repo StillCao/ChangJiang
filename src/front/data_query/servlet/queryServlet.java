@@ -22,7 +22,7 @@ public class queryServlet extends HttpServlet {
 
         //2.或取请求参数
         String value = req.getParameter("value");
-        List<Map> mapList = new Query().queryLable(value);
+        List<Map> mapList = new Query().queryStatic();
 
         //3.将查询结果转换成json;借助工具类ObjectMapper
         ObjectMapper mapper = new ObjectMapper();

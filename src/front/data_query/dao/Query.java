@@ -1,8 +1,11 @@
 package front.data_query.dao;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import front.data_query.domain.Key_Name_Id;
 import front.data_query.domain.Lable;
 import front.data_query.domain.Temp;
+import front.data_query.domain.TempLink;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import utils.JDBCUtils;
@@ -17,153 +20,71 @@ public class Query {
     JdbcTemplate template = new JdbcTemplate(JDBCUtils.getDataSource());
 
     /**
-     *静态查询和联动查询
-     * @param name
+     *静态查询
+     * @param
      * @return
      */
-    public List<Map> queryLable(String name){
+    public List<Map> queryStatic() {
 
         //创建一个Lable对象，用于封装每个标签内容的数据总数和名称
         List<Map> maplist = new ArrayList<>();
 
-        if(name == null){
-            String sql1 = "SELECT \n" +
-                    "\tt1.*,t2.`v_name`,t3.`k_name`\n" +
-                    "FROM\n" +
-                    "\t(SELECT COUNT(basi_info_id) num,at_val_id,at_key_id FROM rela_chart GROUP BY at_val_id) t1,\n" +
-                    "\tattr_value t2,\n" +
-                    "\tattr_key t3\n" +
-                    "WHERE\n" +
-                    "\tt1.at_val_id = t2.`v_id` AND t2.`v_id_k` = t3.`k_id`\n"+
-                    "ORDER BY \n" +
-                    "\tt1.at_key_id";
+        String sql1 = "SELECT \n" +
+                "\tt1.*,t2.`v_name`,t3.`k_name`\n" +
+                "FROM\n" +
+                "\t(SELECT COUNT(basi_info_id) num,at_val_id,at_key_id FROM rela_chart GROUP BY at_val_id) t1,\n" +
+                "\tattr_value t2,\n" +
+                "\tattr_key t3\n" +
+                "WHERE\n" +
+                "\tt1.at_val_id = t2.`v_id` AND t2.`v_id_k` = t3.`k_id`\n" +
+                "ORDER BY \n" +
+                "\tt1.at_key_id";
 
-            List<Temp> tempList = template.query(sql1, new BeanPropertyRowMapper<>(Temp.class));
+        List<Temp> tempList = template.query(sql1, new BeanPropertyRowMapper<>(Temp.class));
 
 
-            String sql2 = "SELECT\n" +
-                    "\tt2.`k_id`,t2.`k_name`\n" +
-                    "FROM\n" +
-                    "\trela_chart t1,\n" +
-                    "\tattr_key t2\n" +
-                    "WHERE\n" +
-                    "\tt1.`at_key_id` = t2.`k_id`\n" +
-                    "GROUP BY\n" +
-                    "\tt1.`at_key_id`";
+        String sql2 = "SELECT\n" +
+                "\tt2.`k_id`,t2.`k_name`\n" +
+                "FROM\n" +
+                "\trela_chart t1,\n" +
+                "\tattr_key t2\n" +
+                "WHERE\n" +
+                "\tt1.`at_key_id` = t2.`k_id`\n" +
+                "GROUP BY\n" +
+                "\tt1.`at_key_id`";
 
-            List<Key_Name_Id> keylist = template.query(sql2, new BeanPropertyRowMapper<>(Key_Name_Id.class));
+        List<Key_Name_Id> keylist = template.query(sql2, new BeanPropertyRowMapper<>(Key_Name_Id.class));
 
-            //遍历属性关键字集合
-            Integer count = 0;
-            for (int i = 0; i < keylist.size(); i++) {
+        //遍历属性关键字集合
+        Integer count = 0;
+        for (int i = 0; i < keylist.size(); i++) {
 
-                //计算该关键字下有多少个被涉及的属性值
-                String sql3 = "SELECT \n" +
-                        "\tCOUNT(temp.at_val_id)\n" +
-                        "FROM\n" +
-                        "\t("+sql1+") temp\n" +
-                        "\t\n" +
-                        "WHERE\n" +
-                        "\ttemp.at_key_id = ?";
-
-                //根据value_count遍历templist，用List集合封装value和count
-                List<Lable> list = new ArrayList<>();
-
-                Integer value_count1 = template.queryForObject(sql3, Integer.class,keylist.get(i).getK_id());
-
-                for (int i1 = 0; i1 < value_count1; i1++) {
-                    Lable lable = new Lable();
-                    lable.setValue(tempList.get(count+i1).getV_name());
-                    lable.setCounts(tempList.get(count+i1).getNum());
-                    list.add(lable);
-
-                }
-                count += value_count1;
-
-                Map map = new HashMap();
-                map.put(keylist.get(i).getK_name(),list);
-                maplist.add(map);
-            }
-        }else{
-            //查询满足属性值名字等于所传参数name的数据id,如'湖北省',得到basi_info_id为4，5，8，9的数据。
-            String sql1 = "SELECT t1.basi_info_id FROM \n" +
-                    "\trela_chart t1,attr_value t2 WHERE t1.at_val_id = t2.`v_id` \n" +
-                    "AND \n" +
-                    "\tt2.`v_name` = '"+name+"' \n" +
-                    "GROUP BY \n" +
-                    "\tt1.basi_info_id";
-
-            //根据sql1所得结果，查询basi_info_id对应的rela_chart对应的所有字段内容
-            String sql2 = "SELECT * FROM \n" +
-                    "\trela_chart \n" +
-                    "WHERE \n" +
-                    "\tbasi_info_id \n" +
-                    "IN \n" +
-                    "\t("+sql1+")";
-
-            //根据sql2所得内容，通过属性值字段分组和关键字字段排序，得到虚拟临时表
+            //计算该关键字下有多少个被涉及的属性值
             String sql3 = "SELECT \n" +
-                    "\tCOUNT(t1.basi_info_id) num,t1.at_val_id,t1.at_key_id,t2.v_name,t3.k_name\n" +
+                    "\tCOUNT(temp.at_val_id)\n" +
                     "FROM\n" +
-                    "\t("+sql2+") t1,\n" +
-                    "\tattr_value t2,\n" +
-                    "\tattr_key t3\n" +
-                    "\n" +
+                    "\t(" + sql1 + ") temp\n" +
+                    "\t\n" +
                     "WHERE\n" +
-                    "\tt1.at_val_id = t2.v_id\n" +
-                    "AND\n" +
-                    "\tt1.at_key_id = t3.k_id\n" +
-                    "GROUP BY \n" +
-                    "\tt1.at_val_id\n" +
-                    "ORDER BY\n" +
-                    "\tt1.at_key_id";
+                    "\ttemp.at_key_id = ?";
 
-            List<Temp> tempList = template.query(sql3, new BeanPropertyRowMapper<>(Temp.class));
+            //根据value_count遍历templist，用List集合封装value和count
+            List<Lable> list = new ArrayList<>();
 
-            //根据sql2得到的虚拟临时表，查询所得数据所有的关键字内容
-            String sql4 = "SELECT\n" +
-                    "\tt2.`k_id`,t2.`k_name`\n" +
-                    "FROM\n" +
-                    "\t("+sql2+") t1,\n" +
-                    "\tattr_key t2\n" +
-                    "WHERE\n" +
-                    "\tt1.`at_key_id` = t2.`k_id`\n" +
-                    "GROUP BY\n" +
-                    "\tt1.`at_key_id`";
+            Integer value_count1 = template.queryForObject(sql3, Integer.class, keylist.get(i).getK_id());
 
-            List<Key_Name_Id> keylist = template.query(sql4, new BeanPropertyRowMapper<>(Key_Name_Id.class));
+            for (int i1 = 0; i1 < value_count1; i1++) {
+                Lable lable = new Lable();
+                lable.setValue(tempList.get(count + i1).getV_name());
+                lable.setCounts(tempList.get(count + i1).getNum());
+                list.add(lable);
 
-            //遍历属性关键字集合
-            Integer count = 0;
-            for (int i = 0; i < keylist.size(); i++) {
-
-                //计算该关键字下有多少个被涉及的属性值
-                String sql5 = "SELECT \n" +
-                        "\tCOUNT(temp.at_val_id)\n" +
-                        "FROM\n" +
-                        "\t("+sql3+") temp\n" +
-                        "\t\n" +
-                        "WHERE\n" +
-                        "\ttemp.at_key_id = ?";
-
-                //根据value_count遍历templist，用List集合封装value和count
-                List<Lable> list = new ArrayList<>();
-
-                Integer value_count = template.queryForObject(sql5, Integer.class,keylist.get(i).getK_id());
-
-                for (int i1 = 0; i1 < value_count; i1++) {
-                    Lable lable = new Lable();
-                    lable.setValue(tempList.get(count+i1).getV_name());
-                    lable.setCounts(tempList.get(count+i1).getNum());
-                    list.add(lable);
-
-                }
-                count += value_count;
-
-                Map map = new HashMap();
-                map.put(keylist.get(i).getK_name(),list);
-                maplist.add(map);
             }
+            count += value_count1;
+
+            Map map = new HashMap();
+            map.put(keylist.get(i).getK_name(), list);
+            maplist.add(map);
         }
         return maplist;
     }
@@ -430,5 +351,200 @@ public class Query {
             maplist.add(map);
         }
         return maplist;
+    }
+
+    /**
+     * 联动查询
+     * @param value_list
+     * @return
+     */
+    public List<Map> query_link(List<String> value_list){
+
+        //创建一个Lable对象，用于封装每个标签内容的数据总数和名称
+        List<Map> maplist = new ArrayList<>();
+
+        //查询满足属性值名字等于所传参数name的数据id,如'湖北省',得到basi_info_id为4，5，8，9的数据。
+        String sql1 = "SELECT t1.basi_info_id FROM \n" +
+                "\trela_chart t1,attr_value t2 WHERE t1.at_val_id = t2.`v_id` \n" +
+                "AND \n" +
+                "\tt2.`v_name` = '" + value_list.get(0) + "' \n" +
+                "GROUP BY \n" +
+                "\tt1.basi_info_id";
+
+        //根据sql1所得结果，查询basi_info_id对应的rela_chart对应的所有字段内容
+        String sql2 = "SELECT * FROM \n" +
+                "\trela_chart \n" +
+                "WHERE \n" +
+                "\tbasi_info_id \n" +
+                "IN \n" +
+                "\t(" + sql1 + ")";
+
+        //根据sql2所得内容，通过basi_info_id字段排序，得到虚拟临时表
+        String sql3 = "SELECT \n" +
+                "\tt1.basi_info_id,t1.at_val_id,t1.at_key_id,t2.v_name,t3.k_name\n" +
+                "FROM\n" +
+                "\t(" + sql2 + ") t1,\n" +
+                "\tattr_value t2,\n" +
+                "\tattr_key t3\n" +
+                "\n" +
+                "WHERE\n" +
+                "\tt1.at_val_id = t2.v_id\n" +
+                "AND\n" +
+                "\tt1.at_key_id = t3.k_id\n" +
+                "ORDER BY\n" +
+                "\tt1.basi_info_id";
+
+        List<TempLink> tempList = template.query(sql3, new BeanPropertyRowMapper<>(TempLink.class));
+
+        //确定所有条件满足后的数据id
+
+        //存放满足所有条件的数据id
+        List<Integer> numlist = new ArrayList<>();
+        for (int j = 1; j < value_list.size(); j++) {
+            //结合temp1用来存放满足一个条件的中间结果
+            List<TempLink> temp1 = new ArrayList<>();
+
+            for (int j1 = 0; j1 < tempList.size(); j1++) {
+
+                //注：字符串匹配最好是用equals方法
+                if(tempList.get(j1).getV_name().equals(value_list.get(j))){
+                    Integer basi_info_id = tempList.get(j1).getBasi_info_id();
+                    System.out.println(basi_info_id);
+                    numlist.add(basi_info_id);
+                }
+            }
+            System.out.println("num===========");
+            System.out.println(numlist);
+
+            //通过上面的循环，得到满足list.get(0)~list.get(j)之间的所有条件的数据id，用temp1存放数据id对应的所有结果
+            for (int j2 = 0; j2 < tempList.size(); j2++) {
+
+                //tempList中每条数据的数据id和numlist中的值对比。相等，将该条数据放入临时集合temp1中
+                for (int j3 = 0; j3 < numlist.size(); j3++) {
+                    if(tempList.get(j2).getBasi_info_id() == numlist.get(j3)){
+                        temp1.add(tempList.get(j2));
+                    }
+                }
+            }
+
+            tempList = temp1;
+        }
+
+        System.out.println("templist==============");
+        try {
+            System.out.println(new ObjectMapper().writeValueAsString(tempList));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        //取出满足所有条件后的数据id，结果用List集合封装
+        List<Integer> idlist = new ArrayList<>();
+        for (int j = 0; j < tempList.size(); j++) {
+            if (idlist.size() == 0){
+                idlist.add(tempList.get(j).getBasi_info_id());
+            }else {
+                if(tempList.get(j).getBasi_info_id() != idlist.get(idlist.size()-1)){
+                    //因为tempList里面的数据是根据basi_info_id排序，为了避免重复添加相同数据id，需要判断
+                    idlist.add(tempList.get(j).getBasi_info_id());
+                }
+            }
+        }
+
+        System.out.println(idlist);
+        //调用query_by_id方法
+        return query_by_id(idlist);
+    }
+
+    /**
+     * 联动查询辅助方法
+     * @param list
+     * @return
+     */
+    public List<Map> query_by_id(List<Integer> list){
+
+        List<Map> mapList = new ArrayList<>();
+        //集合list里存放的是数据id
+        //1.查询各rela_chart表中所有数据
+        String sql1 = "SELECT * FROM rela_chart WHERE basi_info_id IN (";
+
+
+        for (int i = 0; i < list.size(); i++) {
+            if (i == list.size() - 1) {
+                sql1 = sql1 + "'" + list.get(i) + "')";
+            } else {
+                sql1 = sql1 + "'" + list.get(i) + "',";
+            }
+        }
+
+        //2. 根据sql1所得结果，查询basi_info_id对应的rela_chart对应的所有字段内容
+        String sql2 = sql1;
+
+        //3. 根据sql2所得内容，通过属性值字段分组和关键字字段排序，得到虚拟临时表
+        String sql3 = "SELECT \n" +
+                "\tCOUNT(t1.basi_info_id) num,t1.at_val_id,t1.at_key_id,t2.v_name,t3.k_name\n" +
+                "FROM\n" +
+                "\t(" + sql2 + ") t1,\n" +
+                "\tattr_value t2,\n" +
+                "\tattr_key t3\n" +
+                "\n" +
+                "WHERE\n" +
+                "\tt1.at_val_id = t2.v_id\n" +
+                "AND\n" +
+                "\tt1.at_key_id = t3.k_id\n" +
+                "GROUP BY \n" +
+                "\tt1.at_val_id\n" +
+                "ORDER BY\n" +
+                "\tt1.at_key_id";
+
+
+        List<Temp> tempList = template.query(sql3, new BeanPropertyRowMapper<>(Temp.class));
+
+        //4. 根据sql2得到的虚拟临时表，查询所得数据所有的关键字内容
+        String sql4 = "SELECT\n" +
+                "\tt2.`k_id`,t2.`k_name`\n" +
+                "FROM\n" +
+                "\t(" + sql2 + ") t1,\n" +
+                "\tattr_key t2\n" +
+                "WHERE\n" +
+                "\tt1.`at_key_id` = t2.`k_id`\n" +
+                "GROUP BY\n" +
+                "\tt1.`at_key_id`";
+
+        /*System.out.println("sql4============");
+        System.out.println(sql4);*/
+
+        List<Key_Name_Id> keylist = template.query(sql4, new BeanPropertyRowMapper<>(Key_Name_Id.class));
+
+        //5. 遍历属性关键字集合
+        Integer count = 0;
+        for (int i = 0; i < keylist.size(); i++) {
+
+            //5.1 计算该关键字下有多少个被涉及的属性值
+            String sql5 = "SELECT \n" +
+                    "\tCOUNT(temp.at_val_id)\n" +
+                    "FROM\n" +
+                    "\t(" + sql3 + ") temp\n" +
+                    "\t\n" +
+                    "WHERE\n" +
+                    "\ttemp.at_key_id = ?";
+
+            //根据value_count遍历templist，用List集合封装value和count
+            List<Lable> lableList = new ArrayList<>();
+
+            Integer value_count = template.queryForObject(sql5, Integer.class, keylist.get(i).getK_id());
+
+            for (int i1 = 0; i1 < value_count; i1++) {
+                Lable lable = new Lable();
+                lable.setValue(tempList.get(count + i1).getV_name());
+                lable.setCounts(tempList.get(count + i1).getNum());
+                lableList.add(lable);
+
+            }
+            count += value_count;
+
+            Map map = new HashMap();
+            map.put(keylist.get(i).getK_name(), lableList);
+            mapList.add(map);
+        }
+        return mapList;
     }
 }

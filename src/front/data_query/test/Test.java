@@ -15,8 +15,8 @@ public class Test {
         String s = new ObjectMapper().writeValueAsString(maps);
         System.out.println(s);*/
 
-        List<Map> mapList = new Query().queryLable("湖北省");
+        /*List<Map> mapList = new Query().queryLable("湖北省");
         String str = new ObjectMapper().writeValueAsString(mapList);
-        System.out.println(str);
+        System.out.println(str);*/
     }
 }
