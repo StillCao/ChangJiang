@@ -33,9 +33,9 @@ public class QueryData {
      * @param tagId 二级标签ID
      * @return 所有属于二级标签名的数据
      */
-    public List<BasicInfoPos> QueryBasicInfoByTagLevel2(int tagId) {
+    public List<BasicData> QueryBasicInfoByTagLevel2(int tagId) {
         String sql = "SELECT * from basic_info where da_type = ?";
-        return template.query(sql, new BeanPropertyRowMapper<>(BasicInfoPos.class), tagId);
+        return template.query(sql, new BeanPropertyRowMapper<>(BasicData.class), tagId);
     }
 
     /**
@@ -77,11 +77,11 @@ public class QueryData {
      * @param tagId 一级标签ID
      * @return 所有属于一级标签名的数据
      */
-    public List<BasicInfoPos> QueryBasicInfoByTagLevel1(int tagId) {
+    public List<BasicData> QueryBasicInfoByTagLevel1(int tagId) {
         //先查询一级标签对应的二级标签数组
         List<Integer> integers = QueryTagLevel2IdBy1Id(tagId);
 
-        List<BasicInfoPos> basicInfoPos = new ArrayList<>();
+        List<BasicData> basicInfoPos = new ArrayList<>();
         integers.forEach(integer -> {
             basicInfoPos.addAll(QueryBasicInfoByTagLevel2(integer));
         });

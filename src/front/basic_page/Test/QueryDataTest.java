@@ -28,13 +28,13 @@ public class QueryDataTest {
 
     @org.junit.Test
     public void QueryBasicInfoByTagLevel2() {
-        List<BasicInfoPos> basicInfoPos = new QueryData().QueryBasicInfoByTagLevel2(9);
+        List<BasicData> basicInfoPos = new QueryData().QueryBasicInfoByTagLevel2(9);
         System.out.println(basicInfoPos);
     }
 
     @org.junit.Test
     public void QueryBasicInfoByTagLevel1() {
-        List<BasicInfoPos> basicInfoPos = new QueryData().QueryBasicInfoByTagLevel1(4);
+        List<BasicData> basicInfoPos = new QueryData().QueryBasicInfoByTagLevel1(4);
         System.out.println(basicInfoPos);
     }
 
