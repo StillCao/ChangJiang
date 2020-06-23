@@ -33,45 +33,45 @@ public class IndexDataServlet extends HttpServlet {
             return;
         }
 
-        String url = "http://" + req.getServerName() + ":" + req.getServerPort() + req.getContextPath();
-//        String PrjFileUrlPath = url + "/PrjFile";
-
-        if (basicInfoList != null) {
-            basicInfoList.forEach(basicInfo -> {
-                String picContextPath = "";
-                String picRealPath = basicInfo.getImage();
-                String[] picPathSplits = picRealPath.split("长江地学\\\\");
-                if (picPathSplits.length == 2) {
-                    String picHalfPath = picRealPath.split("长江地学\\\\")[1].replace("\\", "/");
-                    picContextPath = url + "/" + picHalfPath;
-                }
-                System.out.println(picContextPath);
-                basicInfo.setImage(picContextPath);
-
-//                File file = new File(basicInfo.getImage());
-//                FileInputStream in = null;
-//                byte[] buffer = null;
-//                try {
-//                    in = new FileInputStream(file);
-//                    buffer = new byte[in.available()];
-//                    int len = 0;
-//                    while ((len = in.read(buffer)) > 0) {
-//                    }
-//                    System.out.println(Arrays.toString(buffer));
-//                    in.close();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
+//        String url = "http://" + req.getServerName() + ":" + req.getServerPort() + req.getContextPath();
+////        String PrjFileUrlPath = url + "/PrjFile";
+//
+//        if (basicInfoList != null) {
+//            basicInfoList.forEach(basicInfo -> {
+//                String picContextPath = "";
+//                String picRealPath = basicInfo.getImage();
+//                String[] picPathSplits = picRealPath.split("长江地学\\\\");
+//                if (picPathSplits.length == 2) {
+//                    String picHalfPath = picRealPath.split("长江地学\\\\")[1].replace("\\", "/");
+//                    picContextPath = url + "/" + picHalfPath;
 //                }
-//                String by = "";
-//                if (buffer != null) {
-//                    by = new String(buffer);
-//                }
-////                System.out.println(by);
-//                basicInfo.setImage(by);
-////                System.out.println(basicInfo.toString());
-            });
-
-        }
+//                System.out.println(picContextPath);
+//                basicInfo.setImage(picContextPath);
+//
+////                File file = new File(basicInfo.getImage());
+////                FileInputStream in = null;
+////                byte[] buffer = null;
+////                try {
+////                    in = new FileInputStream(file);
+////                    buffer = new byte[in.available()];
+////                    int len = 0;
+////                    while ((len = in.read(buffer)) > 0) {
+////                    }
+////                    System.out.println(Arrays.toString(buffer));
+////                    in.close();
+////                } catch (IOException e) {
+////                    e.printStackTrace();
+////                }
+////                String by = "";
+////                if (buffer != null) {
+////                    by = new String(buffer);
+////                }
+//////                System.out.println(by);
+////                basicInfo.setImage(by);
+//////                System.out.println(basicInfo.toString());
+//            });
+//
+//        }
 
         ObjectMapper mapper = new ObjectMapper();
         String result = mapper.writeValueAsString(basicInfoList);

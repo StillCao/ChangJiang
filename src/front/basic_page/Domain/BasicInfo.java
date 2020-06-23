@@ -3,7 +3,6 @@ package front.basic_page.Domain;
 public class BasicInfo {
     private int id;
     private String name;
-    private String image;
 
     public int getId() {
         return id;
@@ -21,20 +20,11 @@ public class BasicInfo {
         this.name = name;
     }
 
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-
     @Override
     public String toString() {
         return "BasicInfo{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", image=" + image +
                 '}';
     }
 }
