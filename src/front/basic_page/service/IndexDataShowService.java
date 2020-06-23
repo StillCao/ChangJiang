@@ -43,24 +43,24 @@ public class IndexDataShowService {
                 basicDataSub.addAll(queryData.QueryBasicByTag2IdLimit(typeLevel2.getId(), newnum));
             }
             JSONArray jsonArray = (JSONArray) JSONArray.toJSON(basicDataSub);
-            List<BasicData> finalBasicDataSub = basicDataSub;
-            jsonArray.forEach(jsonObject -> {         //转化成jsonArray添加处理后的image字段
-                int index = jsonArray.indexOf(jsonObject);
-                BasicData basic = finalBasicDataSub.get(index);
-                String picRealPath = queryBasicData.queryImage(basic.getId());
-                String picContextPath = "";
-                if (picRealPath != null) {
-                    if (picRealPath.contains("长江地学\\")) {
-                        String[] picPathSplits = picRealPath.split("长江地学\\\\");
-                        if (picPathSplits.length == 2) {
-                            String picHalfPath = picPathSplits[1].replace("\\", "/");
-                            picContextPath = url + "/" + picHalfPath;
-                        }
-                        System.out.println(picContextPath);
-                    }
-                }
-                ((JSONObject) jsonObject).put("image", picContextPath);
-            });
+//            List<BasicData> finalBasicDataSub = basicDataSub;
+//            jsonArray.forEach(jsonObject -> {         //转化成jsonArray添加处理后的image字段
+//                int index = jsonArray.indexOf(jsonObject);
+//                BasicData basic = finalBasicDataSub.get(index);
+//                String picRealPath = queryBasicData.queryImage(basic.getId());
+//                String picContextPath = "";
+//                if (picRealPath != null) {
+//                    if (picRealPath.contains("长江地学\\")) {
+//                        String[] picPathSplits = picRealPath.split("长江地学\\\\");
+//                        if (picPathSplits.length == 2) {
+//                            String picHalfPath = picPathSplits[1].replace("\\", "/");
+//                            picContextPath = url + "/" + picHalfPath;
+//                        }
+//                        System.out.println(picContextPath);
+//                    }
+//                }
+//                ((JSONObject) jsonObject).put("image", picContextPath);
+//            });
 
             resultObject.put(level1.getT1_name(), jsonArray);
         });

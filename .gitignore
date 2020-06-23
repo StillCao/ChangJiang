@@ -1,6 +1,8 @@
-.idea/
-out/
-lib/
+/.idea
+/out
+/lib
 src/druid.properties
 .gitignore
+/ChangJiang.iml
+/web/数据
 ChangJiang.iml
