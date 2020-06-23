@@ -2,7 +2,7 @@ package front.basic_page.Servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import front.basic_page.Dao.QueryData;
-import front.basic_page.Domain.BasicInfoPos;
+import front.basic_page.Domain.BasicData;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -34,7 +34,7 @@ public class DataLocationServlet extends HttpServlet {
 //        int id = Integer.parseInt(idString);
 
         QueryData queryData = new QueryData();
-        List<BasicInfoPos> basicInfoPos = null;
+        List<BasicData> basicInfoPos = null;
         if (type.equals("2")){
             basicInfoPos = queryData.QueryBasicInfoByTagLevel2(id);
         }
