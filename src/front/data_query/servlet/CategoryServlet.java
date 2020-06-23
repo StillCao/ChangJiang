@@ -23,8 +23,10 @@ public class CategoryServlet extends HttpServlet {
 
         //2.或取请求参数
         String cate_id = req.getParameter("categoryid");
+        String type = req.getParameter("type");
         int i = Integer.parseInt(cate_id);
-        List<Map> mapList = new Query().click_category(i);
+        int j = Integer.parseInt(type);
+        List<Map> mapList = new Query().click_category(i,j);
 
         //3.将查询结果转换成json;借助工具类ObjectMapper
         ObjectMapper mapper = new ObjectMapper();

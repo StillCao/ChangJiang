@@ -3,6 +3,7 @@ package front.data_query.domain;
 import java.util.Date;
 
 public class Basic_info {
+
     private Integer id;
     private String name;
     private String sploc;
@@ -22,11 +23,13 @@ public class Basic_info {
     private Integer up_id;
     private Integer da_type;
     private String image;
+    private String uper_name;
+    private String uper_place;
 
     public Basic_info() {
     }
 
-    public Basic_info(Integer id, String name, String sploc, String docname, Date up_time, Double point1_lat, Double point1_lon, Double point2_lat, Double point2_lon, String topic_w1, String topic_w2, String topic_w3, String topic_cfi, String da_summ, String da_size, String da_url, Integer up_id, Integer da_type, String image) {
+    public Basic_info(Integer id, String name, String sploc, String docname, Date up_time, Double point1_lat, Double point1_lon, Double point2_lat, Double point2_lon, String topic_w1, String topic_w2, String topic_w3, String topic_cfi, String da_summ, String da_size, String da_url, Integer up_id, Integer da_type, String image, String uper_name, String uper_place) {
         this.id = id;
         this.name = name;
         this.sploc = sploc;
@@ -46,6 +49,24 @@ public class Basic_info {
         this.up_id = up_id;
         this.da_type = da_type;
         this.image = image;
+        this.uper_name = uper_name;
+        this.uper_place = uper_place;
+    }
+
+    public String getUper_name() {
+        return uper_name;
+    }
+
+    public void setUper_name(String uper_name) {
+        this.uper_name = uper_name;
+    }
+
+    public String getUper_place() {
+        return uper_place;
+    }
+
+    public void setUper_place(String uper_place) {
+        this.uper_place = uper_place;
     }
 
     public Integer getId() {
