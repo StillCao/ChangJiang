@@ -50,5 +50,14 @@ public class AdminQueryTest {
         System.out.println(new AdminQuery().updateAdmin(admin));
     }
 
+    @org.junit.Test
+    public void queryAdminByAccountLikeByPage() {
+        Admin admin = new Admin();
+        admin.setAccount("wwxx");
+        admin.setPassword("123456");
+        admin.setId(3);
+        System.out.println(new AdminQuery().queryAdminByAccountLikeByPage("wwx",0,10));
+    }
+
 
 }

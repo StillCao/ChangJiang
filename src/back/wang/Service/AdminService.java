@@ -41,14 +41,18 @@ public class AdminService {
         return JSON.toJSONString(admin);
     }
 
-    /**
+    /** 根据名称模糊分页查询
      * @param account 管理员 account
      * @return 根据account查信息
      */
-    public String adminByAccount(String account) {
+    public String adminByAccount(String account,int currentPage, int currentCount) {
         AdminQuery adminQuery = new AdminQuery();
-        Admin admin = adminQuery.queryAdminByAccount(account);
-        return JSON.toJSONString(admin);
+        int totalCount = adminQuery.queryAdminCount();
+        int totalPage = totalCount % currentCount == 0 ? totalCount / currentCount : totalCount / currentCount + 1;
+        int startPosition = (currentPage - 1) * currentCount;
+        List<Admin> admins = adminQuery.queryAdminByAccountLikeByPage(account,startPosition ,currentCount);
+        Page<Admin> page = new Page<>(currentPage, currentCount, totalPage, totalCount, admins);
+        return JSON.toJSONString(page);
     }
 
     /**

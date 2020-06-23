@@ -56,6 +56,20 @@ public class AdminQuery {
     }
 
     /**
+     * account 模糊查询
+     *
+     * @param account admin account
+     * @return 对应account 的 admin
+     */
+    public List<Admin> queryAdminByAccountLikeByPage(String account, int startPos, int count) {
+        account = "%" + account + "%";
+        String sql = "select * from admin where account like '" + account + "' limit ?,?";
+        return template.query(sql, new BeanPropertyRowMapper<>(Admin.class), startPos, count);
+    }
+
+    /**
+     * account 精确查询
+     *
      * @param account admin account
      * @return 对应account 的 admin
      */
@@ -85,25 +99,29 @@ public class AdminQuery {
 
     /**
      * 修改admin信息
+     *
      * @param admin
      * @return 修改成功与否
      */
     public boolean updateAdmin(Admin admin) {
         String sql = "UPDATE admin SET account = ? ,password = ?, type = ? WHERE id = ?";
-        int success = template.update(sql, admin.getAccount(), admin.getPassword(),admin.getType(),admin.getId());
+        int success = template.update(sql, admin.getAccount(), admin.getPassword(), admin.getType(), admin.getId());
         return success >= 1;
     }
 
     /**
      * 删除admin
+     *
      * @param id admin id
      * @return 删除成功与否
      */
-    public boolean deleteAdminById(int id){
+    public boolean deleteAdminById(int id) {
         int count = queryAdminCount();
-        if (count == 1){ return false;} //若数据库里只有一个管理员，不能进行删除
+        if (count == 1) {
+            return false;
+        } //若数据库里只有一个管理员，不能进行删除
         String sql = "delete from admin where id = ?";
-        int success = template.update(sql,id);
+        int success = template.update(sql, id);
         return success >= 1;
     }
 

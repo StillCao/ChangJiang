@@ -51,12 +51,15 @@ public class AdminServlet extends BaseServlet {
     }
 
     /**
-     * 根据名称查询管理员
+     * 根据名称模糊查询管理员
      */
 
     public void getAdminByAccount(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String account = req.getParameter("account");
-        String result = new AdminService().adminByAccount(account);
+        Map<String, String[]> map = req.getParameterMap();
+        int currentPage = Integer.parseInt(map.getOrDefault("currentPage", new String[]{"1"})[0]);
+        int currentCount = Integer.parseInt(map.getOrDefault("currentCount", new String[]{"10"})[0]);
+        String account = map.get("account")[0];
+        String result = new AdminService().adminByAccount(account,currentPage, currentCount);
 
         resp.setContentType("text/html;charset=utf-8");
         resp.setHeader("Access-Control-Allow-Origin", "*");//解决跨域问题，开发完毕时应该关闭
