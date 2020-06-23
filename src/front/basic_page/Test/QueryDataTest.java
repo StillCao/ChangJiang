@@ -1,18 +1,10 @@
 package front.basic_page.Test;
 
 
-import com.alibaba.fastjson.JSONObject;
 import front.basic_page.Dao.QueryData;
 import front.basic_page.Domain.*;
-import front.basic_page.service.IndexDataShowService;
 
-import javax.servlet.ServletOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
-import java.util.jar.Attributes;
 
 public class QueryDataTest {
 
