@@ -72,9 +72,10 @@ public class DoclistServlet extends HttpServlet {
         //3.将查询结果转换成json;借助工具类ObjectMapper
         ObjectMapper mapper = new ObjectMapper();
         List<Map> mapList = new ArrayList<>();
-        if(currentPage == null){
+        if(list.isEmpty()){
             int page = Integer.parseInt(pageSize);
-            mapList = new Query().doclist_sta(update,page);
+            int current = Integer.parseInt(currentPage);
+            mapList = new Query().doclist_sta(update,current,page);
         }else {
             int page = Integer.parseInt(pageSize);
             int current = Integer.parseInt(currentPage);

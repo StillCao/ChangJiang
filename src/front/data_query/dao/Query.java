@@ -652,7 +652,7 @@ public class Query {
      * 文件列表不传参时的静态页面所需数据
      * @return
      */
-    public List<Map> doclist_sta(boolean updated, int pagesize){
+    public List<Map> doclist_sta(boolean updated,int currentpage, int pagesize){
 
         //创建一个集合，封装最终结果
         List<Map> list = new ArrayList<>();
@@ -661,10 +661,10 @@ public class Query {
         if(updated == true){
             //按时间降序排列，也就是日期从大到小
             //2.创建sql语句，获取基本信息表的数据信息
-            String sql = "SELECT * FROM basic_info ORDER BY up_time DESC LIMIT 0,?";
+            String sql = "SELECT * FROM basic_info ORDER BY up_time DESC LIMIT ?,?";
 
             //3. 执行sql语句并封装
-            List<Basic_info> basicInfoList = template.query(sql, new BeanPropertyRowMapper<>(Basic_info.class), pagesize);
+            List<Basic_info> basicInfoList = template.query(sql, new BeanPropertyRowMapper<>(Basic_info.class),currentpage-1, pagesize);
 
             try {
                 System.out.println(new ObjectMapper().writeValueAsString(basicInfoList));
@@ -683,10 +683,10 @@ public class Query {
         }else{
             //按时间升序排列，也就是日期从小到大
             //2.创建sql语句，获取基本信息表的数据信息
-            String sql = "SELECT * FROM basic_info ORDER BY up_time ASC LIMIT 0,?";
+            String sql = "SELECT * FROM basic_info ORDER BY up_time ASC LIMIT ?,?";
 
             //3. 执行sql语句并封装
-            List<Basic_info> basicInfoList = template.query(sql, new BeanPropertyRowMapper<>(Basic_info.class), pagesize);
+            List<Basic_info> basicInfoList = template.query(sql, new BeanPropertyRowMapper<>(Basic_info.class),currentpage-1 , pagesize);
 
             //计算结果中的数据总条数，将其封装在map集合
             Map num_map = new HashMap();
