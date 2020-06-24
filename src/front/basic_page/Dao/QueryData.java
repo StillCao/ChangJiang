@@ -212,5 +212,14 @@ public class QueryData {
         return template.query(sql, new BeanPropertyRowMapper<>(Attr_value.class), key_id, num);
     }
 
+    /**
+     *
+     * @return 查询所有AttrKey
+     */
+    public List<Attr_key> QueryAttrKeyAll(){
+        String sql = "Select * from attr_key";
+        return template.query(sql,new BeanPropertyRowMapper<>(Attr_key.class));
+    }
+
 
 }

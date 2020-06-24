@@ -98,6 +98,11 @@ public class QueryDataTest {
         System.out.println(new QueryData().QueryBasicInfoCountByTagLevel1(6));
     }
 
+    @org.junit.Test
+    public void QueryAttrKeyAll() {
+        System.out.println(new QueryData().QueryAttrKeyAll().toString());
+    }
+
 
 
 }
