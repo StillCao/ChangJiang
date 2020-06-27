@@ -10,12 +10,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-@WebServlet("/CategoryServlet")
-public class CategoryServlet extends HttpServlet {
+/**
+ * 该接口会与分类体系、标签、文件列表三个模块有正向联动，但不存在反向联动
+ */
+@WebServlet("/FirstSearch")
+public class FirstSearch extends HttpServlet{
 
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -23,34 +25,34 @@ public class CategoryServlet extends HttpServlet {
         req.setCharacterEncoding("utf-8");
         resp.setContentType("text/html;charset=utf-8");
 
-        //2.或取请求参数
-        String cate_id = req.getParameter("categoryid");
-        String type = req.getParameter("type");
-        int i = Integer.parseInt(cate_id);
-        int j = Integer.parseInt(type);
+        //2. 获取请求参数
+        String searchWord = req.getParameter("searchWord");
+        String name = searchWord;
+        String uper_place = searchWord;
 
+        //3. 查询数据
+        List<Integer> list = new Query().search_fir(name, uper_place);
+        //3.1 先用session暂存该数据id集合，方便后续筛选
         HttpSession session = req.getSession();
-        //List<Integer> firstSearch = (List<Integer>)session.getAttribute("firstSearch");
-        List<Map> mapList = new ArrayList<>();
-        //将id集合用session缓存
-        List<Integer> cate_idlist = new Query().click_category(i, j);
-        session.setAttribute("cate_idlist",cate_idlist);
-        session.setAttribute("f_idlist",cate_idlist);
-        System.out.println("cate_idlist="+cate_idlist);
-        //在进行分类体系查询下做标签查询
-        mapList = new Query().query_by_id(cate_idlist);
+        session.setAttribute("firstSearch",list);
 
-        //3.将查询结果转换成json;借助工具类ObjectMapper
+        //3.2 设置f_idlist，放置最终集合
+        session.setAttribute("f_idlist",list);
+        //3.3 将查询结果转换成字符串
+        //String result = list.toString();
+
+        //3.3 根据id集合查询数据基本信息
+        List<Map> mapList = new Query().doclist_dyn(true, 0, 0, list);
         ObjectMapper mapper = new ObjectMapper();
         String result = mapper.writeValueAsString(mapList);
 
         //4.向前端响应数据response对象
         resp.setHeader("Access-Control-Allow-Origin","*"); //解决跨域问题，让返回结果可远程调用
         resp.getWriter().append(result);
+
     }
 
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        this.doPost(req,resp);
+        this.doPost(req, resp);
     }
-
 }

@@ -7,10 +7,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import utils.JDBCUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Query {
 
@@ -274,7 +271,7 @@ public class Query {
      * @param value_list
      * @return
      */
-    public List<Map> query_link(List<String> value_list){
+    public List<Integer> query_link(List<String> value_list){
 
         //创建一个Lable对象，用于封装每个标签内容的数据总数和名称
         List<Map> maplist = new ArrayList<>();
@@ -362,9 +359,7 @@ public class Query {
         //将idlist集合中的所有id存放在全局变量imglist中，方便查询文件列表
         imglist = idlist;
 
-        //System.out.println(idlist);
-        //调用query_by_id方法
-        return query_by_id(idlist);
+        return idlist;
     }
 
     /**
@@ -467,17 +462,18 @@ public class Query {
      * @param type
      * @return
      */
-    public List<Map> click_category(int cate_id,int type) {
-
+    public List<Integer> click_category(int cate_id,int type) {
         //创建一个Lable对象，用于封装每个标签内容的数据总数和名称
         List<Map> maplist = new ArrayList<>();
 
+        //存放完成数据分类体系查询的id集合
+        List<Integer> cate_idlist = new ArrayList<>();
         if (type == 2){
             //type = 2. 说明二级分类体系id为参数
             //1. 定义sql语句
             String sql = "SELECT * FROM basic_info WHERE da_type = ?";
 
-            //2. 执行sql语句，得到满足条件的内容
+            //            //2. 执行sql语句，得到满足条件的内容
             List<Basic_info> infolist = template.query(sql, new BeanPropertyRowMapper<>(Basic_info.class), cate_id);
 
             //3. 用集合存下上步得到的所有数据id
@@ -498,8 +494,13 @@ public class Query {
             for (int i = 0; i < infolist.size(); i++) {
                 idlist.add(infolist.get(i).getId());
             }
+
+            System.out.println("idlist===========");
+            System.out.println(idlist);
             //6. 调用方法传入参数idlist,
-            maplist = query_by_id(idlist);//该方法得到的结果是满足idlist集合中的数据id所对应
+            //maplist = query_by_id(idlist);//该方法得到的结果是满足idlist集合中的数据id所对应
+
+            cate_idlist = idlist;
 
         }else{
             //type =1.说明一级分类体系id为参数
@@ -532,11 +533,16 @@ public class Query {
             for (int i = 0; i < infolist.size(); i++) {
                 idlist.add(infolist.get(i).getId());
             }
+
+            System.out.println("idlist==========");
+            System.out.println(idlist);
             //6. 调用方法传入参数idlist
-            maplist = query_by_id(idlist);
+            //maplist = query_by_id(idlist);
+            cate_idlist = idlist;
+
         }
 
-        return maplist;
+        return cate_idlist;
     }
 
     //需要设置一个全局变量imglist，用来接收联动查询最终得到的数据id集合。
@@ -546,13 +552,13 @@ public class Query {
      * 返回静态页面数据分类体系的功能模块结果，而且能实现标签页面对分类体系的反向联动
      * @return
      */
-    public List<Map> query_lab_to_cate(){
+    public List<Map> query_lab_to_cate(List<Integer> idlist){
 
         //创建集合，封装最终结果
         List<Map> cate_List = new ArrayList<>();
 
         //设置一个List<Integer>集合，接收标签查询返回的数据id
-        List<Integer> idlist = imglist;
+        //List<Integer> idlist = imglist;
 
         //1. 查询da_type1(一级分类体系表)，封装结果
         //1.1 创建sql语句，查出所有的一级分类体系相关内容，并用list集合封装
@@ -571,7 +577,7 @@ public class Query {
         //3.先将basic_info表按二级分类体系id排序，再封装所有结果
         //根据idlist是否为空，用不同的查询条件约束basic_info表
         List<Basic_info> infoList = new ArrayList<>();
-        if(idlist.size() == 0){
+        if(idlist == null){
             //说明没有进行标签查询，此时应该对所有数据根据分类体系进行分类，并记下数量
             //3.1 创建排序sql语句，查出所有排序后的数据基本信息，并用list集合封装
             String sql3 = "SELECT * FROM basic_info ORDER BY da_type";
@@ -579,7 +585,7 @@ public class Query {
             //3.2 封装结果
             infoList = template.query(sql3, new BeanPropertyRowMapper<>(Basic_info.class));
         }else {
-            //说明没有进行标签查询，此时应该对idlist的数据根据分类体系进行分类，并记下数量
+            //说明有进行标签查询，此时应该对idlist的数据根据分类体系进行分类，并记下数量
             //3.1 创建排序sql语句，查出所有排序后的数据基本信息，并用list集合封装
             String s1 = "SELECT * FROM basic_info WHERE id IN (";
             String s2 = "";
@@ -629,9 +635,15 @@ public class Query {
             String s = datype_fir.get(i).getT1_code();
             int count = 0;
             for (int j = 0; j < sec_cate.size(); j++) {
+                /*这种判断条件不准确，例如0201也会被计入01中
+                if(sec_cate.get(i).getValue().contains(s)){
+                    count += sec_cate.get(i).getCount();
+                }*/
                 //以0102为例，要先剪掉02，可使用String类中的substring方法
                 String sub_code = sec_cate.get(j).getValue().substring(0,2);
-
+                /*System.out.println(sub_code);
+                System.out.println(sec_cate.get(j).getCount());
+                System.out.println("count="+count);*/
                 if(sub_code.equals(s)){
                     count += sec_cate.get(j).getCounts();
                 }
@@ -661,41 +673,75 @@ public class Query {
         if(updated == true){
             //按时间降序排列，也就是日期从大到小
             //2.创建sql语句，获取基本信息表的数据信息
-            String sql = "SELECT * FROM basic_info ORDER BY up_time DESC LIMIT ?,?";
+            if (currentpage==0 && pagesize==0){
+                String sql = "SELECT * FROM basic_info ORDER BY up_time DESC";
 
-            //3. 执行sql语句并封装
-            List<Basic_info> basicInfoList = template.query(sql, new BeanPropertyRowMapper<>(Basic_info.class),currentpage-1, pagesize);
+                //3. 执行sql语句并封装
+                List<Basic_info> basicInfoList = template.query(sql, new BeanPropertyRowMapper<>(Basic_info.class));
 
-            try {
-                System.out.println(new ObjectMapper().writeValueAsString(basicInfoList));
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
+                //计算结果中的数据总条数，将其封装在map集合
+                Map num_map = new HashMap();
+                num_map.put("allCounts",basicInfoList.size());
+                list.add(num_map);
+                //将关键字features和属性值放在map中
+                Map reslut_map = new HashMap();
+                reslut_map.put("features",basicInfoList);
+                list.add(reslut_map);
+            }else {
+                String sql = "SELECT * FROM basic_info ORDER BY up_time DESC LIMIT ?,?";
+
+                //3. 执行sql语句并封装
+                List<Basic_info> basicInfoList = template.query(sql, new BeanPropertyRowMapper<>(Basic_info.class),currentpage-1,pagesize);
+
+                try {
+                    System.out.println(new ObjectMapper().writeValueAsString(basicInfoList));
+                } catch (JsonProcessingException e) {
+                    e.printStackTrace();
+                }
+                //3.1 将数据基本信息的url中的“//”改为“/”
+                //计算结果中的数据总条数，将其封装在map集合
+                Map num_map = new HashMap();
+                num_map.put("allCounts",basicInfoList.size());
+                list.add(num_map);
+                //将关键字features和属性值放在map中
+                Map reslut_map = new HashMap();
+                reslut_map.put("features",basicInfoList);
+                list.add(reslut_map);
             }
 
-            //计算结果中的数据总条数，将其封装在map集合
-            Map num_map = new HashMap();
-            num_map.put("allCounts",basicInfoList.size());
-            list.add(num_map);
-            //将关键字features和属性值放在map中
-            Map reslut_map = new HashMap();
-            reslut_map.put("features",basicInfoList);
-            list.add(reslut_map);
         }else{
             //按时间升序排列，也就是日期从小到大
             //2.创建sql语句，获取基本信息表的数据信息
-            String sql = "SELECT * FROM basic_info ORDER BY up_time ASC LIMIT ?,?";
 
-            //3. 执行sql语句并封装
-            List<Basic_info> basicInfoList = template.query(sql, new BeanPropertyRowMapper<>(Basic_info.class),currentpage-1 , pagesize);
+            if (currentpage==0 && pagesize==0){
+                String sql = "SELECT * FROM basic_info ORDER BY up_time ASC";
 
-            //计算结果中的数据总条数，将其封装在map集合
-            Map num_map = new HashMap();
-            num_map.put("allCounts",basicInfoList.size());
-            list.add(num_map);
-            //将关键字features和属性值放在map中
-            Map reslut_map = new HashMap();
-            reslut_map.put("features",basicInfoList);
-            list.add(reslut_map);
+                //3. 执行sql语句并封装
+                List<Basic_info> basicInfoList = template.query(sql, new BeanPropertyRowMapper<>(Basic_info.class));
+
+                //计算结果中的数据总条数，将其封装在map集合
+                Map num_map = new HashMap();
+                num_map.put("allCounts",basicInfoList.size());
+                list.add(num_map);
+                //将关键字features和属性值放在map中
+                Map reslut_map = new HashMap();
+                reslut_map.put("features",basicInfoList);
+                list.add(reslut_map);
+            }else {
+                String sql = "SELECT * FROM basic_info ORDER BY up_time ASC LIMIT ?,?";
+
+                //3. 执行sql语句并封装
+                List<Basic_info> basicInfoList = template.query(sql, new BeanPropertyRowMapper<>(Basic_info.class),currentpage-1 ,pagesize);
+
+                //计算结果中的数据总条数，将其封装在map集合
+                Map num_map = new HashMap();
+                num_map.put("allCounts",basicInfoList.size());
+                list.add(num_map);
+                //将关键字features和属性值放在map中
+                Map reslut_map = new HashMap();
+                reslut_map.put("features",basicInfoList);
+                list.add(reslut_map);
+            }
         }
         return list;
     }
@@ -711,7 +757,7 @@ public class Query {
      * @param currentpage
      * @return
      */
-    public List<Map> doclist_dyn(boolean updated,int currentpage,int pagesize) throws JsonProcessingException {
+    public List<Map> doclist_dyn(boolean updated,int currentpage,int pagesize,List<Integer> idlist) throws JsonProcessingException {
 
         //创建一个集合，封装最终结果
         List<Map> list = new ArrayList<>();
@@ -721,31 +767,48 @@ public class Query {
             //拼接sql语句，最终得到根据参数info_id集合查询涉及其中id的数据基本信息
             String s1 = "SELECT * FROM basic_info WHERE id IN (";
             String s2 = "";
-            for (int i = 0; i < imglist.size(); i++) {
-                if (i == imglist.size()-1){
-                    s2 += imglist.get(i)+") ";
+
+            for (int i = 0; i < idlist.size(); i++) {
+                if (i == idlist.size()-1){
+                    s2 += idlist.get(i)+") ";
                 }else {
-                    s2 += imglist.get(i)+",";
+                    s2 += idlist.get(i)+",";
                 }
             }
 
-            String s3 = "ORDER BY up_time DESC LIMIT ?,?";
+            if(currentpage == 0 && pagesize == 0){
 
-            String sql = s1 + s2 + s3;
+                String s3 = "ORDER BY up_time DESC";
+                String sql = s1 + s2 + s3;
 
-            System.out.println("sql =============");
-            System.out.println(sql);
-            //执行sql语句，并封装结果
-            List<Basic_info> basicinfolist = template.query(sql, new BeanPropertyRowMapper<>(Basic_info.class), currentpage - 1, pagesize);
+                //执行sql语句，并封装结果
+                List<Basic_info> basicinfolist = template.query(sql, new BeanPropertyRowMapper<>(Basic_info.class));
+                //计算结果中的数据总条数，将其封装在map集合
+                Map num_map = new HashMap();
+                num_map.put("allCounts",basicinfolist.size());
+                list.add(num_map);
+                //将关键字features和属性值放在map中
+                Map reslut_map = new HashMap();
+                reslut_map.put("features",basicinfolist);
+                list.add(reslut_map);
+            }else {
+                String s3 = "ORDER BY up_time DESC LIMIT ?,?";
 
-            //计算结果中的数据总条数，将其封装在map集合
-            Map num_map = new HashMap();
-            num_map.put("allCounts",basicinfolist.size());
-            list.add(num_map);
-            //将关键字features和属性值放在map中
-            Map reslut_map = new HashMap();
-            reslut_map.put("features",basicinfolist);
-            list.add(reslut_map);
+                String sql = s1 + s2 + s3;
+
+                //执行sql语句，并封装结果
+                List<Basic_info> basicinfolist = template.query(sql, new BeanPropertyRowMapper<>(Basic_info.class),currentpage-1,pagesize);
+
+                //计算结果中的数据总条数，将其封装在map集合
+                Map num_map = new HashMap();
+                num_map.put("allCounts",basicinfolist.size());
+                list.add(num_map);
+                //将关键字features和属性值放在map中
+                Map reslut_map = new HashMap();
+                reslut_map.put("features",basicinfolist);
+                list.add(reslut_map);
+            }
+
         }else {
             System.out.println("imglist===============");
             System.out.println(imglist);
@@ -753,33 +816,164 @@ public class Query {
             //拼接sql语句，最终得到根据参数info_id集合查询涉及其中id的数据基本信息
             String s1 = "SELECT * FROM basic_info WHERE id IN (";
             String s2 = "";
-            for (int i = 0; i < imglist.size(); i++) {
-                if (i == imglist.size()-1){
-                    s2 += imglist.get(i)+") ";
+
+            for (int i = 0; i < idlist.size(); i++) {
+                if (i == idlist.size()-1){
+                    s2 += idlist.get(i)+") ";
                 }else {
-                    s2 += imglist.get(i)+",";
+                    s2 += idlist.get(i)+",";
                 }
             }
 
-            String s3 = "ORDER BY up_time ASC LIMIT ?,?";
+            if (currentpage==0 && pagesize==0){
+                String s3 = "ORDER BY up_time ASC";
+                String sql = s1 + s2 + s3;
 
-            String sql = s1 + s2 + s3;
+                //执行sql语句，并封装结果
+                List<Basic_info> basicinfolist = template.query(sql, new BeanPropertyRowMapper<>(Basic_info.class));
 
-            System.out.println("sql =============");
-            System.out.println(sql);
+                //计算结果中的数据总条数，将其封装在map集合
+                Map num_map = new HashMap();
+                num_map.put("allCounts",basicinfolist.size());
+                list.add(num_map);
+                //将关键字features和属性值放在map中
+                Map reslut_map = new HashMap();
+                reslut_map.put("features",basicinfolist);
+                list.add(reslut_map);
+            }else {
+                String s3 = "ORDER BY up_time ASC LIMIT ?,?";
 
-            //执行sql语句，并封装结果
-            List<Basic_info> basicinfolist = template.query(sql, new BeanPropertyRowMapper<>(Basic_info.class), currentpage - 1, pagesize);
+                String sql = s1 + s2 + s3;
 
-            //计算结果中的数据总条数，将其封装在map集合
-            Map num_map = new HashMap();
-            num_map.put("allCounts",basicinfolist.size());
-            list.add(num_map);
-            //将关键字features和属性值放在map中
-            Map reslut_map = new HashMap();
-            reslut_map.put("features",basicinfolist);
-            list.add(reslut_map);
+                System.out.println("sql=================");
+                System.out.println(sql);
+                //执行sql语句，并封装结果
+                List<Basic_info> basicinfolist = template.query(sql, new BeanPropertyRowMapper<>(Basic_info.class), currentpage - 1, pagesize);
+
+                //计算结果中的数据总条数，将其封装在map集合
+                Map num_map = new HashMap();
+                num_map.put("allCounts",basicinfolist.size());
+                list.add(num_map);
+                //将关键字features和属性值放在map中
+                Map reslut_map = new HashMap();
+                reslut_map.put("features",basicinfolist);
+                list.add(reslut_map);
+            }
         }
+        return list;
+    }
+
+    /**
+     * 一次查询，针对原始数据。所有分页都是在文件列表处显示，该方法不提供分页
+     * @param name
+     * @param uper_place
+     * @return
+     */
+    public List<Integer> search_fir(String name,String uper_place){
+
+        //查询原始数据。用户通过name和uper_place两个字段进行模糊查询，得出所有满足条件的数据并分页
+        //1. 创建sql语句
+
+        String sql1 = "SELECT * FROM basic_info WHERE NAME LIKE '%"+name+"%' OR uper_place LIKE '%"+uper_place+"%' ORDER BY id";
+
+        //2. 执行sql语句
+
+        List<Basic_info> infoList1 = template.query(sql1, new BeanPropertyRowMapper<>(Basic_info.class));
+
+        //3. 取出所有数据id并封装，将获得的数据id用于查询分类体系数据总数和标签的数据总数
+        List<Integer> idlist = new ArrayList<>();
+        for (Basic_info basic_info : infoList1) {
+            idlist.add(basic_info.getId());
+        }
+
+        return idlist;
+    }
+
+    /**
+     *二次查询，传入之前获取到的文件列表。最重查询的是文件列表，所以调用文件列表查询下的接口
+     * @return
+     */
+    public List<Map> search_sec(String name,String uper_place,int time_l,int time_r,List<Basic_info> infos){
+
+        //对满足之前的查询结果在进行筛选，即在infos集合中筛选
+
+        //1. 新建一个List集合，用于封装结果
+        List<Map> maplist = new ArrayList<>();
+        List<Basic_info> infoList = new ArrayList<>();
+        //2. 依次比较infos集合中的元素
+        for (Basic_info info : infos) {
+            //满足三个条件，根据name和uper_place进行模糊查询
+            if(name != null && uper_place != null){
+                if (info.getName().contains(name) || info.getUper_place().contains(uper_place)){
+                    //2.1 判断该数据是否在年份范围类
+                    Calendar calendar= Calendar.getInstance();
+                    calendar.setTime(info.getUp_time());
+                    int year = calendar.get(Calendar.YEAR);
+                    //如果左边年份和右边年份未输入，参数设为0，则不进行判断；反之，要判断
+                    if(time_l != 0 && time_r != 0){
+                        if (year >= time_l && year<=time_r) infoList.add(info);
+                    }else {
+                        if (time_l == 0 && time_r != 0){
+                            if (year <= time_r) infoList.add(info);
+                        }else {
+                            if (time_l != 0 && time_r == 0){
+                                if (year >= time_l) infoList.add(info);
+                            }else {
+                                infoList.add(info);
+                            }
+                        }
+                    }
+                }
+            }else {
+                //2.1 判断该数据是否在年份范围类
+                Calendar calendar= Calendar.getInstance();
+                calendar.setTime(info.getUp_time());
+                int year = calendar.get(Calendar.YEAR);
+                //如果左边年份和右边年份未输入，参数设为0，则不进行判断；反之，要判断
+                if(time_l != 0 && time_r != 0){
+                    if (year >= time_l && year<=time_r) infoList.add(info);
+                }else {
+                    if (time_l == 0 && time_r != 0){
+                        if (year <= time_r) infoList.add(info);
+                    }else {
+                        if (time_l != 0 && time_r == 0){
+                            if (year >= time_l) infoList.add(info);
+                        }else {
+                            infoList.add(info);
+                        }
+                    }
+                }
+            }
+        }
+        Map map1 = new HashMap();
+        map1.put("allCounts",infoList.size());
+        maplist.add(map1);
+        Map map2 = new HashMap();
+        map2.put("features",infoList);
+        maplist.add(map2);
+
+        return maplist;
+    }
+
+    /**
+     * 两次查询取交集，得到同时满足分类体系查询和标签查询的数据id
+     * @param list1
+     * @param list2
+     * @return
+     */
+    public List<Integer> id_union(List<Integer> list1,List<Integer> list2){
+
+        List<Integer> list = new ArrayList<>();
+        //对list2实现升序排列
+        //排序后不用遍历集合所有元素进行比较
+        for (int i = 0; i < list1.size(); i++) {
+            for (int j = 0; j < list2.size(); j++){
+                if(list1.get(i) == list2.get(j)){
+                    list.add(list1.get(i));
+                }
+            }
+        }
+
         return list;
     }
 }

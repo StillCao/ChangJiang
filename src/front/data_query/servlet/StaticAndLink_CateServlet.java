@@ -8,6 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,57 +23,30 @@ public class StaticAndLink_CateServlet extends HttpServlet {
         req.setCharacterEncoding("utf-8");
         resp.setContentType("text/html;charset=utf-8");
 
-        //2.获取请求参数
-        List<String> list = new ArrayList<>();
-        if(req.getParameter("keyWords") != null){
-            list.add(req.getParameter("keyWords"));
-        }
-
-        if(req.getParameter("disciplines") != null){
-            list.add(req.getParameter("disciplines"));
-        }
-
-        if(req.getParameter("placeNames") != null){
-            list.add(req.getParameter("placeNames"));
-        }
-
-        if(req.getParameter("dataTypes") != null){
-            list.add(req.getParameter("dataTypes"));
-        }
-
-        if(req.getParameter("dataProductions") != null){
-            list.add(req.getParameter("dataProductions"));
-        }
-
-        if(req.getParameter("spatialScales") != null){
-            list.add(req.getParameter("spatialScales"));
-        }
-
-        if(req.getParameter("timeResolutions") != null){
-            list.add(req.getParameter("timeResolutions"));
-        }
-
-        if(req.getParameter("spatialResolutions") != null){
-            list.add(req.getParameter("spatialResolutions"));
-        }
-
-        if(req.getParameter("scales") != null){
-            list.add(req.getParameter("scales"));
-        }
-
-        if(req.getParameter("satelliteSensors") != null){
-            list.add(req.getParameter("satelliteSensors"));
-        }
-
+        //2.获取请求参数，前端不传入参数。参数来源于之前的全局查询和分类体系查询
+        HttpSession ses = req.getSession();
         List<Map> mapList = new ArrayList<>();
-        if(list.size() == 0){
-            //说明没有传入参数，查询的是分类体系静态页面
-            mapList = new Query().query_lab_to_cate();
+
+        //3. yongsession对象获取之前的参数
+        List<Integer> firstSearch = (List<Integer>)ses.getAttribute("firstSearch");
+        List<Integer> label_idlist = (List<Integer>) ses.getAttribute("label_idlist");
+
+        if (firstSearch != null){
+            if (label_idlist != null){
+                //存在S1C,S1CL,S1L,L，四种种情况因为是互斥的，故label_idlist表示其中一种情形
+                mapList = new Query().query_lab_to_cate(label_idlist);
+            }else {
+                //只存在S1这一种情况，但firstSearch表示该情形的结果与分类体系无关
+                mapList = new Query().query_lab_to_cate(null);
+            }
         }else {
-            //说明传入了标签参数，查询的是标签查询对于分类体系的联动改变
-            Query query = new Query();
-            query.query_link(list);
-            mapList = query.query_lab_to_cate();
+            if (label_idlist != null){
+                //存在CL，L两种情况，两种情况是互斥的，故label_idlist表示其中一种情形
+                mapList = new Query().query_lab_to_cate(label_idlist);
+            }else {
+                //没经过标签查询，直接对所有数据进行分类体系查询
+                mapList = new Query().query_lab_to_cate(null);
+            }
         }
 
         //3.将查询结果转换成json;借助工具类ObjectMapper
