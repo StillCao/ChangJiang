@@ -3,16 +3,19 @@ package front.data_order.servlet;
 import front.data_order.dao.InsertShopcar;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
  * Fun:
  * Created by CW on 2020/6/27 5:14 下午
  */
+@WebServlet("/dbShopcar")
 public class DbShopcar extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -28,7 +31,8 @@ public class DbShopcar extends HttpServlet {
         int data_id = Integer.parseInt(dataid);
         int status = Integer.parseInt(S_status);
         //3.执行入库操作
-        long time = new Date().getTime();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String time = sdf.format(new Date());
         int i = new InsertShopcar().insertShopcar(u_id, data_id, status, time);
         //4.判断入库是否成功
         if (i == 1){

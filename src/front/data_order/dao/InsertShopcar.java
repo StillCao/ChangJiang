@@ -19,7 +19,7 @@ public class InsertShopcar {
      * @param create_time
      * @return
      */
-    public int insertShopcar(int u_id,int data_id,int status ,long create_time){
+    public int insertShopcar(int u_id,int data_id,int status ,String create_time){
 
         String sql = "insert into data_shopcar (u_id,data_id,status,create_time) VALUES (?,?,?,?);";
         int i = template.update(sql,u_id,data_id,status,create_time);
