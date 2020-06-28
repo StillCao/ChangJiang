@@ -28,21 +28,22 @@ public class AddWaitingOrder extends HttpServlet {
         int u_id = Integer.parseInt(uid);
         int data_id = Integer.parseInt(dataid);
         int status = Integer.parseInt(S_status);
-        int i = 0;
+
         //3.执行入库操作
-        int rows = new OrderManage().judgeWaitingOrder(u_id, data_id, status);
+        int rows = new OrderManage().judgeWaitingOrder(u_id, data_id);
         if (rows == 1){
             //该数据订单已经为待提交状态或者在审核状态，不需要重新提交。
             resp.getWriter().append("OrderExist");
         }else{
-             i = new OrderManage().insertWaitingOrder(u_id, data_id, status);
+             int i = new OrderManage().insertWaitingOrder(u_id, data_id, status);
+            //4.待提交订单入库
+            if (i == 1){
+                resp.getWriter().append("true");
+            }else {
+                resp.getWriter().append("false");
+            }
         }
-        //4.待提交订单入库
-        if (i == 1){
-            resp.getWriter().append("true");
-        }else {
-            resp.getWriter().append("false");
-        }
+
 
     }
 
