@@ -45,7 +45,10 @@ public class UpLoadService {
      */
     public boolean InsertRelate(Attr_value attr_value, int basic_id) {
         UpLoadInsert insert = new UpLoadInsert();
-        if (attr_value.getV_id() == -1) { //新增标签，需要先插入attr_value表然后再插入关系表
+
+        int v_id = attr_value.getV_id();
+
+        if (insert.attrValueQuery(v_id)) { //先判断v_id 是否在 attr_value 表中 ，若为新增标签，需要先插入attr_value表然后再插入关系表
             int attr_id = insert.attrValueInsert(attr_value);
             if (attr_id == 0) return false;
             attr_value.setV_id(attr_id);

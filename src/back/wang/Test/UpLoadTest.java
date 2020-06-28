@@ -74,4 +74,11 @@ public class UpLoadTest {
         attr_value.setV_name("sadwqdqwd");
         System.out.println(new UpLoadInsert().attrValueInsert(attr_value));
     }
+
+    @org.junit.Test
+    public void attrValueQuery(){
+        System.out.println(new UpLoadInsert().attrValueQuery(1));
+    }
+
+
 }

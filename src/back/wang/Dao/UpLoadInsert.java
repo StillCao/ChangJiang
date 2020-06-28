@@ -60,5 +60,16 @@ public class UpLoadInsert {
         return keyHolder.getKey().intValue();
     }
 
+    /**
+     * 查询 attr_value 表里是否存在 v_id
+     * @param v_id 标签id
+     * @return 是否存在
+     */
+    public boolean attrValueQuery(int v_id){
+        String sql = "select count(*) from attr_value where v_id = ?";
+        int count = template.queryForObject(sql,Integer.class,v_id);
+        return count >= 1;
+    }
+
 
 }
