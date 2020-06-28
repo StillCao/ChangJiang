@@ -71,12 +71,11 @@ public class OrderManage {
      * 不能重复下单。
      * @param u_id
      * @param data_id
-     * @param status
      * @return
      */
-    public int judgeWaitingOrder(int u_id,int data_id,int status){
+    public int judgeWaitingOrder(int u_id,int data_id){
         String sql = "SELECT count(*) from order_confirm where userId =? and dataId =? and orderStatus in (0,1);";
-        int rows = template.update(sql,u_id, data_id,status);
+        int rows = template.update(sql,u_id, data_id);
         return rows;
     }
 
