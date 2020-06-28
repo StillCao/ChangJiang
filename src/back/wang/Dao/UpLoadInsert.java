@@ -2,19 +2,13 @@ package back.wang.Dao;
 
 import back.wang.Domain.BasicInfoAll;
 import front.basic_page.Domain.Attr_value;
-import front.basic_page.Domain.BasicData;
 import front.basic_page.Domain.RelateKeyNData;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import utils.JDBCUtils;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 
 /**
  * 描述:
@@ -36,7 +30,7 @@ public class UpLoadInsert {
      */
     public int basicDataInsert(BasicInfoAll data) {
         //id,name,sploc,docname,up_time,point1_lat,point1_lon,point2_lat,point2_lon,topic_w1,topic_w2,topic_w3,topic_cfi,da_summ,da_size,up_id,da_type
-        String sql = "Insert into basic_info(id,name,sploc,docname,up_time,point1_lat,point1_lon,point2_lat,point2_lon,topic_w1,topic_w2,topic_w3,topic_cfi,da_summ,da_size,da_url,up_id,da_type,image,uper_name,uper_place,file_url,sample_url,datm_range,da_source,da_method,da_projection,da_quality,da_refer) Values (null,:name,:sploc,:docname,:up_time,:point1_lat,:point1_lon,:point2_lat,:point2_lon,:topic_w1,:topic_w2,:topic_w3,:topic_cfi,:da_summ,:da_size,:da_url,:up_id,:da_type,:image,:uper_name,:uper_place,:file_url,:sample_url,:datm_range,:da_source,:da_method,:da_projection,:da_quality,:da_refer)";
+        String sql = "Insert into basic_info(id,name,sploc,docname,up_time,point1_lat,point1_lon,point2_lat,point2_lon,topic_w1,topic_w2,topic_w3,topic_cfi,da_summ,da_size,da_url,up_id,da_type,image,uper_name,uper_place,file_url,sample_url,datm_range,da_source,da_method,da_projection,da_quality,da_refer,subj_cfi) Values (null,:name,:sploc,:docname,:up_time,:point1_lat,:point1_lon,:point2_lat,:point2_lon,:topic_w1,:topic_w2,:topic_w3,:topic_cfi,:da_summ,:da_size,:da_url,:up_id,:da_type,:image,:uper_name,:uper_place,:file_url,:sample_url,:datm_range,:da_source,:da_method,:da_projection,:da_quality,:da_refer,:subj_cfi)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         npjTemplate.update(sql, new BeanPropertySqlParameterSource(data), keyHolder);

@@ -4,6 +4,12 @@ import back.wang.Dao.UpLoadInsert;
 import back.wang.Domain.BasicInfoAll;
 import front.basic_page.Domain.Attr_value;
 import front.basic_page.Domain.RelateKeyNData;
+import org.apache.commons.fileupload.FileItem;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * 描述:
@@ -30,6 +36,13 @@ public class UpLoadService {
         return id;
     }
 
+    /**
+     * 插入关系表
+     *
+     * @param attr_value Attr_value对象
+     * @param basic_id   关联的数据Id
+     * @return 是否插入成功
+     */
     public boolean InsertRelate(Attr_value attr_value, int basic_id) {
         UpLoadInsert insert = new UpLoadInsert();
         if (attr_value.getV_id() == -1) { //新增标签，需要先插入attr_value表然后再插入关系表
@@ -43,5 +56,29 @@ public class UpLoadService {
         relateKeyNData.setAt_val_id(attr_value.getV_id());
 
         return insert.relateInsert(relateKeyNData);
+    }
+
+    /** 保存文件流到指定的目录
+     * @param item FileItem 对象
+     * @param projDirPath 指定的目录
+     * @return 是否保存成功
+     */
+    public boolean SaveFile(FileItem item, String projDirPath) throws IOException {
+        File file = new File(projDirPath, item.getName());
+        InputStream is = item.getInputStream();
+        //创建文件输出流
+        FileOutputStream os = new FileOutputStream(file);
+        //将输入流中的数据写出到输出流中
+        int len = -1;
+        byte[] buf = new byte[1024];
+        while ((len = is.read(buf)) != -1) {
+            os.write(buf, 0, len);
+        }
+        //关闭流
+        os.close();
+        is.close();
+        //删除临时文件
+        item.delete();
+        return file.exists();
     }
 }

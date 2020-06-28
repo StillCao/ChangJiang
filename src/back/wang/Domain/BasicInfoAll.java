@@ -11,9 +11,9 @@ import java.util.Date;
  */
 
 public class BasicInfoAll {
-    private int id ;
-    private String name ;
-    private String  sploc;
+    private int id;
+    private String name;
+    private String sploc;
     private String docname;
     private Date up_time;
     private long point1_lat;
@@ -40,6 +40,7 @@ public class BasicInfoAll {
     private String da_projection;
     private String da_quality;
     private String da_refer;
+    private String subj_cfi;
 
     public int getId() {
         return id;
@@ -273,6 +274,14 @@ public class BasicInfoAll {
         this.da_refer = da_refer;
     }
 
+    public String getSubj_cfi() {
+        return subj_cfi;
+    }
+
+    public void setSubj_cfi(String subj_cfi) {
+        this.subj_cfi = subj_cfi;
+    }
+
     @Override
     public String toString() {
         return "BasicInfoAll{" +
@@ -305,6 +314,7 @@ public class BasicInfoAll {
                 ", da_projection='" + da_projection + '\'' +
                 ", da_quality='" + da_quality + '\'' +
                 ", da_refer='" + da_refer + '\'' +
+                ", subj_cfi='" + subj_cfi + '\'' +
                 '}';
     }
 }
