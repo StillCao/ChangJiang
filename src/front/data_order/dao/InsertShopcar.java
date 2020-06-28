@@ -32,25 +32,17 @@ public class InsertShopcar {
     }
 
     /**
-     * 2.根据数据id,查询数据的部分信息。
-     * @param id
-     * @return
-     */
-    public Shopcar queryUserShopcar(int id){
-        String sql = "select id,name,sploc,da_time,da_size from basic_info where id = ?";
-        Shopcar shopcar = template.queryForObject(sql, Shopcar.class, id);
-        return shopcar;
-    }
-
-    /**
-     * 3.查询用户购物车
+     * 2.用户购物车查询，左外连接
      * @param u_id
      * @return
      */
-    public List<DataId> queryShopcarId(int u_id){
-        String sql = "select data_id from data_shopcar where u_id = ?";
-        List<DataId> dataList= template.query(sql, new BeanPropertyRowMapper<>(DataId.class), u_id);
-        return dataList;
+    public List<Shopcar> queryUserShopcar(int u_id){
+        String sql = "select basic_info.id,basic_info.name,basic_info.sploc,basic_info.da_time,basic_info.da_size from basic_info INNER JOIN " +
+                "data_shopcar on data_shopcar.data_id = basic_info.id where u_id = ? ;";
+        List<Shopcar> shopcar = template.query(sql, new BeanPropertyRowMapper<>(Shopcar.class), u_id);
+        return shopcar;
     }
+
+
 
 }

@@ -3,7 +3,6 @@ package front.data_order.servlet;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import front.data_order.dao.InsertShopcar;
 import front.data_order.domain.Shopcar;
-import front.data_order.service.UserShopcar;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,8 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+
 import java.util.List;
 
 /**
@@ -31,7 +29,7 @@ public class QueShopcar extends HttpServlet {
         String uid = req.getParameter("u_id");
         int u_id = Integer.parseInt(uid);
         //3.执行查询操作
-        List<Shopcar> shopcars = new UserShopcar().userShopcar(u_id);
+        List<Shopcar> shopcars = new InsertShopcar().queryUserShopcar(u_id);
         //4.判断入库是否成功
         ObjectMapper mapper = new ObjectMapper();
         String result = mapper.writeValueAsString(shopcars);
