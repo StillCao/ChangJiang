@@ -74,8 +74,8 @@ public class OrderManage {
      * @return
      */
     public int judgeWaitingOrder(int u_id,int data_id){
-        String sql = "SELECT count(*) from order_confirm where userId =? and dataId =? and orderStatus in (0,1);";
-        int rows = template.update(sql,u_id, data_id);
+        String sql = "SELECT count(*) from order_confirm where userId =? and dataId =? and orderStatus in (0,1,-1);";
+        int rows = template.queryForObject(sql,Integer.class,u_id, data_id);
         return rows;
     }
 
