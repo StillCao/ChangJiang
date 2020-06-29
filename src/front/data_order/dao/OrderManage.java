@@ -1,6 +1,7 @@
 package front.data_order.dao;
 
 import front.data_order.domain.OrderChart;
+import front.data_order.domain.UserConfi;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import utils.JDBCUtils;
@@ -56,6 +57,18 @@ public class OrderManage {
     }
 
     /**
+     * 3.2管理员-获取所有用户的待审核订单
+     * @param orderStatus
+     * @return
+     */
+    public List<OrderChart> checkAllOrder(int orderStatus){
+        String sql = "SELECT  o.userId,o.dataId,o.orderStatus,b.name,b.da_time,b.sploc,b.da_size from " +
+                "order_confirm AS o LEFT JOIN basic_info AS b on o.dataId = b.id where  orderStatus = ?;";
+        List<OrderChart> orderCharts = template.query(sql, new BeanPropertyRowMapper<>(OrderChart.class),orderStatus);
+        return orderCharts;
+    }
+
+    /**
      * 4.修改订单状态
      * @param u_id
      * @param data_id
@@ -81,7 +94,13 @@ public class OrderManage {
         return rows;
     }
 
-
-
+    /**
+     * 6.查询当前用户的信息
+     */
+    public UserConfi queryUser(int id){
+        String sql = "select realName,workUnit,email,phone from user where id = ? ;";
+        UserConfi uc = template.queryForObject(sql, UserConfi.class, id);
+        return uc;
+    }
 
 }
