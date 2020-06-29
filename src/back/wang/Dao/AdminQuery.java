@@ -125,5 +125,23 @@ public class AdminQuery {
         return success >= 1;
     }
 
+    /**
+     * admin登录
+     *
+     * @param admin
+     * @return 登录成功返回admin 的 id , 登录失败返回 -1
+     */
+    public int loginAdmin(Admin admin) {
+        String sql = "select id from admin where account = ? and password = ?";
+
+        try {
+            return template.queryForObject(sql, Integer.class, admin.getAccount(), admin.getPassword());
+        }
+        catch (DataAccessException e){
+            return -1;
+        }
+
+    }
+
 
 }
