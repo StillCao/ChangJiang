@@ -24,6 +24,9 @@ public class OrderChart {
         this.da_size = da_size;
     }
 
+    public OrderChart() {
+    }
+
     public int getUserId() {
         return userId;
     }

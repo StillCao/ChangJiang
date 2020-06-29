@@ -23,8 +23,10 @@ public class OrderManage {
      * @return
      */
     public int insertWaitingOrder(int u_id,int data_id,int orderStatus){
-        String sql = "update order_confirm set status = 0 where uId = ? and dataId = ? ;";
-        int rows = template.update(sql);
+        //此处sql为插入记录，而不是修改
+        //String sql = "update order_confirm set orderStatus = ? where userId = ? and dataId = ? ;";
+        String sql = "insert into order_confirm  (userId,dataId,orderStatus) values(?,?,?);";
+        int rows = template.update(sql,u_id,data_id,orderStatus);
         return rows;
     }
 
@@ -75,7 +77,7 @@ public class OrderManage {
      */
     public int judgeWaitingOrder(int u_id,int data_id){
         String sql = "SELECT count(*) from order_confirm where userId =? and dataId =? and orderStatus in (0,1);";
-        int rows = template.update(sql,u_id, data_id);
+        int rows = template.queryForObject(sql,Integer.class,u_id, data_id);
         return rows;
     }
 
