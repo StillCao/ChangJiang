@@ -35,6 +35,11 @@ public class UpLoadServlet extends HttpServlet {
         if (!ServletFileUpload.isMultipartContent(req)) {
             throw new RuntimeException("当前请求不支持文件上传！");
         }
+
+        req.setCharacterEncoding("utf-8");
+        resp.setContentType("text/html;charset=utf-8");
+        resp.setHeader("Access-Control-Allow-Origin", "*"); //解决跨域问题，让返回结果可远程调用
+
         //upload对象初始化
 
         //创建一个fileItem工厂
@@ -46,7 +51,9 @@ public class UpLoadServlet extends HttpServlet {
         //设置临时文件，来缓存上传的文件
         String tempPath = this.getServletContext().getRealPath("/WEB-INF/tempFile");
         File temp = new File(tempPath);
-        if (!temp.exists()){temp.mkdir();}
+        if (!temp.exists()) {
+            temp.mkdir();
+        }
         factory.setRepository(temp);
 
         //创建文件上传核心组件
@@ -56,11 +63,12 @@ public class UpLoadServlet extends HttpServlet {
 
 
         List<FileItem> items = null;
-        String JsonString = ""; //存普通表单的JsonString对象
         String imgPath = "";    //缩略图绝对路径
         String proPath = "";    //数据绝对路径
         UpLoadService service = new UpLoadService();
-
+        BasicInfoAll basic_info = null;    //JSONString转出的BasicInfoAll对象
+        List<Attr_value> attr_valueList = null;    //JSONString转出的Attr_value列表对象
+        String projName = ""; //项目名
 
         //item分类处理
         try {
@@ -71,22 +79,35 @@ public class UpLoadServlet extends HttpServlet {
         }
         //遍历item
         if (items != null) {
-            for (FileItem item : items) {
+            for (FileItem item : items) {//先循环一次，找到表单
                 if (item.isFormField()) { //若item为普通表单项
                     String name = item.getFieldName();
                     String value = item.getString("utf-8");
                     if (name.equals("data")) {
-                        JsonString = value;
+                        JSONObject jsonObject = JSON.parseObject(value);
+                        JSONObject basic_infoObj = jsonObject.getJSONObject("basic_info");
+                        JSONArray attr_valueArray = jsonObject.getJSONArray("attr_value");
+                        basic_info = JSON.parseObject(basic_infoObj.toJSONString(), BasicInfoAll.class);
+                        attr_valueList = JSONObject.parseArray(attr_valueArray.toString(), Attr_value.class);
+                        if (basic_info != null && !basic_info.getName().equals("")) {
+                            projName = basic_info.getName();
+                        }
                     }
                     System.out.println(name + ":" + value);
+                    break;
+                }
+            }
 
-                } else { //若item为文件表单项目
+            for (FileItem item : items) {   //再循环一次，插值
+                if (!item.isFormField()) {  //若item为文件表单项目
                     String rootDirPath = "C:\\Users\\Administrator\\Desktop\\长江中游地学数据集\\";
+//                    String rootDirPath = "D:\\长江中游地学数据集\\";
                     String fileName = item.getName();
-                    String projName = item.getName();
+//                    String projName = item.getName();
+
                     String subfix = "";
                     if (fileName.contains(".")) {
-                        projName = fileName.split("\\.")[0];
+//                        projName = fileName.split("\\.")[0];
                         subfix = fileName.split("\\.")[1];
                     }
                     String projDirPath = rootDirPath + projName;
@@ -120,15 +141,9 @@ public class UpLoadServlet extends HttpServlet {
             }
         }
 
-
-        JSONObject jsonObject = JSON.parseObject(JsonString);
-        JSONObject basic_infoObj = jsonObject.getJSONObject("basic_info");
-        JSONArray attr_valueArray = jsonObject.getJSONArray("attr_value");
-
-        BasicInfoAll basic_info = JSON.parseObject(basic_infoObj.toJSONString(), BasicInfoAll.class);
-        List<Attr_value> attr_valueList = JSONObject.parseArray(attr_valueArray.toString(), Attr_value.class);
-//        Attr_value attr_value = JSON.parseObject(attr_valueObj.toJSONString(), Attr_value.class);
-
+        if (basic_info == null) {
+            return;
+        }
 
         if (new File(proPath).exists()) {
             basic_info.setDa_url(proPath);
@@ -143,6 +158,9 @@ public class UpLoadServlet extends HttpServlet {
         int basicId = service.InsertBasic(basic_info);  //插入基本数据
         if (basicId != 0) {
             result.append("插入基本信息表成功！\n");
+            if (attr_valueList == null) {
+                return;
+            }
             attr_valueList.forEach(attr_value -> {
                 if (service.InsertRelate(attr_value, basicId)) {  //插入数据主题词关系表
                     result.append(attr_value.getV_name()).append("插入数据主题词关系表成功！\n");

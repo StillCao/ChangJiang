@@ -111,5 +111,29 @@ public class AdminServlet extends BaseServlet {
 
     }
 
+    /**
+     * 管理员登录
+     */
+    public void login(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        String account = req.getParameter("account");
+        String password = req.getParameter("password");
+
+        if (account.equals("")||password.equals("")){
+            return;
+        }
+
+        Admin admin = new Admin();
+        admin.setAccount(account);
+        admin.setPassword(password);
+
+        AdminService adminService = new AdminService();
+        int id = adminService.adminLogin(admin);
+
+        resp.setContentType("text/html;charset=utf-8");
+        resp.setHeader("Access-Control-Allow-Origin", "*");//解决跨域问题，开发完毕时应该关闭
+        resp.getWriter().append(String.valueOf(id));
+
+    }
+
 
 }

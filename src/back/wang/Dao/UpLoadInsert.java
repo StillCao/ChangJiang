@@ -71,5 +71,15 @@ public class UpLoadInsert {
         return count >= 1;
     }
 
+    /**
+     * 查询 attr_value 表里是否存在 v_name
+     * @param v_name 标签名称
+     * @return 是否存在
+     */
+    public boolean attrValueQueryName(String v_name){
+        String sql = "select count(*) from attr_value where v_name = ?";
+        int count = template.queryForObject(sql,Integer.class,v_name);
+        return count >= 1;
+    }
 
 }

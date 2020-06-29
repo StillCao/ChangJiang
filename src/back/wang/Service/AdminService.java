@@ -101,4 +101,14 @@ public class AdminService {
         AdminQuery adminQuery = new AdminQuery();
         return adminQuery.deleteAdminById(id);
     }
+
+    /**
+     * 管理员登录
+     * @param admin account 和 password 不为空的 admin
+     * @return
+     */
+    public int adminLogin(Admin admin){
+        AdminQuery adminQuery = new AdminQuery();
+        return adminQuery.loginAdmin(admin);
+    }
 }
