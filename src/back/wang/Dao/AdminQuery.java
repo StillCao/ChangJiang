@@ -89,7 +89,7 @@ public class AdminQuery {
     public boolean addAdmin(Admin admin) {
         String sql = "insert into admin values(null,?,?,?,?,?,?,?)";
         try {
-            template.update(sql, admin.getAccount(), admin.getPassword(), admin.getType(),admin.getEmail(),admin.getPhone(),admin.getWorkUnit(),admin.getAddr());
+            template.update(sql, admin.getAccount(), admin.getPassword(), admin.getType(), admin.getEmail(), admin.getPhone(), admin.getWorkUnit(), admin.getAddr());
             return true;
         } catch (DataAccessException e) {
             e.printStackTrace();
@@ -100,12 +100,12 @@ public class AdminQuery {
     /**
      * 修改admin信息
      *
-     * @param admin
+     * @param admin Admin对象
      * @return 修改成功与否
      */
     public boolean updateAdmin(Admin admin) {
-        String sql = "UPDATE admin SET account = ? ,password = ?, type = ? WHERE id = ?";
-        int success = template.update(sql, admin.getAccount(), admin.getPassword(), admin.getType(), admin.getId());
+        String sql = "UPDATE admin SET account = ? ,password = ?, type = ?, email = ? , phone = ?, workUnit =?, addr = ? WHERE id = ?";
+        int success = template.update(sql, admin.getAccount(), admin.getPassword(), admin.getType(), admin.getEmail(), admin.getPhone(), admin.getWorkUnit(), admin.getAddr(), admin.getId());
         return success >= 1;
     }
 
@@ -136,8 +136,7 @@ public class AdminQuery {
 
         try {
             return template.queryForObject(sql, Integer.class, admin.getAccount(), admin.getPassword());
-        }
-        catch (DataAccessException e){
+        } catch (DataAccessException e) {
             return -1;
         }
 
