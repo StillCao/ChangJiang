@@ -1,9 +1,12 @@
 package back.wang.Test;
 
 import back.wang.Dao.AdminQuery;
+import back.wang.Dao.DownAimInsert;
 import back.wang.Dao.UpLoadInsert;
 import back.wang.Domain.Admin;
 import back.wang.Domain.BasicInfoAll;
+import back.wang.Domain.Downaim;
+import back.wang.Domain.Order_confirm;
 import back.wang.Service.UpLoadService;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -13,9 +16,8 @@ import front.basic_page.Domain.BasicData;
 import front.basic_page.Domain.TypeLevel2;
 import org.junit.Test;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 描述:
@@ -122,6 +124,50 @@ public class UpLoadTest {
         admin.setPassword("3333333333");
         System.out.println(adminQuery.loginAdmin(admin));
 
+    }
+
+    @org.junit.Test
+    public void Time() {
+        System.out.println(new Date().getTime());
+    }
+
+    @org.junit.Test
+    public void printDownAimFields() {
+        Downaim downaim = new Downaim();
+        String data = downaim.toString();
+        data = data.replaceAll("(=)(.*?)(,)", "");
+//        data = data.replaceAll(" ",",");
+        data = data.replaceAll(" ", ",:");
+        System.out.println(data);
+    }
+
+    @org.junit.Test
+    public void String2List() {
+        String s = "123,123,434";
+        List<String> strings = Arrays.asList((s.split(",")));
+        List<Integer> codesInteger = strings.stream().map(Integer::parseInt).collect(Collectors.toList());
+
+        System.out.println(codesInteger);
+    }
+
+    @org.junit.Test
+    public void UpDateOrderConfirm() {
+        DownAimInsert insert = new DownAimInsert();
+        Order_confirm order_confirm = new Order_confirm();
+        order_confirm.setDataId(1);
+        order_confirm.setUserId(1);
+        order_confirm.setDown_aim(1);
+
+        int id = insert.QueryOrderConfirmByIds(order_confirm.getUserId(), order_confirm.getDataId());
+        order_confirm.setId(2);
+
+        System.out.println(new DownAimInsert().UpDateOrderConfirm(order_confirm));
+    }
+
+
+    @org.junit.Test
+    public void QueryOrderConfirmByIds() {
+        System.out.println(new DownAimInsert().QueryOrderConfirmByIds(1, 2));
     }
 
 

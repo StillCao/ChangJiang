@@ -87,9 +87,9 @@ public class AdminQuery {
      * @return 返回插入成功与否
      */
     public boolean addAdmin(Admin admin) {
-        String sql = "insert into admin values(null,?,?,?)";
+        String sql = "insert into admin values(null,?,?,?,?,?,?,?)";
         try {
-            template.update(sql, admin.getAccount(), admin.getPassword(), admin.getType());
+            template.update(sql, admin.getAccount(), admin.getPassword(), admin.getType(),admin.getEmail(),admin.getPhone(),admin.getWorkUnit(),admin.getAddr());
             return true;
         } catch (DataAccessException e) {
             e.printStackTrace();
