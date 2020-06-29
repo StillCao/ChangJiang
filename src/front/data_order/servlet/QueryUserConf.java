@@ -15,7 +15,7 @@ import java.io.IOException;
  * Fun: 获取下载数据的当前用户信息。
  * Created by CW on 2020/6/27 5:14 下午
  */
-@WebServlet("/dbShopcar")
+@WebServlet("/queryUserConf")
 public class QueryUserConf extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
