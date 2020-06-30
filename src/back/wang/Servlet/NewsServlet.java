@@ -103,7 +103,13 @@ public class NewsServlet extends BaseServlet {
         int id = Integer.parseInt(idString);
 
         NewsService newsService = new NewsService();
-//        if (newsService)
+        if (newsService.newsDelete(id)) {
+            result = "1";
+        }
+
+        resp.setContentType("text/html;charset=utf-8");
+        resp.setHeader("Access-Control-Allow-Origin", "*");//解决跨域问题，开发完毕时应该关闭
+        resp.getWriter().append(result);
     }
 
     /**
