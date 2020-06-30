@@ -1,14 +1,12 @@
 package back.wang.Servlet;
 
-import back.wang.Domain.Admin;
 import back.wang.Domain.News;
-import back.wang.Service.AdminService;
 import back.wang.Service.NewsService;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import front.basic_page.Servlet.BaseServlet;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.ConvertUtils;
-import org.apache.commons.beanutils.Converter;
 import org.apache.commons.beanutils.converters.DateConverter;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
@@ -28,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * 描述:
@@ -169,7 +168,9 @@ public class NewsServlet extends BaseServlet {
 
         NewsService service = new NewsService();
 
-        List<String> picturePaths  = new ArrayList<>();
+        List<String> picturePaths = new ArrayList<>();
+        AtomicInteger error_count = new AtomicInteger();    //错误数
+
         //item分类处理
         try {
             //解析请求，或取到所有的item
@@ -181,11 +182,13 @@ public class NewsServlet extends BaseServlet {
         if (items != null) {
             items.forEach(item -> {
                 if (!item.isFormField()) { //若item为文件表单项目
-//                    String rootDirPath = "C:\\ftp\\ChangJiang";
-                    String rootDirPath = "D:\\ftp\\ChangJiang";
+                    String rootDirPath = "C:\\ftp\\ChangJiang";
+//                    String rootDirPath = "D:\\ftp\\ChangJiang";
+                    String rootUrl = "http://101.37.83.223:8025/";
                     String fileFolderName = item.getFieldName();
                     String fileName = item.getName();
                     String projDirPath = rootDirPath + File.separator + fileFolderName;
+                    String projUrl = rootUrl + fileFolderName;
                     File projDir = new File(projDirPath);
                     if (!projDir.exists()) {
                         projDir.mkdir();
@@ -197,24 +200,33 @@ public class NewsServlet extends BaseServlet {
                     //判断文件是否重名或者存在
                     try {
                         if (file.exists()) {
-                            resp.getWriter().append("文件已经存在或者重名！");
+                            error_count.addAndGet(1);
+                            resp.getWriter().append("errno:").append(Character.highSurrogate(error_count.get()));
+                            resp.getWriter().append("caused by:文件已经存在或者重名！");
                             return;
                         }
                         if (service.SaveFile(item, projDirPath)) {
-                            picturePaths.add(file.getAbsolutePath());
+                            String picHttpUrl = projUrl + "/" + file.getName();
+                            picturePaths.add(picHttpUrl);
                         } else {
-                            resp.getWriter().append("文件上传失败！");
-                            return;
+                            error_count.addAndGet(1);
+                            resp.getWriter().append("errno:").append(Character.highSurrogate(error_count.get()));
+                            resp.getWriter().append("caused by:文件上传失败！");
                         }
                     } catch (IOException e) {
+                        error_count.addAndGet(1);
                         e.printStackTrace();
                     }
                 }
             });
         }
 
+        JSONObject object = new JSONObject();
+        object.put("errno", error_count.get());
+        object.put("data", picturePaths);
+
         resp.setContentType("text/html;charset=utf-8");
         resp.setHeader("Access-Control-Allow-Origin", "*");//解决跨域问题，开发完毕时应该关闭
-        resp.getWriter().append(JSON.toJSONString(picturePaths));
+        resp.getWriter().append(JSON.toJSONString(object));
     }
 }
