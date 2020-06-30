@@ -20,7 +20,7 @@ public class NewsTest {
     @org.junit.Test
     public void queryAllAdmins() {
         List<News> news = new NewsQuery().queryNewsByKeyLikeByPage("title", "国家", 0, 10);
-        System.out.println(news.size());
+        System.out.println(news);
     }
 
     @org.junit.Test

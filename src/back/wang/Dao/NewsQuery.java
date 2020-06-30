@@ -33,7 +33,7 @@ public class NewsQuery {
      */
     public List<News> queryNewsByKeyLikeByPage(String key, String value, int startPos, int count) {
         value = "%" + value + "%";
-        String sql = "select * from news where " + key + " like '" + value + "' limit ?,?";
+        String sql = "select * from news where " + key + " like '" + value + "'  Order By DATE Desc limit ?,? ";
         return template.query(sql, new BeanPropertyRowMapper<>(News.class), startPos, count);
     }
 

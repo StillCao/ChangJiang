@@ -6,6 +6,7 @@ import back.wang.Domain.Admin;
 import back.wang.Domain.News;
 import back.wang.Domain.Page;
 import com.alibaba.fastjson.JSON;
+import org.springframework.dao.DataAccessException;
 
 
 import java.io.File;
@@ -75,14 +76,18 @@ public class NewsService {
      */
     public boolean newsDelete(int id) {
         NewsQuery newsQuery = new NewsQuery();
+        if (id > 0) {
+            //先删除照片
+            try {
+                String pictureFolder = newsQuery.queryNewsAddr(id);
+                File folder = new File(pictureFolder);
+                if (folder.exists()) {
+                    folder.delete();
+                }
+            } catch (DataAccessException e) {
+            }
 
-        //先删除照片
-        String pictureFolder = newsQuery.queryNewsAddr(id);
-        File folder = new File(pictureFolder);
-        if (folder.exists()){
-            folder.delete();
-        }
-        if (id > 0 ){ //再进行数据库删除
+            //再进行数据库删除
             return newsQuery.deleteNews(id);
         }
         return false;
@@ -99,11 +104,14 @@ public class NewsService {
         int id = news.getId();
 
         //更改图片文件夹名称，保持与title一致
-        String addr = news.getLocaladdr();
-        String title = news.getTitle();
-        File fileFolder = new File(addr);
-        if (fileFolder.exists()) {
-            fileFolder.renameTo(new File(fileFolder.getParent(),title));
+        try {
+            String addr = news.getLocaladdr();
+            String title = news.getTitle();
+            File fileFolder = new File(addr);
+            if (fileFolder.exists()) {
+                fileFolder.renameTo(new File(fileFolder.getParent(), title));
+            }
+        } catch (Exception e) {
         }
 
         if (id > 0) { //再进行数据库修改
