@@ -92,4 +92,10 @@ public class NewsTest {
         filefolder.renameTo(new File(filefolder.getParent() + "ahah"));
     }
 
+    @org.junit.Test
+    public void deleteFile() {
+        File file = new File("D://长江中游地学数据集//test.txt");
+        file.delete();
+    }
+
 }

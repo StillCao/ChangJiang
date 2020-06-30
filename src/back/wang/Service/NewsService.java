@@ -124,4 +124,17 @@ public class NewsService {
         item.delete();
         return file.exists();
     }
+
+    /**
+     * 删除新闻图片
+     * @param picPath 图片的绝对路径
+     * @return 是否删除成功
+     */
+    public boolean deletePictures(String picPath){
+        File file = new File(picPath);
+        if (!file.exists()){
+            return true;
+        }
+        return file.delete();
+    }
 }

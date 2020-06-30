@@ -22,10 +22,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -231,6 +228,32 @@ public class NewsServlet extends BaseServlet {
      * 新闻图片删除
      */
     public void deletePictures(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String picNames ;
+        String picNamesString  = req.getParameter("picNames");
+        List<String> picNames = new ArrayList<>();
+        NewsService service = new NewsService();
+//        String rootPath = "C://ftp//ChangJiang";
+        String rootPath = "D://ftp";
+        List<String> result = new ArrayList<>();
+        if (picNamesString.contains(",")){
+            String[] picNamesSplits = picNamesString.split(",");
+            picNames.addAll(Arrays.asList(picNamesSplits));
+        }
+        else {
+            picNames.add(picNamesString);
+        }
+        picNames.forEach(picName->{
+            String picPath = rootPath + File.separator + picName;
+            String res = picName;
+            if(service.deletePictures(picPath)){
+                res += "删除成功";
+            }else res += "删除失败";
+            result.add(res);
+        });
+
+        resp.setContentType("text/html;charset=utf-8");
+        resp.setHeader("Access-Control-Allow-Origin", "*");//解决跨域问题，开发完毕时应该关闭
+        resp.getWriter().append(JSON.toJSONString(result));
+
+
     }
 }
