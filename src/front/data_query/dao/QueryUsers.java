@@ -35,7 +35,7 @@ public class QueryUsers {
         map.put("currentPage",currentpage);
 
         //3. 封装当前页码的数据
-        int index = (currentpage - 1) * pagesize + 1;//这是索引变量，指向该页码下的第一条数据
+        int index = (currentpage - 1) * pagesize;//这是索引变量，指向该页码下的第一条数据
         int count = 0;//计算存储该页码下数据的集合里已经存下的数据条数
         List<User> p_list = new ArrayList<>();//存放当前页码下的数据总数
         for (int i = index; i < u_list.size(); i++) {
