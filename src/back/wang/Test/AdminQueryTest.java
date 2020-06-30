@@ -44,9 +44,13 @@ public class AdminQueryTest {
     @org.junit.Test
     public void updateAdmin() {
         Admin admin = new Admin();
-        admin.setAccount("wwxx");
+        admin.setAccount("司马光");
         admin.setPassword("123456");
-        admin.setId(3);
+        admin.setId(4);
+        admin.setEmail("aaaa");
+        admin.setPhone("213214");
+        admin.setWorkUnit("地阿达");
+        admin.setAddr("地adadad阿达");
         System.out.println(new AdminQuery().updateAdmin(admin));
     }
 
