@@ -12,6 +12,10 @@ public class BasicData {
     private String  sploc;
     private String docname;
     private Date up_time;
+    private String uper_name;
+    private String uper_place;
+    private String datm_range;
+    private String subj_cfi;
     private long point1_lat;
     private long point1_lon;
     private long point2_lat;
@@ -25,30 +29,13 @@ public class BasicData {
     private String da_url;
     private int up_id;
     private int da_type;
-
+    private String da_source;
+    private String da_method;
+    private String da_projection;
+    private String da_quality;
+    private String da_refer;
 
     public BasicData() {
-    }
-
-    public BasicData(int id, String name, String sploc, String docname, Date up_time, long point1_lat, long point1_lon, long point2_lat, long point2_lon, String topic_w1, String topic_w2, String topic_w3, String topic_cfi, String da_summ, String da_size, String da_url, int up_id, int da_type) {
-        this.id = id;
-        this.name = name;
-        this.sploc = sploc;
-        this.docname = docname;
-        this.up_time = up_time;
-        this.point1_lat = point1_lat;
-        this.point1_lon = point1_lon;
-        this.point2_lat = point2_lat;
-        this.point2_lon = point2_lon;
-        this.topic_w1 = topic_w1;
-        this.topic_w2 = topic_w2;
-        this.topic_w3 = topic_w3;
-        this.topic_cfi = topic_cfi;
-        this.da_summ = da_summ;
-        this.da_size = da_size;
-        this.da_url = da_url;
-        this.up_id = up_id;
-        this.da_type = da_type;
     }
 
     public int getId() {
@@ -89,6 +76,38 @@ public class BasicData {
 
     public void setUp_time(Date up_time) {
         this.up_time = up_time;
+    }
+
+    public String getUper_name() {
+        return uper_name;
+    }
+
+    public void setUper_name(String uper_name) {
+        this.uper_name = uper_name;
+    }
+
+    public String getUper_place() {
+        return uper_place;
+    }
+
+    public void setUper_place(String uper_place) {
+        this.uper_place = uper_place;
+    }
+
+    public String getDatm_range() {
+        return datm_range;
+    }
+
+    public void setDatm_range(String datm_range) {
+        this.datm_range = datm_range;
+    }
+
+    public String getSubj_cfi() {
+        return subj_cfi;
+    }
+
+    public void setSubj_cfi(String subj_cfi) {
+        this.subj_cfi = subj_cfi;
     }
 
     public long getPoint1_lat() {
@@ -195,6 +214,46 @@ public class BasicData {
         this.da_type = da_type;
     }
 
+    public String getDa_source() {
+        return da_source;
+    }
+
+    public void setDa_source(String da_source) {
+        this.da_source = da_source;
+    }
+
+    public String getDa_method() {
+        return da_method;
+    }
+
+    public void setDa_method(String da_method) {
+        this.da_method = da_method;
+    }
+
+    public String getDa_projection() {
+        return da_projection;
+    }
+
+    public void setDa_projection(String da_projection) {
+        this.da_projection = da_projection;
+    }
+
+    public String getDa_quality() {
+        return da_quality;
+    }
+
+    public void setDa_quality(String da_quality) {
+        this.da_quality = da_quality;
+    }
+
+    public String getDa_refer() {
+        return da_refer;
+    }
+
+    public void setDa_refer(String da_refer) {
+        this.da_refer = da_refer;
+    }
+
     @Override
     public String toString() {
         return "BasicData{" +
@@ -203,6 +262,10 @@ public class BasicData {
                 ", sploc='" + sploc + '\'' +
                 ", docname='" + docname + '\'' +
                 ", up_time=" + up_time +
+                ", uper_name='" + uper_name + '\'' +
+                ", uper_place='" + uper_place + '\'' +
+                ", datm_range='" + datm_range + '\'' +
+                ", subj_cfi='" + subj_cfi + '\'' +
                 ", point1_lat=" + point1_lat +
                 ", point1_lon=" + point1_lon +
                 ", point2_lat=" + point2_lat +
@@ -216,6 +279,11 @@ public class BasicData {
                 ", da_url='" + da_url + '\'' +
                 ", up_id=" + up_id +
                 ", da_type=" + da_type +
+                ", da_source='" + da_source + '\'' +
+                ", da_method='" + da_method + '\'' +
+                ", da_projection='" + da_projection + '\'' +
+                ", da_quality='" + da_quality + '\'' +
+                ", da_refer='" + da_refer + '\'' +
                 '}';
     }
 }
