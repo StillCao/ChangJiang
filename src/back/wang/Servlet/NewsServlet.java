@@ -144,6 +144,7 @@ public class NewsServlet extends BaseServlet {
      * 新闻图片上传
      */
     public void uploadPictures(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("text/html;charset=utf-8");
         if (!ServletFileUpload.isMultipartContent(req)) {
             throw new RuntimeException("当前请求不支持文件上传！");
         }
