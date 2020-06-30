@@ -18,12 +18,12 @@ public class QueryBasicData {
     /**
      * 1.根据id,查询用户信息
      *
-     * @param u_id
+     * @param id
      * @return
      */
-    public User queryUserById(int u_id) {
-        String sql = "select * from user where u_id = ? ;";
-        List<User> userList = template.query(sql, new BeanPropertyRowMapper<>(User.class), u_id);
+    public User queryUserById(int id) {
+        String sql = "select id,account,phone,email,workUnit,addr from admin where id = ? ;";
+        List<User> userList = template.query(sql, new BeanPropertyRowMapper<>(User.class), id);
         User user = userList.get(0);
         return user;
     }
@@ -35,7 +35,8 @@ public class QueryBasicData {
      * @return
      */
     public BasicData queryBasicDataById(int id) {
-        String sql = "select id,name,sploc,docname,up_time,point1_lat,point1_lon,point2_lat,point2_lon,topic_w1,topic_w2,topic_w3,topic_cfi,da_summ,da_size,up_id,da_type from basic_info where id = ? ;";
+        String sql = "select id,name,sploc,docname,up_time,uper_name,uper_place,datm_range,subj_cfi,point1_lat,point1_lon,point2_lat,point2_lon,topic_w1,topic_w2,topic_w3,topic_cfi," +
+                "da_summ,da_size,up_id,da_type,da_source,da_method,da_projection,da_quality,da_refer from basic_info where id = ? ;";
         List<BasicData> basicDataList = template.query(sql, new BeanPropertyRowMapper<>(BasicData.class), id);
         BasicData basicData = basicDataList.get(0);
         return basicData;

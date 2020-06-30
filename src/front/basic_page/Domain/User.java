@@ -7,71 +7,39 @@ import java.util.Date;
  * Created by CW on 2020/6/17 5:01 下午
  */
 public class User {
-    private int u_id;
-    private String userName;
-    private String password;
-    private String realName;
-    private String email;
+    private int id;
+    private String account;
     private String phone;
+    private String email;
     private String workUnit;
     private String addr;
-    private Date createTime;
-    private Date updateTime;
 
     public User() {
     }
 
-    public User(int u_id, String userName, String password, String realName, String email, String phone, String workUnit, String addr, Date createTime, Date updateTime) {
-        this.u_id = u_id;
-        this.userName = userName;
-        this.password = password;
-        this.realName = realName;
-        this.email = email;
+    public User(int id, String account, String phone, String email, String workUnit, String addr) {
+        this.id = id;
+        this.account = account;
         this.phone = phone;
+        this.email = email;
         this.workUnit = workUnit;
         this.addr = addr;
-        this.createTime = createTime;
-        this.updateTime = updateTime;
     }
 
-    public int getU_id() {
-        return u_id;
+    public int getId() {
+        return id;
     }
 
-    public void setU_id(int u_id) {
-        this.u_id = u_id;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getAccount() {
+        return account;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getRealName() {
-        return realName;
-    }
-
-    public void setRealName(String realName) {
-        this.realName = realName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
+    public void setAccount(String account) {
+        this.account = account;
     }
 
     public String getPhone() {
@@ -80,6 +48,14 @@ public class User {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getWorkUnit() {
@@ -98,35 +74,15 @@ public class User {
         this.addr = addr;
     }
 
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
-
     @Override
     public String toString() {
         return "User{" +
-                "u_id=" + u_id +
-                ", userName='" + userName + '\'' +
-                ", password='" + password + '\'' +
-                ", realName='" + realName + '\'' +
-                ", email='" + email + '\'' +
+                "id=" + id +
+                ", account='" + account + '\'' +
                 ", phone='" + phone + '\'' +
+                ", email='" + email + '\'' +
                 ", workUnit='" + workUnit + '\'' +
                 ", addr='" + addr + '\'' +
-                ", createTime=" + createTime +
-                ", updateTime=" + updateTime +
                 '}';
     }
 }
