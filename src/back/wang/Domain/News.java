@@ -13,9 +13,9 @@ import java.util.Date;
 public class News {
     private int id;
     private String title;
-    private Date date;
+    private Date DATE;
     private String source;
-    private int type;
+    private int TYPE;
     private String localaddr;
     private String news_cont;
 
@@ -35,12 +35,12 @@ public class News {
         this.title = title;
     }
 
-    public Date getDate() {
-        return date;
+    public Date getDATE() {
+        return DATE;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setDATE(Date DATE) {
+        this.DATE = DATE;
     }
 
     public String getSource() {
@@ -51,12 +51,12 @@ public class News {
         this.source = source;
     }
 
-    public int getType() {
-        return type;
+    public int getTYPE() {
+        return TYPE;
     }
 
-    public void setType(int type) {
-        this.type = type;
+    public void setTYPE(int TYPE) {
+        this.TYPE = TYPE;
     }
 
     public String getLocaladdr() {
@@ -80,9 +80,9 @@ public class News {
         return "News{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
-                ", date=" + date +
+                ", date=" + DATE +
                 ", source='" + source + '\'' +
-                ", type=" + type +
+                ", type=" + TYPE +
                 ", localaddr='" + localaddr + '\'' +
                 ", news_cont='" + news_cont + '\'' +
                 '}';
