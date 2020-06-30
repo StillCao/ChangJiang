@@ -2,6 +2,7 @@ package back.wang.Test;
 
 import back.wang.Dao.AdminQuery;
 import back.wang.Domain.Admin;
+import front.basic_page.Dao.QueryBasicData;
 
 import java.util.List;
 
@@ -61,6 +62,11 @@ public class AdminQueryTest {
         admin.setPassword("123456");
         admin.setId(3);
         System.out.println(new AdminQuery().queryAdminByAccountLikeByPage("wwx",0,10));
+    }
+
+    @org.junit.Test
+    public void queryUserById() {
+        System.out.println(new QueryBasicData().queryUserById(12));
     }
 
 
