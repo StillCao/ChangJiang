@@ -41,13 +41,15 @@ public class NewsTest {
     public void insertNews() {
         News news = new News();
         Date date = new Date();
-        news.setType(1);
+        news.setTYPE(1);
         news.setLocaladdr("asdqwd");
         news.setNews_cont("dwqdwqdwqdwqdqwdqwd");
         news.setTitle("qwd");
         news.setSource("asdqd");
-        news.setDate(date);
-        System.out.println(new NewsQuery().insertNews(news));
+//        news.setDATE(date);
+//        System.out.println(new NewsQuery().insertNews(news));
+        System.out.println(date.getTime());
+
     }
 
     @org.junit.Test

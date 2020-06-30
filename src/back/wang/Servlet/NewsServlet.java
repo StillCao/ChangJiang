@@ -6,12 +6,15 @@ import back.wang.Service.AdminService;
 import back.wang.Service.NewsService;
 import front.basic_page.Servlet.BaseServlet;
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils.ConvertUtils;
+import org.apache.commons.beanutils.converters.DateConverter;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -57,15 +60,18 @@ public class NewsServlet extends BaseServlet {
      */
     public void addNews(HttpServletRequest req, HttpServletResponse resp) throws IOException, InvocationTargetException, IllegalAccessException {
         Map<String, String[]> map = req.getParameterMap();
-
+        String result = "0";
         News news = new News();
+
+        //为BeanUtils登记String转换Date的Pattern，否则populate方法无法自行转换
+        DateConverter converter = new DateConverter();
+        converter.setPattern("yyyy-MM-dd");
+        ConvertUtils.register(converter, Date.class);
+
         BeanUtils.populate(news, map);
         NewsService newsService = new NewsService();
-        String result = "";
         if (newsService.newsAdd(news)) {
             result = "1";
-        } else {
-            result = "0";
         }
         resp.setContentType("text/html;charset=utf-8");
         resp.setHeader("Access-Control-Allow-Origin", "*");//解决跨域问题，开发完毕时应该关闭
