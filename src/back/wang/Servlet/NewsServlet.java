@@ -232,8 +232,8 @@ public class NewsServlet extends BaseServlet {
         String picNamesString  = req.getParameter("picNames");
         List<String> picNames = new ArrayList<>();
         NewsService service = new NewsService();
-//        String rootPath = "C://ftp//ChangJiang";
-        String rootPath = "D://ftp";
+        String rootPath = "C://ftp//ChangJiang";
+//        String rootPath = "D://ftp";
         List<String> result = new ArrayList<>();
         if (picNamesString.contains(",")){
             String[] picNamesSplits = picNamesString.split(",");
