@@ -7,6 +7,7 @@ import back.wang.Service.NewsService;
 import front.basic_page.Servlet.BaseServlet;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.ConvertUtils;
+import org.apache.commons.beanutils.Converter;
 import org.apache.commons.beanutils.converters.DateConverter;
 
 import javax.servlet.annotation.WebServlet;
@@ -14,6 +15,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
@@ -64,15 +67,22 @@ public class NewsServlet extends BaseServlet {
         News news = new News();
 
         //为BeanUtils登记String转换Date的Pattern，否则populate方法无法自行转换
-        DateConverter converter = new DateConverter();
-        converter.setPattern("yyyy-MM-dd");
-        ConvertUtils.register(converter, Date.class);
+        ConvertUtils.register((clazz, value) -> {
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            Date parse = null;
+            try {
+                parse = format.parse(value.toString());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            return parse;
+        }, Date.class);
 
         BeanUtils.populate(news, map);
 
         //前端不会传图片位置这个字段过来，需要手动与title保持一致
         String title = news.getTitle();
-        String folderPath = "C://ftp//ChangJiang//" + title;
+        String folderPath = "C:/ftp/ChangJiang/" + title;
         news.setLocaladdr(folderPath);
 
         NewsService newsService = new NewsService();
@@ -87,7 +97,7 @@ public class NewsServlet extends BaseServlet {
     /**
      * 新闻删除
      */
-    public void deleteNews(HttpServletRequest req, HttpServletResponse resp) throws IOException{
+    public void deleteNews(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String result = "0";
         String idString = req.getParameter("id");
         int id = Integer.parseInt(idString);

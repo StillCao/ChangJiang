@@ -72,6 +72,8 @@ public class NewsQuery {
      */
     public boolean insertNews(News news) {
         String sql = "insert into news (id,title,DATE,source,TYPE,news_cont,localaddr) Values(null,:title,:DATE,:source,:TYPE,:news_cont,:localaddr)";
+
+        System.out.println(news.getDATE());
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         npjTemplate.update(sql, new BeanPropertySqlParameterSource(news), keyHolder);
