@@ -146,7 +146,6 @@ public class NewsServlet extends BaseServlet {
     /**
      * 新闻图片上传
      */
-
     public void uploadPictures(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if (!ServletFileUpload.isMultipartContent(req)) {
             throw new RuntimeException("当前请求不支持文件上传！");
@@ -185,18 +184,16 @@ public class NewsServlet extends BaseServlet {
                     String rootDirPath = "C:\\ftp\\ChangJiang";
 //                    String rootDirPath = "D:\\ftp\\ChangJiang";
                     String rootUrl = "http://101.37.83.223:8025/";
-                    String fileFolderName = item.getFieldName();
                     String fileName = item.getName();
-                    String projDirPath = rootDirPath + File.separator + fileFolderName;
-                    String projUrl = rootUrl + fileFolderName;
-                    File projDir = new File(projDirPath);
+
+                    File projDir = new File(rootDirPath);
                     if (!projDir.exists()) {
                         projDir.mkdir();
                         System.out.println("数据不存在，正在上传文件");
                     } else {
                         System.out.println("数据存在，添加文件");
                     }
-                    File file = new File(projDirPath, fileName);
+                    File file = new File(rootDirPath, fileName);
                     //判断文件是否重名或者存在
                     try {
                         if (file.exists()) {
@@ -205,8 +202,8 @@ public class NewsServlet extends BaseServlet {
                             resp.getWriter().append("caused by:文件已经存在或者重名！");
                             return;
                         }
-                        if (service.SaveFile(item, projDirPath)) {
-                            String picHttpUrl = projUrl + "/" + file.getName();
+                        if (service.SaveFile(item, rootDirPath)) {
+                            String picHttpUrl = rootUrl + "/" + file.getName();
                             picturePaths.add(picHttpUrl);
                         } else {
                             error_count.addAndGet(1);
@@ -228,5 +225,12 @@ public class NewsServlet extends BaseServlet {
         resp.setContentType("text/html;charset=utf-8");
         resp.setHeader("Access-Control-Allow-Origin", "*");//解决跨域问题，开发完毕时应该关闭
         resp.getWriter().append(JSON.toJSONString(object));
+    }
+
+    /**
+     * 新闻图片删除
+     */
+    public void deletePictures(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String picNames ;
     }
 }
