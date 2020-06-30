@@ -8,6 +8,7 @@ import back.wang.Domain.Page;
 import com.alibaba.fastjson.JSON;
 
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -58,13 +59,56 @@ public class NewsService {
     }
 
     /**
-     * 管理员添加
+     * 新闻添加
      *
-     * @param news
+     * @param news News 对象
      * @return 返回添加状态
      */
     public boolean newsAdd(News news) {
         NewsQuery newsQuery = new NewsQuery();
         return newsQuery.insertNews(news);
+    }
+
+    /**
+     * @param id 要删除的News id
+     * @return 是否删除成功
+     */
+    public boolean newsDelete(int id) {
+        NewsQuery newsQuery = new NewsQuery();
+
+        //先删除照片
+        String pictureFolder = newsQuery.queryNewsAddr(id);
+        File folder = new File(pictureFolder);
+        if (folder.exists()){
+            folder.delete();
+        }
+        if (id > 0 ){ //再进行数据库删除
+            return newsQuery.deleteNews(id);
+        }
+        return false;
+    }
+
+    /**
+     * 修改新闻
+     *
+     * @param news 要修改的News对象
+     * @return 是否修改成功
+     */
+    public boolean newsUpdate(News news) {
+        NewsQuery newsQuery = new NewsQuery();
+        int id = news.getId();
+
+        //更改图片文件夹名称，保持与title一致
+        String addr = news.getLocaladdr();
+        String title = news.getTitle();
+        File fileFolder = new File(addr);
+        if (fileFolder.exists()) {
+            fileFolder.renameTo(new File(fileFolder.getParent(),title));
+        }
+
+        if (id > 0) { //再进行数据库修改
+            return newsQuery.updateNewsById(news);
+        }
+        return false;
     }
 }

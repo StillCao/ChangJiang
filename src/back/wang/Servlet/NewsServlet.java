@@ -69,6 +69,12 @@ public class NewsServlet extends BaseServlet {
         ConvertUtils.register(converter, Date.class);
 
         BeanUtils.populate(news, map);
+
+        //前端不会传图片位置这个字段过来，需要手动与title保持一致
+        String title = news.getTitle();
+        String folderPath = "C://ftp//ChangJiang//" + title;
+        news.setLocaladdr(folderPath);
+
         NewsService newsService = new NewsService();
         if (newsService.newsAdd(news)) {
             result = "1";
@@ -78,5 +84,39 @@ public class NewsServlet extends BaseServlet {
         resp.getWriter().append(result);
     }
 
+    /**
+     * 新闻删除
+     */
+    public void deleteNews(HttpServletRequest req, HttpServletResponse resp) throws IOException{
+        String result = "0";
+        String idString = req.getParameter("id");
+        int id = Integer.parseInt(idString);
+
+        NewsService newsService = new NewsService();
+//        if (newsService)
+    }
+
+    /**
+     * 新闻修改
+     */
+    public void updateNews(HttpServletRequest req, HttpServletResponse resp) throws IOException, InvocationTargetException, IllegalAccessException {
+        Map<String, String[]> map = req.getParameterMap();
+        String result = "0";
+        News news = new News();
+
+        //为BeanUtils登记String转换Date的Pattern，否则populate方法无法自行转换
+        DateConverter converter = new DateConverter();
+        converter.setPattern("yyyy-MM-dd");
+        ConvertUtils.register(converter, Date.class);
+
+        BeanUtils.populate(news, map);
+        NewsService newsService = new NewsService();
+        if (newsService.newsUpdate(news)) {
+            result = "1";
+        }
+        resp.setContentType("text/html;charset=utf-8");
+        resp.setHeader("Access-Control-Allow-Origin", "*");//解决跨域问题，开发完毕时应该关闭
+        resp.getWriter().append(result);
+    }
 
 }
