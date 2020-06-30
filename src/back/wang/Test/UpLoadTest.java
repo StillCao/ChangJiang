@@ -14,6 +14,7 @@ import com.alibaba.fastjson.JSONObject;
 import front.basic_page.Domain.Attr_value;
 import front.basic_page.Domain.BasicData;
 import front.basic_page.Domain.TypeLevel2;
+import front.user_io.dao.UserQuery;
 import org.junit.Test;
 
 import java.util.*;
@@ -168,6 +169,11 @@ public class UpLoadTest {
     @org.junit.Test
     public void QueryOrderConfirmByIds() {
         System.out.println(new DownAimInsert().QueryOrderConfirmByIds(1, 2));
+    }
+
+    @org.junit.Test
+    public void queryUserById() {
+        System.out.println(new UserQuery().queryUserById(1));
     }
 
 

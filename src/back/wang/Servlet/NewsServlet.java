@@ -4,20 +4,29 @@ import back.wang.Domain.Admin;
 import back.wang.Domain.News;
 import back.wang.Service.AdminService;
 import back.wang.Service.NewsService;
+import com.alibaba.fastjson.JSON;
 import front.basic_page.Servlet.BaseServlet;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.beanutils.Converter;
 import org.apache.commons.beanutils.converters.DateConverter;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -135,4 +144,77 @@ public class NewsServlet extends BaseServlet {
         resp.getWriter().append(result);
     }
 
+    /**
+     * 新闻图片上传
+     */
+
+    public void uploadPictures(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        if (!ServletFileUpload.isMultipartContent(req)) {
+            throw new RuntimeException("当前请求不支持文件上传！");
+        }
+
+        //upload对象初始化
+        DiskFileItemFactory factory = new DiskFileItemFactory();
+        factory.setSizeThreshold(1024 * 1024 * 1);
+        String tempPath = this.getServletContext().getRealPath("/WEB-INF/tempFile");
+        File temp = new File(tempPath);
+        if (!temp.exists()) {
+            temp.mkdir();
+        }
+        factory.setRepository(temp);
+        ServletFileUpload upload = new ServletFileUpload(factory);
+        upload.setHeaderEncoding("utf-8");
+
+        List<FileItem> items = null;
+
+        NewsService service = new NewsService();
+
+        List<String> picturePaths  = new ArrayList<>();
+        //item分类处理
+        try {
+            //解析请求，或取到所有的item
+            items = upload.parseRequest(req);
+        } catch (FileUploadException e) {
+            e.printStackTrace();
+        }
+        //遍历item
+        if (items != null) {
+            items.forEach(item -> {
+                if (!item.isFormField()) { //若item为文件表单项目
+//                    String rootDirPath = "C:\\ftp\\ChangJiang";
+                    String rootDirPath = "D:\\ftp\\ChangJiang";
+                    String fileFolderName = item.getFieldName();
+                    String fileName = item.getName();
+                    String projDirPath = rootDirPath + File.separator + fileFolderName;
+                    File projDir = new File(projDirPath);
+                    if (!projDir.exists()) {
+                        projDir.mkdir();
+                        System.out.println("数据不存在，正在上传文件");
+                    } else {
+                        System.out.println("数据存在，添加文件");
+                    }
+                    File file = new File(projDirPath, fileName);
+                    //判断文件是否重名或者存在
+                    try {
+                        if (file.exists()) {
+                            resp.getWriter().append("文件已经存在或者重名！");
+                            return;
+                        }
+                        if (service.SaveFile(item, projDirPath)) {
+                            picturePaths.add(file.getAbsolutePath());
+                        } else {
+                            resp.getWriter().append("文件上传失败！");
+                            return;
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
+
+        resp.setContentType("text/html;charset=utf-8");
+        resp.setHeader("Access-Control-Allow-Origin", "*");//解决跨域问题，开发完毕时应该关闭
+        resp.getWriter().append(JSON.toJSONString(picturePaths));
+    }
 }

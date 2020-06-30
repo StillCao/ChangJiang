@@ -6,10 +6,14 @@ import back.wang.Domain.Admin;
 import back.wang.Domain.News;
 import back.wang.Domain.Page;
 import com.alibaba.fastjson.JSON;
+import org.apache.commons.fileupload.FileItem;
 import org.springframework.dao.DataAccessException;
 
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -118,5 +122,29 @@ public class NewsService {
             return newsQuery.updateNewsById(news);
         }
         return false;
+    }
+
+    /** 保存文件流到指定的目录
+     * @param item FileItem 对象
+     * @param projDirPath 指定的目录
+     * @return 是否保存成功
+     */
+    public boolean SaveFile(FileItem item, String projDirPath) throws IOException {
+        File file = new File(projDirPath, item.getName());
+        InputStream is = item.getInputStream();
+        //创建文件输出流
+        FileOutputStream os = new FileOutputStream(file);
+        //将输入流中的数据写出到输出流中
+        int len = -1;
+        byte[] buf = new byte[1024];
+        while ((len = is.read(buf)) != -1) {
+            os.write(buf, 0, len);
+        }
+        //关闭流
+        os.close();
+        is.close();
+        //删除临时文件
+        item.delete();
+        return file.exists();
     }
 }
