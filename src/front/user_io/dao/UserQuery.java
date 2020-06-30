@@ -59,4 +59,14 @@ public class UserQuery {
         List<User> user = template.query(sql, new BeanPropertyRowMapper<>(User.class), userName);
         return user;
     }
+
+    /**
+     * 5.根据用户id 查询
+     * @param id 用户id
+     * @return User对象
+     */
+    public User queryUserById(int id){
+        String sql = "select * from user where u_id = ?";
+        return template.queryForObject(sql,new BeanPropertyRowMapper<>(User.class),id);
+    }
 }

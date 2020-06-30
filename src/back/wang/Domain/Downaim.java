@@ -18,7 +18,6 @@ public class Downaim {
     private double east;
     private double west;
     private String timeRange;
-    private String otherDemand;
     private int useType;
     private String proofUrl;
     private String projLevel;
@@ -89,13 +88,6 @@ public class Downaim {
         this.timeRange = timeRange;
     }
 
-    public String getOtherDemand() {
-        return otherDemand;
-    }
-
-    public void setOtherDemand(String otherDemand) {
-        this.otherDemand = otherDemand;
-    }
 
     public int getUseType() {
         return useType;
@@ -211,7 +203,6 @@ public class Downaim {
                 ", east=" + east +
                 ", west=" + west +
                 ", timeRange='" + timeRange + '\'' +
-                ", otherDemand='" + otherDemand + '\'' +
                 ", useType=" + useType +
                 ", proofUrl='" + proofUrl + '\'' +
                 ", projLevel='" + projLevel + '\'' +

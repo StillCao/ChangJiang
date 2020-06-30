@@ -9,6 +9,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import front.basic_page.Domain.Attr_value;
+import front.user_io.dao.UserQuery;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -60,9 +61,11 @@ public class DownAimServlet extends HttpServlet {
         Downaim downaim = null;    //JSONString转出的Downaim对象
         StringBuilder projName = new StringBuilder(); //项目名
         int user_id = 0;                                   //用户ID
+        String user_name = "";                          //用户名称
         List<Integer> dataIds = new ArrayList<>();      //数据id列表
 
         DownAimService service = new DownAimService();
+        UserQuery userQuery = new UserQuery();
 
         //item分类处理
         try {
@@ -79,19 +82,24 @@ public class DownAimServlet extends HttpServlet {
                     String value = item.getString("utf-8");
                     if (name.equals("data")) {
                         JSONObject jsonObject = JSON.parseObject(value);
-                        JSONObject down_aimObj = jsonObject.getJSONObject("downaim");
+//                        JSONObject down_aimObj = jsonObject.getJSONObject("downaim");
 //                        JSONArray attr_valueArray = jsonObject.getJSONArray("attr_value");
-                        downaim = JSON.parseObject(down_aimObj.toJSONString(), Downaim.class);
+                        downaim = JSON.parseObject(jsonObject.toJSONString(), Downaim.class);
 //                        attr_valueList = JSONObject.parseArray(attr_valueArray.toString(), Attr_value.class);
 //                        if (basic_info != null && !basic_info.getName().equals("")) {
-//                            projName = basic_info.getName();
                     }
-                    if (name.equals("user_id")){
-                        user_id = Integer.parseInt(value);
+                    if (name.equals("user_id")) {
+                        try {
+                            user_id = Integer.parseInt(value);
+                            user_name = userQuery.queryUserById(1).getUserName();
+                            projName.append(user_name);
+                        } catch (NumberFormatException e) {
+                            e.printStackTrace();
+                        }
                     }
-                    if (name.equals("list_id")){
+                    if (name.equals("list_id")) {
                         List<String> ids = Arrays.asList((value.split(",")));
-                        dataIds= ids.stream().map(Integer::parseInt).collect(Collectors.toList());
+                        dataIds = ids.stream().map(Integer::parseInt).collect(Collectors.toList());
                     }
 
                 }
@@ -109,9 +117,8 @@ public class DownAimServlet extends HttpServlet {
                         preName = fileName.split("\\.")[0];
                         subfix = fileName.split("\\.")[1];
                     }
-                    if (!projName.toString().equals("")) {
-                        projName.append("_").append(preName).append("_").append(new Date().getTime());
-                    }
+
+                    projName.append("_").append(preName).append("_").append(new Date().getTime());
 
                     String projDirPath = rootDirPath + projName;
                     File projDir = new File(projDirPath);
@@ -148,18 +155,16 @@ public class DownAimServlet extends HttpServlet {
         }
         int id = service.InsertDownAim(downaim);
         StringBuilder result = new StringBuilder();
-        if (id > 0 && user_id >0) {
+        if (id > 0 && user_id > 0) {
             int finalUser_id = user_id;
             dataIds.forEach(data_id -> {
-                if (data_id > 0){
-                    if (service.UpDateOrderConfirm(finalUser_id,data_id,id)){
+                if (data_id > 0) {
+                    if (service.UpDateOrderConfirm(finalUser_id, data_id, id)) {
                         result.append("order_confirm表 userId为").append(finalUser_id).append("id").append("更新成功！");
-                    }
-                    else {
+                    } else {
                         result.append("order_confirm表更新失败！");
                     }
-                }
-                else {
+                } else {
                     result.append("数据id错误！");
                 }
             });

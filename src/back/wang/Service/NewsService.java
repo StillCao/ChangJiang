@@ -6,10 +6,14 @@ import back.wang.Domain.Admin;
 import back.wang.Domain.News;
 import back.wang.Domain.Page;
 import com.alibaba.fastjson.JSON;
+import org.apache.commons.fileupload.FileItem;
 import org.springframework.dao.DataAccessException;
 
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -77,17 +81,6 @@ public class NewsService {
     public boolean newsDelete(int id) {
         NewsQuery newsQuery = new NewsQuery();
         if (id > 0) {
-            //先删除照片
-            try {
-                String pictureFolder = newsQuery.queryNewsAddr(id);
-                File folder = new File(pictureFolder);
-                if (folder.exists()) {
-                    folder.delete();
-                }
-            } catch (DataAccessException e) {
-            }
-
-            //再进行数据库删除
             return newsQuery.deleteNews(id);
         }
         return false;
@@ -102,21 +95,33 @@ public class NewsService {
     public boolean newsUpdate(News news) {
         NewsQuery newsQuery = new NewsQuery();
         int id = news.getId();
-
-        //更改图片文件夹名称，保持与title一致
-        try {
-            String addr = news.getLocaladdr();
-            String title = news.getTitle();
-            File fileFolder = new File(addr);
-            if (fileFolder.exists()) {
-                fileFolder.renameTo(new File(fileFolder.getParent(), title));
-            }
-        } catch (Exception e) {
-        }
-
         if (id > 0) { //再进行数据库修改
             return newsQuery.updateNewsById(news);
         }
         return false;
+    }
+
+    /** 保存文件流到指定的目录
+     * @param item FileItem 对象
+     * @param projDirPath 指定的目录
+     * @return 是否保存成功
+     */
+    public boolean SaveFile(FileItem item, String projDirPath) throws IOException {
+        File file = new File(projDirPath, item.getName());
+        InputStream is = item.getInputStream();
+        //创建文件输出流
+        FileOutputStream os = new FileOutputStream(file);
+        //将输入流中的数据写出到输出流中
+        int len = -1;
+        byte[] buf = new byte[1024];
+        while ((len = is.read(buf)) != -1) {
+            os.write(buf, 0, len);
+        }
+        //关闭流
+        os.close();
+        is.close();
+        //删除临时文件
+        item.delete();
+        return file.exists();
     }
 }

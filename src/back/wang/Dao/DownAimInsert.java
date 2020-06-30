@@ -32,7 +32,7 @@ public class DownAimInsert {
      * @return
      */
     public int InsertDownAim(Downaim downaim) {
-        String sql = "Insert into downaim (id,location,north,south,east,west,timeRange,otherDemand,useType,proofUrl,projLevel,projName,projCode,projAdmin,projWorkUnit,projEndTime,title,schoolName,teacherName,teacherPhone,endTime) Values (null,:location,:north,:south,:east,:west,:timeRange,:otherDemand,:useType,:proofUrl,:projLevel,:projName,:projCode,:projAdmin,:projWorkUnit,:projEndTime,:title,:schoolName,:teacherName,:teacherPhone,:endTime)";
+        String sql = "Insert into downaim (id,location,north,south,east,west,timeRange,useType,proofUrl,projLevel,projName,projCode,projAdmin,projWorkUnit,projEndTime,title,schoolName,teacherName,teacherPhone,endTime) Values (null,:location,:north,:south,:east,:west,:timeRange,:useType,:proofUrl,:projLevel,:projName,:projCode,:projAdmin,:projWorkUnit,:projEndTime,:title,:schoolName,:teacherName,:teacherPhone,:endTime)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         npjTemplate.update(sql, new BeanPropertySqlParameterSource(downaim), keyHolder);
