@@ -13,6 +13,7 @@ import java.util.Date;
 public class Downaim {
     private int id;
     private String location;
+    private String note;
     private double north;
     private double south;
     private double east;
@@ -193,11 +194,20 @@ public class Downaim {
         this.endTime = endTime;
     }
 
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
     @Override
     public String toString() {
         return "Downaim{" +
                 "id=" + id +
                 ", location='" + location + '\'' +
+                ", note='" + note + '\'' +
                 ", north=" + north +
                 ", south=" + south +
                 ", east=" + east +
