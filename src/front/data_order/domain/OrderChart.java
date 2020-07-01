@@ -12,9 +12,9 @@ public class OrderChart {
     private String da_time;
     private String sploc;
     private String da_size;
+    private String orderCode;
 
-
-    public OrderChart(int userId, int dataId, int orderStatus, String name, String da_time, String sploc, String da_size) {
+    public OrderChart(int userId, int dataId, int orderStatus, String name, String da_time, String sploc, String da_size, String orderCode) {
         this.userId = userId;
         this.dataId = dataId;
         this.orderStatus = orderStatus;
@@ -22,6 +22,7 @@ public class OrderChart {
         this.da_time = da_time;
         this.sploc = sploc;
         this.da_size = da_size;
+        this.orderCode = orderCode;
     }
 
     public OrderChart() {
@@ -83,6 +84,14 @@ public class OrderChart {
         this.da_size = da_size;
     }
 
+    public String getOrderCode() {
+        return orderCode;
+    }
+
+    public void setOrderCode(String orderCode) {
+        this.orderCode = orderCode;
+    }
+
     @Override
     public String toString() {
         return "OrderChart{" +
@@ -93,6 +102,7 @@ public class OrderChart {
                 ", da_time='" + da_time + '\'' +
                 ", sploc='" + sploc + '\'' +
                 ", da_size='" + da_size + '\'' +
+                ", orderCode='" + orderCode + '\'' +
                 '}';
     }
 }

@@ -50,7 +50,7 @@ public class OrderManage {
      * @return
      */
     public List<OrderChart> queryWaitingOrder(int u_id,int orderStatus){
-        String sql = "SELECT  o.userId,o.dataId,o.orderStatus,b.name,b.da_time,b.sploc,b.da_size from " +
+        String sql = "SELECT  o.orderCode,o.userId,o.dataId,o.orderStatus,b.name,b.da_time,b.sploc,b.da_size from " +
                 "order_confirm AS o LEFT JOIN basic_info AS b on o.dataId = b.id where o.userId = ? and orderStatus = ?;";
         List<OrderChart> orderCharts = template.query(sql, new BeanPropertyRowMapper<>(OrderChart.class), u_id,orderStatus);
         return orderCharts;
@@ -62,7 +62,7 @@ public class OrderManage {
      * @return
      */
     public List<OrderChart> checkAllOrder(int orderStatus){
-        String sql = "SELECT  o.userId,o.dataId,o.orderStatus,b.name,b.da_time,b.sploc,b.da_size from " +
+        String sql = "SELECT  o.orderCode,o.userId,o.dataId,o.orderStatus,b.name,b.da_time,b.sploc,b.da_size from " +
                 "order_confirm AS o LEFT JOIN basic_info AS b on o.dataId = b.id where  orderStatus = ?;";
         List<OrderChart> orderCharts = template.query(sql, new BeanPropertyRowMapper<>(OrderChart.class),orderStatus);
         return orderCharts;
