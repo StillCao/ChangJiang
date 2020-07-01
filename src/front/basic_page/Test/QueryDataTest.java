@@ -58,7 +58,7 @@ public class QueryDataTest {
 
     @org.junit.Test
     public void QueryBasicByTag2IdLimit() {
-        List<BasicData> typeLevel2s = new QueryData().QueryBasicByTag2IdLimit(9,5);
+        List<BasicInfo> typeLevel2s = new QueryData().QueryBasicByTag2IdLimit(9,5);
         System.out.println(typeLevel2s.size());
     }
 

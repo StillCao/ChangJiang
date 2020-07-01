@@ -17,6 +17,8 @@ import front.basic_page.Domain.TypeLevel2;
 import front.user_io.dao.UserQuery;
 import org.junit.Test;
 
+import java.io.File;
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -174,6 +176,34 @@ public class UpLoadTest {
     @org.junit.Test
     public void queryUserById() {
         System.out.println(new UserQuery().queryUserById(1));
+    }
+
+    @org.junit.Test
+    public void mkDir() {
+
+        File picProjDir = new File("D:\\kk\\hah");
+        File pic = new File(picProjDir,"aa.txt");
+        System.out.println(pic.getAbsolutePath());
+
+//        if (!picProjDir.exists()) {
+////            if (!picProjDir.mkdir()) {
+////                if (picProjDir.getParentFile().mkdir()){
+////                    picProjDir.mkdir();
+////                }
+////            }
+//            picProjDir.mkdirs();
+//
+//            System.out.println("数据不存在，正在上传图片");
+//        } else {
+//            System.out.println("数据存在，添加图片");
+//        }
+    }
+
+    @org.junit.Test
+    public void StringSub() {
+        String a = "0,1,2,3,4,5,6";
+        List<String> aa =  Arrays.asList((a.split(",")));
+        System.out.println(aa.subList(0,5).toString());
     }
 
 

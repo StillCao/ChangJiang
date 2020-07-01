@@ -66,9 +66,9 @@ public class QueryData {
      * @param tagId 二级标签ID
      * @return 所有属于二级标签名的数据, 限制n条数据
      */
-    public List<BasicData> QueryBasicByTag2IdLimit(int tagId, int num) {
+    public List<BasicInfo> QueryBasicByTag2IdLimit(int tagId, int num) {
         String sql = "SELECT * from basic_info where da_type = ? limit ?";
-        return template.query(sql, new BeanPropertyRowMapper<>(BasicData.class), tagId, num);
+        return template.query(sql, new BeanPropertyRowMapper<>(BasicInfo.class), tagId, num);
     }
 
     /**
