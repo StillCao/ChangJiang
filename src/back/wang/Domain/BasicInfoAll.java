@@ -16,10 +16,10 @@ public class BasicInfoAll {
     private String sploc;
     private String docname;
     private Date up_time;
-    private long point1_lat;
-    private long point1_lon;
-    private long point2_lat;
-    private long point2_lon;
+    private double point1_lat;
+    private double point1_lon;
+    private double point2_lat;
+    private double point2_lon;
     private String topic_w1;
     private String topic_w2;
     private String topic_w3;
@@ -82,35 +82,35 @@ public class BasicInfoAll {
         this.up_time = up_time;
     }
 
-    public long getPoint1_lat() {
+    public double getPoint1_lat() {
         return point1_lat;
     }
 
-    public void setPoint1_lat(long point1_lat) {
+    public void setPoint1_lat(double point1_lat) {
         this.point1_lat = point1_lat;
     }
 
-    public long getPoint1_lon() {
+    public double getPoint1_lon() {
         return point1_lon;
     }
 
-    public void setPoint1_lon(long point1_lon) {
+    public void setPoint1_lon(double point1_lon) {
         this.point1_lon = point1_lon;
     }
 
-    public long getPoint2_lat() {
+    public double getPoint2_lat() {
         return point2_lat;
     }
 
-    public void setPoint2_lat(long point2_lat) {
+    public void setPoint2_lat(double point2_lat) {
         this.point2_lat = point2_lat;
     }
 
-    public long getPoint2_lon() {
+    public double getPoint2_lon() {
         return point2_lon;
     }
 
-    public void setPoint2_lon(long point2_lon) {
+    public void setPoint2_lon(double point2_lon) {
         this.point2_lon = point2_lon;
     }
 

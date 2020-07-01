@@ -16,7 +16,10 @@ import front.basic_page.Domain.BasicData;
 import front.basic_page.Domain.TypeLevel2;
 import front.user_io.dao.UserQuery;
 import org.junit.Test;
+import utils.KeyUtils;
 
+import java.io.File;
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -155,12 +158,13 @@ public class UpLoadTest {
     public void UpDateOrderConfirm() {
         DownAimInsert insert = new DownAimInsert();
         Order_confirm order_confirm = new Order_confirm();
-        order_confirm.setDataId(1);
-        order_confirm.setUserId(1);
+        order_confirm.setDataId(8);
+        order_confirm.setUserId(8);
         order_confirm.setDown_aim(1);
+        order_confirm.setOrderCode(KeyUtils.generateUniqueKey());
 
         int id = insert.QueryOrderConfirmByIds(order_confirm.getUserId(), order_confirm.getDataId());
-        order_confirm.setId(2);
+        order_confirm.setId(id);
 
         System.out.println(new DownAimInsert().UpDateOrderConfirm(order_confirm));
     }
@@ -175,6 +179,62 @@ public class UpLoadTest {
     public void queryUserById() {
         System.out.println(new UserQuery().queryUserById(1));
     }
+
+    @org.junit.Test
+    public void mkDir() {
+
+        File picProjDir = new File("D:\\kk\\hah");
+        File pic = new File(picProjDir,"aa.txt");
+        System.out.println(pic.getAbsolutePath());
+
+//        if (!picProjDir.exists()) {
+////            if (!picProjDir.mkdir()) {
+////                if (picProjDir.getParentFile().mkdir()){
+////                    picProjDir.mkdir();
+////                }
+////            }
+//            picProjDir.mkdirs();
+//
+//            System.out.println("数据不存在，正在上传图片");
+//        } else {
+//            System.out.println("数据存在，添加图片");
+//        }
+    }
+
+    @org.junit.Test
+    public void StringSub() {
+        String a = "0,1,2,3,4,5,6";
+        List<String> aa =  Arrays.asList((a.split(",")));
+        System.out.println(aa.subList(0,5).toString());
+    }
+
+    @org.junit.Test
+    public void GenerateKey() {
+        System.out.println(KeyUtils.generateUniqueKey());
+    }
+
+    @org.junit.Test
+    public void QueryOrderConfirmAllByIds() {
+        System.out.println(new DownAimInsert().QueryOrderConfirmAllById(1));
+    }
+
+
+    @org.junit.Test
+    public void QueryDownAimById() {
+        System.out.println(new DownAimInsert().QueryDownAimById(1));
+    }
+
+    @org.junit.Test
+    public void queryUserById2() {
+        System.out.println(new DownAimInsert().queryUserById(1));
+    }
+
+    @org.junit.Test
+    public void queryOrderIdsByStatus() {
+        System.out.println(new DownAimInsert().queryOrderByStatus(1));
+    }
+
+
 
 
 }
