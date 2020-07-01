@@ -16,6 +16,7 @@ import front.basic_page.Domain.BasicData;
 import front.basic_page.Domain.TypeLevel2;
 import front.user_io.dao.UserQuery;
 import org.junit.Test;
+import utils.KeyUtils;
 
 import java.io.File;
 import java.lang.reflect.Array;
@@ -160,6 +161,7 @@ public class UpLoadTest {
         order_confirm.setDataId(1);
         order_confirm.setUserId(1);
         order_confirm.setDown_aim(1);
+        order_confirm.setOrderCode(KeyUtils.generateUniqueKey());
 
         int id = insert.QueryOrderConfirmByIds(order_confirm.getUserId(), order_confirm.getDataId());
         order_confirm.setId(2);
@@ -205,6 +207,13 @@ public class UpLoadTest {
         List<String> aa =  Arrays.asList((a.split(",")));
         System.out.println(aa.subList(0,5).toString());
     }
+
+    @org.junit.Test
+    public void GenerateKey() {
+        System.out.println(KeyUtils.generateUniqueKey());
+    }
+
+
 
 
 }

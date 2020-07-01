@@ -4,6 +4,7 @@ import back.wang.Dao.DownAimInsert;
 import back.wang.Domain.Downaim;
 import back.wang.Domain.Order_confirm;
 import org.apache.commons.fileupload.FileItem;
+import utils.KeyUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -66,6 +67,7 @@ public class DownAimService {
         order_confirm.setUserId(userId);
         order_confirm.setDataId(dataId);
         order_confirm.setDown_aim(downaim_id);
+        order_confirm.setOrderCode(KeyUtils.generateUniqueKey());
         DownAimInsert insert = new DownAimInsert();
         int id  = insert.QueryOrderConfirmByIds(order_confirm.getUserId(),order_confirm.getDataId());
         if (id >0){

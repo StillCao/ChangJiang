@@ -40,17 +40,19 @@ public class DownAimInsert {
     }
 
     /**
-     *  更新 order_confirm 表
+     * 更新 order_confirm 表
+     *
      * @param order_confirm order_confirm对象
      * @return 是否更新成功
      */
     public boolean UpDateOrderConfirm(Order_confirm order_confirm) {
-        String sql = "Update order_confirm set down_aim = ? , orderStatus = 1 where id = ? ";
-        return template.update(sql, order_confirm.getDown_aim(), order_confirm.getId()) >= 1;
+        String sql = "Update order_confirm set down_aim = ? , orderCode = ?,orderStatus = 1 where id = ? ";
+        return template.update(sql, order_confirm.getDown_aim(), order_confirm.getOrderCode(), order_confirm.getId()) >= 1;
     }
 
     /**
      * 根据 userID 和 dataID 查询 order_confirm 记录,查询对应记录的ID
+     *
      * @param userId 用户ID
      * @param dataId 数据ID
      * @return 对应的记录id
