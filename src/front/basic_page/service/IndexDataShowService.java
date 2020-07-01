@@ -4,10 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import front.basic_page.Dao.QueryBasicData;
 import front.basic_page.Dao.QueryData;
-import front.basic_page.Domain.Attr_value;
-import front.basic_page.Domain.BasicData;
-import front.basic_page.Domain.TypeLevel1;
-import front.basic_page.Domain.TypeLevel2;
+import front.basic_page.Domain.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +28,7 @@ public class IndexDataShowService {
 
         JSONObject resultObject = new JSONObject();
         level1s.forEach(level1 -> {
-            List<BasicData> basicDataSub = new ArrayList<>();
+            List<BasicInfo> basicDataSub = new ArrayList<>();
 
             List<TypeLevel2> typeLevel2List = queryData.QueryTagLevel2By1Id(level1.getId());
             for (TypeLevel2 typeLevel2 : typeLevel2List) {

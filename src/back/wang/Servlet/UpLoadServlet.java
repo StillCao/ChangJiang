@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -69,6 +70,7 @@ public class UpLoadServlet extends HttpServlet {
         BasicInfoAll basic_info = null;    //JSONString转出的BasicInfoAll对象
         List<Attr_value> attr_valueList = null;    //JSONString转出的Attr_value列表对象
         String projName = ""; //项目名
+        List<String> filePaths = new ArrayList<>();     //非图片文件的存储绝对路径
 
         //item分类处理
         try {
@@ -100,6 +102,7 @@ public class UpLoadServlet extends HttpServlet {
 
             for (FileItem item : items) {   //再循环一次，保存文件
                 if (!item.isFormField()) {  //若item为文件表单项目
+                    String picRootDirPath = "C:\\ftp\\ChangJiang\\基础数据上传图片\\";
                     String rootDirPath = "C:\\Users\\Administrator\\Desktop\\长江中游地学数据集\\";
 //                    String rootDirPath = "D:\\长江中游地学数据集\\";
                     String fileName = item.getName();
@@ -111,26 +114,44 @@ public class UpLoadServlet extends HttpServlet {
                         subfix = fileName.split("\\.")[1];
                     }
                     String projDirPath = rootDirPath + projName;
+                    String picProJDirPath = picRootDirPath + projName;
+                    String fileFolderPath = "";         //该文件的父级目录路径
                     File projDir = new File(projDirPath);
+                    File picProjDir = new File(picProJDirPath);
                     if (!projDir.exists()) {
-                        projDir.mkdir();
+                        projDir.mkdirs();
                         System.out.println("数据不存在，正在上传文件");
                     } else {
                         System.out.println("数据存在，添加文件");
                     }
 
-                    File file = new File(projDirPath, fileName);
+                    if (!picProjDir.exists()) {
+                        picProjDir.mkdirs();
+                        System.out.println("数据不存在，正在上传图片");
+                    } else {
+                        System.out.println("数据存在，添加图片");
+                    }
+
+                    File file = null;
+
+                    if (subfix.equals("png") || subfix.equals("jpg") || subfix.equals("jpeg")) { //为缩略图文件
+                        file  = new File(picProjDir, fileName);
+                        imgPath = file.getAbsolutePath();
+                        fileFolderPath = picProJDirPath;
+                    }
+                    else {
+                        file = new File(projDir,fileName);
+                        fileFolderPath = projDirPath;
+                        filePaths.add(file.getAbsolutePath());
+                    }
+
                     //判断文件是否重名或者存在
                     if (file.exists()) {
                         resp.getWriter().append("文件已经存在或者重名！");
                         return;
                     }
 
-                    if (subfix.equals("png") || subfix.equals("jpg") || subfix.equals("jpeg")) { //为缩略图文件
-                        imgPath = file.getAbsolutePath();
-                    }
-
-                    if (service.SaveFile(item, projDirPath)) {
+                    if (service.SaveFile(item, fileFolderPath)) {
                         resp.getWriter().append(fileName).append("文件上传成功！");
                         proPath = projDirPath;
                     } else {
@@ -145,17 +166,31 @@ public class UpLoadServlet extends HttpServlet {
             return;
         }
 
+        BasicInfoAll finalBasic_info = basic_info;
         if (new File(proPath).exists()) {
-            basic_info.setDa_url(proPath);
-//            basic_info.setFile_url(proPath);
-            basic_info.setSample_url(proPath);
+            finalBasic_info.setDa_url(proPath);
+            if (filePaths.size() > 0){
+                filePaths.forEach(filePath ->{
+                    if (filePath.contains(".")){
+                        String[] splits = filePath.split("\\.");
+                        String sub_fix =splits[splits.length - 1];
+                        if (sub_fix.equals("doc") || sub_fix.equals("docx")){
+                            finalBasic_info.setFile_url(filePath);
+                        }else {
+                             finalBasic_info.setSample_url(filePath);
+                        }
+                    }
+                });
+
+
+            }
         }
         if (new File(imgPath).exists()) {
-            basic_info.setImage(imgPath);
+            finalBasic_info.setImage(imgPath);
         }
 
         StringBuilder result = new StringBuilder();
-        int basicId = service.InsertBasic(basic_info);  //插入基本数据
+        int basicId = service.InsertBasic(finalBasic_info);  //插入基本数据
         if (basicId != 0) {
             result.append("插入基本信息表成功！\n");
             if (attr_valueList == null) {
