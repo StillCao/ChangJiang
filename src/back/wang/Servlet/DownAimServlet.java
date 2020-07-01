@@ -58,6 +58,7 @@ public class DownAimServlet extends HttpServlet {
 
         List<FileItem> items = null;
         String proofPath = "";    //证明材料绝对路径
+        String proofUrl = "";     //证明材料URL
         Downaim downaim = null;    //JSONString转出的Downaim对象
         StringBuilder projName = new StringBuilder(); //项目名
         int user_id = 0;                                   //用户ID
@@ -108,6 +109,7 @@ public class DownAimServlet extends HttpServlet {
             for (FileItem item : items) {//先循环一次，找到表单
                 if (!item.isFormField()) { //若item为文件表单项目
                     String rootDirPath = "C:\\ftp\\ChangJiang\\证明材料\\";
+                    String rootUrl = "http://101.37.83.223:8025/证明材料/";
                     File rootDir = new File(rootDirPath);
                     if (! rootDir.exists()){
                         rootDir.mkdir();
@@ -118,8 +120,6 @@ public class DownAimServlet extends HttpServlet {
                     String fileName = item.getName();
                     String subfix = "";
                     String preName = fileName;
-
-
 
                     if (fileName.contains(".")) {
                         preName = fileName.split("\\.")[0];
@@ -144,6 +144,7 @@ public class DownAimServlet extends HttpServlet {
                         return;
                     }
                     if (service.SaveFile(item, projDirPath)) {
+                        proofUrl = rootUrl + projName + "/" + file.getName();
                         proofPath = file.getAbsolutePath();
                         resp.getWriter().append(fileName).append("文件上传成功！");
                     } else {
@@ -159,7 +160,7 @@ public class DownAimServlet extends HttpServlet {
         }
 
         if (new File(proofPath).exists()) {
-            downaim.setProofUrl(proofPath); //插入downaim表
+            downaim.setProofUrl(proofUrl); //插入downaim表
         }
         int id = service.InsertDownAim(downaim);
         StringBuilder result = new StringBuilder();
