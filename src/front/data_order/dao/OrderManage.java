@@ -103,4 +103,15 @@ public class OrderManage {
         return uc;
     }
 
+    /**
+     * 7.查询订单状态
+     * @param u_id
+     * @param data_id
+     * @return
+     */
+    public int queryOrderStatus(int u_id, int data_id) {
+        String sql = "select orderStatus from order_confirm where userId = ? and dataId = ? ;";
+        int status = template.queryForObject(sql, Integer.class, u_id, data_id);
+        return status;
+    }
 }

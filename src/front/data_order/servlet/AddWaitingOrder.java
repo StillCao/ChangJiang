@@ -1,5 +1,6 @@
 package front.data_order.servlet;
 
+import com.mysql.cj.x.protobuf.MysqlxCrud;
 import front.data_order.dao.OrderManage;
 
 import javax.servlet.ServletException;
@@ -32,9 +33,24 @@ public class AddWaitingOrder extends HttpServlet {
         //3.执行入库操作
         int rows = new OrderManage().judgeWaitingOrder(u_id, data_id);
         if (rows == 1){
-            //该数据订单已经为待提交状态或者在审核状态，不需要重新提交。
-            resp.getWriter().append("OrderExist");
-        }else{
+            int s = new OrderManage().queryOrderStatus(u_id,data_id);
+            if (s == 0 || s == 1){
+                //该数据订单已经为待提交状态或者在审核状态，不需要重新提交。
+                resp.getWriter().append("OrderExist");
+            }else if (s == 2){
+                resp.getWriter().append("OrderDone");
+            }else if (s== -1){
+                //订单处于被删除状态 -1 ，则修改订单状态为0 ，成功加入待提交订单。
+                int i = new OrderManage().updateShopcar(u_id, data_id,0);
+                //待提交订单入库
+                if (i == 1){
+                    resp.getWriter().append("true");
+                }else {
+                    resp.getWriter().append("false");
+                }
+            }
+
+        }else if (rows == 0){  //订单首次建立
              int i = new OrderManage().insertWaitingOrder(u_id, data_id, status);
             //4.待提交订单入库
             if (i == 1){
