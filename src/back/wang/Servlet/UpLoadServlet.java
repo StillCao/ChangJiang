@@ -65,6 +65,7 @@ public class UpLoadServlet extends HttpServlet {
 
         List<FileItem> items = null;
         String imgPath = "";    //缩略图绝对路径
+        String imgUrl = "";    //缩略图URL
         String proPath = "";    //数据绝对路径
         UpLoadService service = new UpLoadService();
         BasicInfoAll basic_info = null;    //JSONString转出的BasicInfoAll对象
@@ -103,6 +104,7 @@ public class UpLoadServlet extends HttpServlet {
             for (FileItem item : items) {   //再循环一次，保存文件
                 if (!item.isFormField()) {  //若item为文件表单项目
                     String picRootDirPath = "C:\\ftp\\ChangJiang\\基础数据上传图片\\";
+                    String picRootUrl = "http://101.37.83.223:8025/基础数据上传图片/";
                     String rootDirPath = "C:\\Users\\Administrator\\Desktop\\长江中游地学数据集\\";
 //                    String rootDirPath = "D:\\长江中游地学数据集\\";
                     String fileName = item.getName();
@@ -135,12 +137,12 @@ public class UpLoadServlet extends HttpServlet {
                     File file = null;
 
                     if (subfix.equals("png") || subfix.equals("jpg") || subfix.equals("jpeg")) { //为缩略图文件
-                        file  = new File(picProjDir, fileName);
+                        file = new File(picProjDir, fileName);
+                        imgUrl = picRootUrl + projName + "/" + file.getName();
                         imgPath = file.getAbsolutePath();
                         fileFolderPath = picProJDirPath;
-                    }
-                    else {
-                        file = new File(projDir,fileName);
+                    } else {
+                        file = new File(projDir, fileName);
                         fileFolderPath = projDirPath;
                         filePaths.add(file.getAbsolutePath());
                     }
@@ -169,15 +171,15 @@ public class UpLoadServlet extends HttpServlet {
         BasicInfoAll finalBasic_info = basic_info;
         if (new File(proPath).exists()) {
             finalBasic_info.setDa_url(proPath);
-            if (filePaths.size() > 0){
-                filePaths.forEach(filePath ->{
-                    if (filePath.contains(".")){
+            if (filePaths.size() > 0) {
+                filePaths.forEach(filePath -> {
+                    if (filePath.contains(".")) {
                         String[] splits = filePath.split("\\.");
-                        String sub_fix =splits[splits.length - 1];
-                        if (sub_fix.equals("doc") || sub_fix.equals("docx")){
+                        String sub_fix = splits[splits.length - 1];
+                        if (sub_fix.equals("doc") || sub_fix.equals("docx")) {
                             finalBasic_info.setFile_url(filePath);
-                        }else {
-                             finalBasic_info.setSample_url(filePath);
+                        } else {
+                            finalBasic_info.setSample_url(filePath);
                         }
                     }
                 });
@@ -185,8 +187,9 @@ public class UpLoadServlet extends HttpServlet {
 
             }
         }
+
         if (new File(imgPath).exists()) {
-            finalBasic_info.setImage(imgPath);
+            finalBasic_info.setImage(imgUrl);
         }
 
         StringBuilder result = new StringBuilder();
