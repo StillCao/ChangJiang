@@ -234,6 +234,13 @@ public class UpLoadTest {
         System.out.println(new DownAimInsert().queryOrderByStatus(1));
     }
 
+    @org.junit.Test
+    public void queryBasicInfoById() {
+        System.out.println(new DownAimInsert().queryBasicInfoById(1));
+    }
+
+
+
 
 
 
