@@ -21,7 +21,7 @@ import java.util.List;
 @WebServlet("/imageById")
 public class ImageById extends HttpServlet {
 
-    @Override
+    /*@Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws  IOException {
         req.setCharacterEncoding("utf-8");
 
@@ -46,6 +46,20 @@ public class ImageById extends HttpServlet {
         //resp.setContentType("text/html;charset=utf-8");
         resp.setHeader("Access-Control-Allow-Origin", "*");//解决跨域问题，开发完毕时应该关闭
 
+    }*/
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        //直接返回图片的可访问路径
+        req.setCharacterEncoding("utf-8");
+
+        String idStr = req.getParameter("id");
+        int id = Integer.parseInt(idStr);
+
+        String imagePath = new QueryBasicData().queryImage(id);
+        resp.setContentType("text/html;charset=utf-8");
+        resp.setHeader("Access-Control-Allow-Origin", "*");//解决跨域问题，开发完毕时应该关闭
+        resp.getWriter().append(imagePath);
     }
 
     @Override
