@@ -158,13 +158,13 @@ public class UpLoadTest {
     public void UpDateOrderConfirm() {
         DownAimInsert insert = new DownAimInsert();
         Order_confirm order_confirm = new Order_confirm();
-        order_confirm.setDataId(1);
-        order_confirm.setUserId(1);
+        order_confirm.setDataId(8);
+        order_confirm.setUserId(8);
         order_confirm.setDown_aim(1);
         order_confirm.setOrderCode(KeyUtils.generateUniqueKey());
 
         int id = insert.QueryOrderConfirmByIds(order_confirm.getUserId(), order_confirm.getDataId());
-        order_confirm.setId(2);
+        order_confirm.setId(id);
 
         System.out.println(new DownAimInsert().UpDateOrderConfirm(order_confirm));
     }
@@ -211,6 +211,27 @@ public class UpLoadTest {
     @org.junit.Test
     public void GenerateKey() {
         System.out.println(KeyUtils.generateUniqueKey());
+    }
+
+    @org.junit.Test
+    public void QueryOrderConfirmAllByIds() {
+        System.out.println(new DownAimInsert().QueryOrderConfirmAllById(1));
+    }
+
+
+    @org.junit.Test
+    public void QueryDownAimById() {
+        System.out.println(new DownAimInsert().QueryDownAimById(1));
+    }
+
+    @org.junit.Test
+    public void queryUserById2() {
+        System.out.println(new DownAimInsert().queryUserById(1));
+    }
+
+    @org.junit.Test
+    public void queryOrderIdsByStatus() {
+        System.out.println(new DownAimInsert().queryOrderByStatus(1));
     }
 
 
