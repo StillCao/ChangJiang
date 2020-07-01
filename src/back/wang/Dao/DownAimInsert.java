@@ -1,6 +1,7 @@
 package back.wang.Dao;
 
 import back.wang.Domain.Admin;
+import back.wang.Domain.BasicInfoAll;
 import back.wang.Domain.Downaim;
 import back.wang.Domain.Order_confirm;
 import front.user_io.domain.User;
@@ -124,7 +125,20 @@ public class DownAimInsert {
             e.printStackTrace();
             return null;
         }
+    }
 
+    /**
+     * 根据Id 查询部分字段
+     * @return
+     */
+    public BasicInfoAll queryBasicInfoById(int id){
+        String sql = "SELECT Name,da_size,datm_range from basic_info where id =?";
+        try {
+            return template.queryForObject(sql, new BeanPropertyRowMapper<>(BasicInfoAll.class), id);
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 
