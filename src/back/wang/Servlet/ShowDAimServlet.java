@@ -7,7 +7,6 @@ import back.wang.Domain.Order_confirm;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import front.basic_page.Domain.BasicData;
 import front.user_io.domain.User;
 
 import javax.servlet.ServletException;
