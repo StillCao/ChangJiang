@@ -45,4 +45,9 @@ public class DMTest {
     public void queryDataByKeyLikeByPage() {
         System.out.println(new BasicDataQuery().queryDataByKeyLikeByPage("NAME","长江",0,9));
     }
+
+    @org.junit.Test
+    public void deleteRelaChartByDataId() {
+        System.out.println(new BasicDataQuery().deleteRelaChartByDataId(42));
+    }
 }
