@@ -1,6 +1,10 @@
 package back.wang.Servlet;
 
+import back.wang.Dao.BasicDataQuery;
+import back.wang.Domain.BasicInfoAll;
 import back.wang.Service.DMService;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import front.basic_page.Servlet.BaseServlet;
 
 import javax.servlet.annotation.WebServlet;
@@ -40,7 +44,7 @@ public class DMServlet extends BaseServlet {
             if (key.equals("name")) {
                 key = "NAME";
             } //与数据库字段匹配
-            if (!map.containsKey("value")){
+            if (!map.containsKey("value")) {
                 result = "请输入value参数 进行查询！";
                 resp.getWriter().append(result);
                 return;
@@ -55,24 +59,45 @@ public class DMServlet extends BaseServlet {
      * 基础数据删除
      */
     public void deleteDataById(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String idString  = req.getParameter("id");
+        String idString = req.getParameter("id");
         int id = Integer.parseInt(idString);
-        String result = "";
-        int error_num = 0;
+        JSONObject object = new JSONObject();
         DMService service = new DMService();
+        BasicDataQuery query = new BasicDataQuery();
 
         //先删除rela_chart表相关信息
-        if (service.deleteRelaChart(id)){
+        if (service.deleteRelaChart(id)) {
+            object.put("删除rela_chart表相关信息:", true);
             //再删除基础数据
+            BasicInfoAll basicInfo = query.queryDataById(id);
+            if (basicInfo != null) {
+                //删除基础数据先删除文件(缩略图和文件)
+                boolean[] successes = service.deleteFiles(basicInfo);
+                for (int i = 0; i < successes.length; i++) {
+                    if (i == 0) {
+                        object.put("删除基础信息图片:", successes[i]);
+                    }
+                    if (i == 1) {
+                        object.put("删除基础信息数据附件:", successes[i]);
+                    }
+                    if (i == 2) {
+                        object.put("删除基础信息数据文档:", successes[i]);
+                    }
+                    if (i == 3) {
+                        object.put("删除基础信息样例数据:", successes[i]);
+                    }
+                }
 
-            //删除基础数据先删除文件
-
-
+                //再删除基础信息表
+                object.put("删除基础信息表中记录:", service.deleteBasicData(id));
+            }
+        } else {
+            object.put("删除rela_chart表相关信息:", false);
         }
 
-
+        resp.setContentType("text/html;charset=utf-8");
+        resp.setHeader("Access-Control-Allow-Origin", "*");//解决跨域问题，开发完毕时应该关闭
+        resp.getWriter().append(JSON.toJSONString(object));
     }
-
-
 
 }
