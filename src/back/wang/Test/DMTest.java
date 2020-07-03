@@ -55,4 +55,9 @@ public class DMTest {
     public void deleteBasicData() {
         System.out.println(new BasicDataQuery().deleteBasicData(36));
     }
+
+    @org.junit.Test
+    public void deleteOrderByDataId() {
+        System.out.println(new BasicDataQuery().deleteOrderByDataId(39));
+    }
 }

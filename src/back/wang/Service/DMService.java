@@ -107,7 +107,9 @@ public class DMService {
 
     // 删除文件，删除后如父文件夹为空，删除父文件夹
     private static boolean deleteFileNParentFile(String filePath) {
-        if (filePath == null){return true;}
+        if (filePath == null) {
+            return true;
+        }
         File file = new File(filePath);
         if (!file.exists()) {
             return true;
@@ -134,5 +136,17 @@ public class DMService {
     public boolean deleteBasicData(int id) {
         BasicDataQuery basicDataQuery = new BasicDataQuery();
         return basicDataQuery.deleteBasicData(id);
+    }
+
+
+    /**
+     * 根据数据id 删除订单记录
+     *
+     * @param id 数据id
+     * @return 是否删除成功
+     */
+    public boolean deleteOrderConfirm(int id) {
+        BasicDataQuery basicDataQuery = new BasicDataQuery();
+        return basicDataQuery.deleteOrderByDataId(id);
     }
 }
