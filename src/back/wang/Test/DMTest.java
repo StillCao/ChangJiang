@@ -4,6 +4,7 @@ import back.wang.Dao.BasicDataQuery;
 import back.wang.Dao.NewsQuery;
 import back.wang.Domain.News;
 import back.wang.Service.DMService;
+import front.basic_page.Dao.QueryData;
 
 import java.util.List;
 
@@ -59,5 +60,14 @@ public class DMTest {
     @org.junit.Test
     public void deleteOrderByDataId() {
         System.out.println(new BasicDataQuery().deleteOrderByDataId(39));
+    }
+    @org.junit.Test
+    public void QueryBasicByTag2IdLimit() {
+        System.out.println(new QueryData().QueryBasicByTag2IdLimit(39,8));
+    }
+
+    @org.junit.Test
+    public void updateClickCounts() {
+        new QueryData().updateClickCounts(39,8);
     }
 }

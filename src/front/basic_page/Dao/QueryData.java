@@ -1,6 +1,8 @@
 package front.basic_page.Dao;
 
+import back.wang.Domain.BasicInfoAll;
 import front.basic_page.Domain.*;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import utils.JDBCUtils;
@@ -68,7 +70,13 @@ public class QueryData {
      */
     public List<BasicInfo> QueryBasicByTag2IdLimit(int tagId, int num) {
         String sql = "SELECT * from basic_info where da_type = ? limit ?";
-        return template.query(sql, new BeanPropertyRowMapper<>(BasicInfo.class), tagId, num);
+
+        try {
+            return template.query(sql, new BeanPropertyRowMapper<>(BasicInfo.class), tagId, num);
+        } catch (DataAccessException e) {
+            return null;
+        }
+
     }
 
     /**
@@ -213,12 +221,30 @@ public class QueryData {
     }
 
     /**
-     *
      * @return 查询所有AttrKey
      */
-    public List<Attr_key> QueryAttrKeyAll(){
+    public List<Attr_key> QueryAttrKeyAll() {
         String sql = "Select * from attr_key";
-        return template.query(sql,new BeanPropertyRowMapper<>(Attr_key.class));
+        return template.query(sql, new BeanPropertyRowMapper<>(Attr_key.class));
+    }
+
+    /**
+     *
+     * @return 查询数据ID和点击量
+     */
+    public List<BasicInfoAll> queryDataClickCounts(){
+        String sql = "Select id , click_count from basic_info";
+        return template.query(sql,new BeanPropertyRowMapper<>(BasicInfoAll.class));
+    }
+
+    /**
+     * 根据id 更新clickCount 的值
+     * @param id DataId
+     * @param clickCount 点击量
+     */
+    public void updateClickCounts(int id, int clickCount){
+        String sql = "update basic_info set click_count = ? where id =?";
+        template.update(sql,clickCount,id);
     }
 
 

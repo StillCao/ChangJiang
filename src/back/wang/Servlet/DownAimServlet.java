@@ -92,7 +92,7 @@ public class DownAimServlet extends HttpServlet {
                     if (name.equals("user_id")) {
                         try {
                             user_id = Integer.parseInt(value);
-                            user_name = userQuery.queryUserById(1).getUserName();
+                            user_name = userQuery.queryUserById(user_id).getUserName();
                             projName.append(user_name);
                         } catch (NumberFormatException e) {
                             e.printStackTrace();

@@ -37,7 +37,10 @@ public class IndexDataShowService {
                     break;
                 }
                 int newnum = num - basicDataSub.size();     // 下一次查询只需要查 newnum 条
-                basicDataSub.addAll(queryData.QueryBasicByTag2IdLimit(typeLevel2.getId(), newnum));
+                List<BasicInfo>  basicInfos = queryData.QueryBasicByTag2IdLimit(typeLevel2.getId(), newnum);
+                if (basicInfos != null){
+                    basicDataSub.addAll(basicInfos);
+                }
             }
             JSONArray jsonArray = (JSONArray) JSONArray.toJSON(basicDataSub);
 //            List<BasicData> finalBasicDataSub = basicDataSub;

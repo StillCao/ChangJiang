@@ -41,6 +41,7 @@ public class BasicInfoAll {
     private String da_quality;
     private String da_refer;
     private String subj_cfi;
+    private int click_count;
 
     public int getId() {
         return id;
@@ -282,6 +283,14 @@ public class BasicInfoAll {
         this.subj_cfi = subj_cfi;
     }
 
+    public int getClick_count() {
+        return click_count;
+    }
+
+    public void setClick_count(int click_count) {
+        this.click_count = click_count;
+    }
+
     @Override
     public String toString() {
         return "BasicInfoAll{" +
@@ -315,6 +324,7 @@ public class BasicInfoAll {
                 ", da_quality='" + da_quality + '\'' +
                 ", da_refer='" + da_refer + '\'' +
                 ", subj_cfi='" + subj_cfi + '\'' +
+                ", click_count=" + click_count +
                 '}';
     }
 }
