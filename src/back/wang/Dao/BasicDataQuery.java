@@ -3,6 +3,7 @@ package back.wang.Dao;
 import back.wang.Domain.BasicInfoAll;
 import back.wang.Domain.News;
 import front.basic_page.Domain.BasicInfo;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import utils.JDBCUtils;
@@ -66,6 +67,30 @@ public class BasicDataQuery {
      */
     public boolean deleteRelaChartByDataId(int id){
         String sql = "delete from rela_chart where basi_info_id = ?";
+        return template.update(sql,id) > 0;
+    }
+
+    /**
+     * 根据数据Id查询数据信息
+     * @param id 数据Id
+     * @return
+     */
+    public BasicInfoAll queryDataById(int id){
+        String sql = "select * from basic_info where id = ?";
+        try {
+            return template.queryForObject(sql,new BeanPropertyRowMapper<>(BasicInfoAll.class),id);
+        }catch (DataAccessException e){
+            return null;
+        }
+    }
+
+    /**
+     * 根据数据id 删除数据记录
+     * @param id 数据id
+     * @return 是否删除成功
+     */
+    public boolean deleteBasicData(int id){
+        String sql = "delete from basic_info where id =?";
         return template.update(sql,id) > 0;
     }
 }

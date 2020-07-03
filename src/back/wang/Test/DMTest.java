@@ -48,6 +48,11 @@ public class DMTest {
 
     @org.junit.Test
     public void deleteRelaChartByDataId() {
-        System.out.println(new BasicDataQuery().deleteRelaChartByDataId(42));
+        System.out.println(new BasicDataQuery().deleteRelaChartByDataId(36));
+    }
+
+    @org.junit.Test
+    public void deleteBasicData() {
+        System.out.println(new BasicDataQuery().deleteBasicData(36));
     }
 }
