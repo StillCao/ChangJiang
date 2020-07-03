@@ -668,41 +668,37 @@ public class Query {
 
         //创建一个集合，封装最终结果
         List<Map> list = new ArrayList<>();
+        String sql = "SELECT count(*) FROM basic_info";
+        Integer allcounts = template.queryForObject(sql, Integer.class);
 
         //1.判断update的值，来确定升序排列还是降序排列
         if(updated == true){
             //按时间降序排列，也就是日期从大到小
             //2.创建sql语句，获取基本信息表的数据信息
+
+            String sql1 = "SELECT * FROM basic_info ORDER BY up_time DESC";
+
+            //3. 执行sql语句并封装
+            List<Basic_info> InfoList = template.query(sql1, new BeanPropertyRowMapper<>(Basic_info.class));
             if (currentpage==0 && pagesize==0){
-                String sql = "SELECT * FROM basic_info ORDER BY up_time DESC";
-
-                //3. 执行sql语句并封装
-                List<Basic_info> basicInfoList = template.query(sql, new BeanPropertyRowMapper<>(Basic_info.class));
-
                 //计算结果中的数据总条数，将其封装在map集合
                 Map num_map = new HashMap();
-                num_map.put("allCounts",basicInfoList.size());
+                num_map.put("allCounts",allcounts);
                 list.add(num_map);
                 //将关键字features和属性值放在map中
                 Map reslut_map = new HashMap();
-                reslut_map.put("features",basicInfoList);
+                reslut_map.put("features",InfoList);
                 list.add(reslut_map);
             }else {
-                String sql = "SELECT * FROM basic_info ORDER BY up_time DESC LIMIT ?,?";
+                String sql2 = "SELECT * FROM basic_info ORDER BY up_time DESC LIMIT ?,?";
 
                 //3. 执行sql语句并封装
-                int max_id = pagesize * (currentpage - 1);
-                List<Basic_info> basicInfoList = template.query(sql, new BeanPropertyRowMapper<>(Basic_info.class),max_id,pagesize);
+                int index = (currentpage - 1) * pagesize;
+                List<Basic_info> basicInfoList = template.query(sql2, new BeanPropertyRowMapper<>(Basic_info.class),index,pagesize);
 
-                try {
-                    System.out.println(new ObjectMapper().writeValueAsString(basicInfoList));
-                } catch (JsonProcessingException e) {
-                    e.printStackTrace();
-                }
-                //3.1 将数据基本信息的url中的“//”改为“/”
                 //计算结果中的数据总条数，将其封装在map集合
                 Map num_map = new HashMap();
-                num_map.put("allCounts",basicInfoList.size());
+                num_map.put("allCounts",allcounts);
                 list.add(num_map);
                 //将关键字features和属性值放在map中
                 Map reslut_map = new HashMap();
@@ -714,30 +710,31 @@ public class Query {
             //按时间升序排列，也就是日期从小到大
             //2.创建sql语句，获取基本信息表的数据信息
 
+
+            String sql1 = "SELECT * FROM basic_info ORDER BY up_time ASC";
+
+            //3. 执行sql语句并封装
+
+            List<Basic_info> InfoList = template.query(sql1, new BeanPropertyRowMapper<>(Basic_info.class));
             if (currentpage==0 && pagesize==0){
-                String sql = "SELECT * FROM basic_info ORDER BY up_time ASC";
-
-                //3. 执行sql语句并封装
-                List<Basic_info> basicInfoList = template.query(sql, new BeanPropertyRowMapper<>(Basic_info.class));
-
                 //计算结果中的数据总条数，将其封装在map集合
                 Map num_map = new HashMap();
-                num_map.put("allCounts",basicInfoList.size());
+                num_map.put("allCounts",InfoList.size());
                 list.add(num_map);
                 //将关键字features和属性值放在map中
                 Map reslut_map = new HashMap();
-                reslut_map.put("features",basicInfoList);
+                reslut_map.put("features",InfoList);
                 list.add(reslut_map);
             }else {
-                String sql = "SELECT * FROM basic_info ORDER BY up_time ASC LIMIT ?,?";
+                String sql2 = "SELECT * FROM basic_info ORDER BY up_time ASC LIMIT ?,?";
 
                 //3. 执行sql语句并封装
-                int max_id = pagesize * (currentpage - 1);
-                List<Basic_info> basicInfoList = template.query(sql, new BeanPropertyRowMapper<>(Basic_info.class),max_id,pagesize);
+                int index = (currentpage - 1) * pagesize;
+                List<Basic_info> basicInfoList = template.query(sql2, new BeanPropertyRowMapper<>(Basic_info.class),index ,pagesize);
 
                 //计算结果中的数据总条数，将其封装在map集合
                 Map num_map = new HashMap();
-                num_map.put("allCounts",basicInfoList.size());
+                num_map.put("allCounts",InfoList.size());
                 list.add(num_map);
                 //将关键字features和属性值放在map中
                 Map reslut_map = new HashMap();
@@ -769,7 +766,6 @@ public class Query {
             //拼接sql语句，最终得到根据参数info_id集合查询涉及其中id的数据基本信息
             String s1 = "SELECT * FROM basic_info WHERE id IN (";
             String s2 = "";
-
             for (int i = 0; i < idlist.size(); i++) {
                 if (i == idlist.size()-1){
                     s2 += idlist.get(i)+") ";
@@ -778,13 +774,12 @@ public class Query {
                 }
             }
 
+            String s3 = "ORDER BY up_time DESC";
+            String sql = s1 + s2 + s3;
+
+            //执行sql语句，并封装结果
+            List<Basic_info> basicinfolist = template.query(sql, new BeanPropertyRowMapper<>(Basic_info.class));
             if(currentpage == 0 && pagesize == 0){
-
-                String s3 = "ORDER BY up_time DESC";
-                String sql = s1 + s2 + s3;
-
-                //执行sql语句，并封装结果
-                List<Basic_info> basicinfolist = template.query(sql, new BeanPropertyRowMapper<>(Basic_info.class));
                 //计算结果中的数据总条数，将其封装在map集合
                 Map num_map = new HashMap();
                 num_map.put("allCounts",basicinfolist.size());
@@ -794,13 +789,13 @@ public class Query {
                 reslut_map.put("features",basicinfolist);
                 list.add(reslut_map);
             }else {
-                String s3 = "ORDER BY up_time DESC LIMIT ?,?";
+                String s4 = "ORDER BY up_time DESC LIMIT ?,?";
 
-                String sql = s1 + s2 + s3;
+                String sql1 = s1 + s2 + s4;
 
                 //执行sql语句，并封装结果
-                int max_id = pagesize * (currentpage - 1);
-                List<Basic_info> basicinfolist = template.query(sql, new BeanPropertyRowMapper<>(Basic_info.class),max_id,pagesize);
+                int index = (currentpage - 1) * pagesize;
+                List<Basic_info> infolist = template.query(sql1, new BeanPropertyRowMapper<>(Basic_info.class),index,pagesize);
 
                 //计算结果中的数据总条数，将其封装在map集合
                 Map num_map = new HashMap();
@@ -808,7 +803,7 @@ public class Query {
                 list.add(num_map);
                 //将关键字features和属性值放在map中
                 Map reslut_map = new HashMap();
-                reslut_map.put("features",basicinfolist);
+                reslut_map.put("features",infolist);
                 list.add(reslut_map);
             }
 
@@ -828,13 +823,12 @@ public class Query {
                 }
             }
 
+            String s3 = "ORDER BY up_time ASC";
+            String sql = s1 + s2 + s3;
+
+            //执行sql语句，并封装结果
+            List<Basic_info> basicinfolist = template.query(sql, new BeanPropertyRowMapper<>(Basic_info.class));
             if (currentpage==0 && pagesize==0){
-                String s3 = "ORDER BY up_time ASC";
-                String sql = s1 + s2 + s3;
-
-                //执行sql语句，并封装结果
-                List<Basic_info> basicinfolist = template.query(sql, new BeanPropertyRowMapper<>(Basic_info.class));
-
                 //计算结果中的数据总条数，将其封装在map集合
                 Map num_map = new HashMap();
                 num_map.put("allCounts",basicinfolist.size());
@@ -844,15 +838,15 @@ public class Query {
                 reslut_map.put("features",basicinfolist);
                 list.add(reslut_map);
             }else {
-                String s3 = "ORDER BY up_time ASC LIMIT ?,?";
+                String s4 = "ORDER BY up_time ASC LIMIT ?,?";
 
-                String sql = s1 + s2 + s3;
+                String sql1 = s1 + s2 + s4;
 
                 System.out.println("sql=================");
                 System.out.println(sql);
                 //执行sql语句，并封装结果
-                int max_id = pagesize * (currentpage - 1);
-                List<Basic_info> basicinfolist = template.query(sql, new BeanPropertyRowMapper<>(Basic_info.class), max_id, pagesize);
+                int index = (currentpage - 1) * pagesize;
+                List<Basic_info> infolist = template.query(sql1, new BeanPropertyRowMapper<>(Basic_info.class), index, pagesize);
 
                 //计算结果中的数据总条数，将其封装在map集合
                 Map num_map = new HashMap();
@@ -860,9 +854,10 @@ public class Query {
                 list.add(num_map);
                 //将关键字features和属性值放在map中
                 Map reslut_map = new HashMap();
-                reslut_map.put("features",basicinfolist);
+                reslut_map.put("features",infolist);
                 list.add(reslut_map);
             }
+
         }
         return list;
     }
