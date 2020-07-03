@@ -24,7 +24,7 @@ public class DMService {
      *
      * @param currentPage  当前页面
      * @param currentCount 每页条数
-     * @return Page<>转为的JsonString
+     * @return             Page<>转为的JsonString
      */
     public String allData(int currentPage, int currentCount) {
         BasicDataQuery basicDataQuery = new BasicDataQuery();
@@ -43,7 +43,7 @@ public class DMService {
      * @param value        字段值
      * @param currentPage  当前页码
      * @param currentCount 每页条数
-     * @return Page<>转为的JsonString
+     * @return             Page<>转为的JsonString
      */
     public String dataByKey(String key, String value, int currentPage, int currentCount) {
         BasicDataQuery basicDataQuery = new BasicDataQuery();
@@ -54,5 +54,16 @@ public class DMService {
         List<BasicInfoAll> newsList = basicDataQuery.queryDataByKeyLikeByPage(key, value, startPosition, currentCount);
         Page<BasicInfoAll> page = new Page<>(currentPage, currentCount, totalPage, totalCount, newsList);
         return JSON.toJSONString(page);
+    }
+
+    /**
+     * 根据 数据id 删除相关表中 属于该数据Id的记录
+     *
+     * @param id    数据id
+     * @return      是否删除成功
+     */
+    public boolean deleteRelaChart(int id ){
+        BasicDataQuery basicDataQuery = new BasicDataQuery();
+        return basicDataQuery.deleteRelaChartByDataId(id);
     }
 }

@@ -50,4 +50,29 @@ public class DMServlet extends BaseServlet {
         }
         resp.getWriter().append(result);
     }
+
+    /**
+     * 基础数据删除
+     */
+    public void deleteDataById(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        String idString  = req.getParameter("id");
+        int id = Integer.parseInt(idString);
+        String result = "";
+        int error_num = 0;
+        DMService service = new DMService();
+
+        //先删除rela_chart表相关信息
+        if (service.deleteRelaChart(id)){
+            //再删除基础数据
+
+            //删除基础数据先删除文件
+
+
+        }
+
+
+    }
+
+
+
 }

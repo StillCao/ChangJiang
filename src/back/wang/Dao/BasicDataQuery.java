@@ -58,4 +58,14 @@ public class BasicDataQuery {
         String sql = "select * from basic_info where " + key + " like '" + value + "'  Order By up_time Desc limit ?,? ";
         return template.query(sql, new BeanPropertyRowMapper<>(BasicInfoAll.class), startPos, count);
     }
+
+    /**
+     * 根据数据id 删除关联表里 与该数据相关记录
+     * @param id 数据id
+     * @return
+     */
+    public boolean deleteRelaChartByDataId(int id){
+        String sql = "delete from rela_chart where basi_info_id = ?";
+        return template.update(sql,id) > 0;
+    }
 }

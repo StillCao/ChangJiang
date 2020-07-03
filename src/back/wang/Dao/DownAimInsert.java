@@ -132,7 +132,7 @@ public class DownAimInsert {
      * @return
      */
     public BasicInfoAll queryBasicInfoById(int id){
-        String sql = "SELECT Name,da_size,datm_range from basic_info where id =?";
+        String sql = "SELECT id,Name,da_size,datm_range from basic_info where id =?";
         try {
             return template.queryForObject(sql, new BeanPropertyRowMapper<>(BasicInfoAll.class), id);
         } catch (DataAccessException e) {
