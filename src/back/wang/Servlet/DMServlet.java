@@ -66,12 +66,20 @@ public class DMServlet extends BaseServlet {
         BasicDataQuery query = new BasicDataQuery();
 
         //先删除rela_chart表相关信息
-        if (service.deleteRelaChart(id)) {
-            object.put("删除rela_chart表相关信息:", true);
-            //再删除基础数据
-            BasicInfoAll basicInfo = query.queryDataById(id);
-            if (basicInfo != null) {
-                //删除基础数据先删除文件(缩略图和文件)
+        object.put("删除rela_chart表相关信息:", service.deleteRelaChart(id));
+
+        //再删除order_num表
+        object.put("删除order_confirm表相关信息:", service.deleteOrderConfirm(id));
+
+        //再删除基础数据
+        BasicInfoAll basicInfo = query.queryDataById(id);
+        if (basicInfo != null) {
+            //删除基础信息表
+            boolean succ = service.deleteBasicData(id);
+            object.put("删除基础信息表中记录:", succ);
+
+            if (succ) {
+                //再删除基础数据先删除文件(缩略图和文件)
                 boolean[] successes = service.deleteFiles(basicInfo);
                 for (int i = 0; i < successes.length; i++) {
                     if (i == 0) {
@@ -87,12 +95,7 @@ public class DMServlet extends BaseServlet {
                         object.put("删除基础信息样例数据:", successes[i]);
                     }
                 }
-
-                //再删除基础信息表
-                object.put("删除基础信息表中记录:", service.deleteBasicData(id));
             }
-        } else {
-            object.put("删除rela_chart表相关信息:", false);
         }
 
         resp.setContentType("text/html;charset=utf-8");

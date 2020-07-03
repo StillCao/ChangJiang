@@ -93,4 +93,14 @@ public class BasicDataQuery {
         String sql = "delete from basic_info where id =?";
         return template.update(sql,id) > 0;
     }
+
+    /**
+     * 根据数据id 删除订单记录
+     * @param id 数据id
+     * @return 是否删除成功
+     */
+    public boolean deleteOrderByDataId(int id){
+        String sql = "delete from order_confirm where dataId = ?";
+        return template.update(sql,id) > 0;
+    }
 }
