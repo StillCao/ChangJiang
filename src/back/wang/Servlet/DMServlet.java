@@ -71,6 +71,9 @@ public class DMServlet extends BaseServlet {
         //再删除order_num表
         object.put("删除order_confirm表相关信息:", service.deleteOrderConfirm(id));
 
+        //再删除data_shopcar表
+        object.put("删除order_confirm表相关信息:", service.deleteShopCar(id));
+
         //再删除基础数据
         BasicInfoAll basicInfo = query.queryDataById(id);
         if (basicInfo != null) {

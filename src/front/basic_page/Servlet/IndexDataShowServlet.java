@@ -44,6 +44,5 @@ public class IndexDataShowServlet extends BaseServlet {
         resp.setContentType("text/html;charset=utf-8");
         resp.setHeader("Access-Control-Allow-Origin", "*");//解决跨域问题，开发完毕时应该关闭
         resp.getWriter().append(result);
-
     }
 }

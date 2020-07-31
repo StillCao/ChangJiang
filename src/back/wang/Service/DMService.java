@@ -149,4 +149,15 @@ public class DMService {
         BasicDataQuery basicDataQuery = new BasicDataQuery();
         return basicDataQuery.deleteOrderByDataId(id);
     }
+
+    /**
+     * 根据数据id 删除购物车记录
+     *
+     * @param id 数据id
+     * @return 是否删除成功
+     */
+    public boolean deleteShopCar(int id) {
+        BasicDataQuery basicDataQuery = new BasicDataQuery();
+        return basicDataQuery.deleteShopCarByDataId(id);
+    }
 }
