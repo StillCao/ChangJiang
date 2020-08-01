@@ -229,22 +229,37 @@ public class QueryData {
     }
 
     /**
-     *
      * @return 查询数据ID和点击量
      */
-    public List<BasicInfoAll> queryDataClickCounts(){
+    public List<BasicInfoAll> queryDataClickCounts() {
         String sql = "Select id , click_count from basic_info";
-        return template.query(sql,new BeanPropertyRowMapper<>(BasicInfoAll.class));
+        return template.query(sql, new BeanPropertyRowMapper<>(BasicInfoAll.class));
     }
 
     /**
      * 根据id 更新clickCount 的值
-     * @param id DataId
+     *
+     * @param id         DataId
      * @param clickCount 点击量
      */
-    public void updateClickCounts(int id, int clickCount){
+    public void updateClickCounts(int id, int clickCount) {
         String sql = "update basic_info set click_count = ? where id =?";
-        template.update(sql,clickCount,id);
+        template.update(sql, clickCount, id);
+    }
+
+    /**
+     * 根据数据id 查询id,name,image字段
+     *
+     * @param id 数据id
+     * @return 查询成功返回对象，查询失败返回null
+     */
+    public BasicInfo queryDataById(int id) {
+        String sql = "Select id , NAME, image from basic_info where id = ?";
+        try {
+            return template.queryForObject(sql, new BeanPropertyRowMapper<>(BasicInfo.class), id);
+        } catch (DataAccessException e) {
+            return null;
+        }
     }
 
 

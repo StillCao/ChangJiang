@@ -1,5 +1,7 @@
 package front.basic_page.Servlet;
 
+import back.wang.Domain.BasicInfoAll;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import front.basic_page.Dao.QueryData;
 import front.basic_page.Domain.BasicInfo;
@@ -9,11 +11,13 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
-import java.util.List;
+import java.util.*;
 
 @WebServlet("/IndexDataServlet")
 public class IndexDataServlet extends HttpServlet {
+    private Map<Integer, Integer> dataCounts = null;
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -30,48 +34,21 @@ public class IndexDataServlet extends HttpServlet {
         } else if (type == 2) {//最新数据
             basicInfoList = queryData.QueryLatest8BasicInfo();
         } else if (type == 3) {//热门数据
-            return;
+            basicInfoList = new ArrayList<>();
+            List<Map.Entry<Integer, Integer>> infoIds = new ArrayList<>(dataCounts.entrySet());
+            infoIds.sort((o1, o2) -> (o2.getValue() - o1.getValue()));
+            for (Map.Entry<Integer, Integer> hot : infoIds) {
+                if (basicInfoList.size() >= 8) {
+                    break;
+                }
+                int id = hot.getKey();
+                BasicInfo basicInfo = queryData.queryDataById(id);
+                if (basicInfo != null) {
+                    basicInfoList.add(basicInfo);
+                }
+            }
         }
 
-//        String url = "http://" + req.getServerName() + ":" + req.getServerPort() + req.getContextPath();
-////        String PrjFileUrlPath = url + "/PrjFile";
-//
-//        if (basicInfoList != null) {
-//            basicInfoList.forEach(basicInfo -> {
-//                String picContextPath = "";
-//                String picRealPath = basicInfo.getImage();
-//                String[] picPathSplits = picRealPath.split("长江地学\\\\");
-//                if (picPathSplits.length == 2) {
-//                    String picHalfPath = picRealPath.split("长江地学\\\\")[1].replace("\\", "/");
-//                    picContextPath = url + "/" + picHalfPath;
-//                }
-//                System.out.println(picContextPath);
-//                basicInfo.setImage(picContextPath);
-//
-////                File file = new File(basicInfo.getImage());
-////                FileInputStream in = null;
-////                byte[] buffer = null;
-////                try {
-////                    in = new FileInputStream(file);
-////                    buffer = new byte[in.available()];
-////                    int len = 0;
-////                    while ((len = in.read(buffer)) > 0) {
-////                    }
-////                    System.out.println(Arrays.toString(buffer));
-////                    in.close();
-////                } catch (IOException e) {
-////                    e.printStackTrace();
-////                }
-////                String by = "";
-////                if (buffer != null) {
-////                    by = new String(buffer);
-////                }
-//////                System.out.println(by);
-////                basicInfo.setImage(by);
-//////                System.out.println(basicInfo.toString());
-//            });
-//
-//        }
 
         ObjectMapper mapper = new ObjectMapper();
         String result = mapper.writeValueAsString(basicInfoList);
@@ -85,5 +62,30 @@ public class IndexDataServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         this.doPost(req, resp);
+    }
+
+    @Override
+    public void init() {
+        //从数据库初始化
+
+        dataCounts = (Map<Integer, Integer>) this.getServletContext().getAttribute("dataCounts");
+        if (dataCounts == null) {
+            dataCounts = new HashMap<>();
+            List<BasicInfoAll> basicInfoList = new QueryData().queryDataClickCounts();
+            basicInfoList.forEach(basicInfo -> dataCounts.put(basicInfo.getId(), basicInfo.getClick_count()));
+        }
+
+        this.getServletContext().setAttribute("dataCounts", dataCounts);
+
+    }
+
+    @Override
+    public void destroy() {
+        //更新到数据库
+        QueryData queryData = new QueryData();
+        for (Integer id : dataCounts.keySet()) {
+            queryData.updateClickCounts(id, dataCounts.get(id));
+        }
+        this.getServletContext().removeAttribute("dataCounts");
     }
 }
