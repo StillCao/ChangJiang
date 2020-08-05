@@ -69,10 +69,6 @@ public class DMTest {
         System.out.println(new QueryData().QueryBasicByTag2IdLimit(39, 8));
     }
 
-    @org.junit.Test
-    public void updateClickCounts() {
-        new QueryData().updateClickCounts(39, 8);
-    }
 
     @org.junit.Test
     public void queryDataById() {

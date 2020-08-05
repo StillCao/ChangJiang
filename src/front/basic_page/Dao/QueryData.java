@@ -232,20 +232,10 @@ public class QueryData {
      * @return 查询数据ID和点击量
      */
     public List<BasicInfoAll> queryDataClickCounts() {
-        String sql = "Select id , click_count from basic_info";
+        String sql = "Select id from basic_info";
         return template.query(sql, new BeanPropertyRowMapper<>(BasicInfoAll.class));
     }
 
-    /**
-     * 根据id 更新clickCount 的值
-     *
-     * @param id         DataId
-     * @param clickCount 点击量
-     */
-    public void updateClickCounts(int id, int clickCount) {
-        String sql = "update basic_info set click_count = ? where id =?";
-        template.update(sql, clickCount, id);
-    }
 
     /**
      * 根据数据id 查询id,name,image字段

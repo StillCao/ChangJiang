@@ -79,13 +79,4 @@ public class IndexDataServlet extends HttpServlet {
 
     }
 
-    @Override
-    public void destroy() {
-        //更新到数据库
-        QueryData queryData = new QueryData();
-        for (Integer id : dataCounts.keySet()) {
-            queryData.updateClickCounts(id, dataCounts.get(id));
-        }
-        this.getServletContext().removeAttribute("dataCounts");
-    }
 }
