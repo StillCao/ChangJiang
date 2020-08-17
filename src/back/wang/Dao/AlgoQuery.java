@@ -9,6 +9,7 @@ import org.springframework.jdbc.support.KeyHolder;
 
 import java.util.List;
 
+import back.wang.Domain.Admin;
 import back.wang.Domain.TypicalAlgo;
 import back.wang.Domain.TypicalAlgoTags;
 import front.basic_page.Domain.Attr_value;
@@ -29,6 +30,16 @@ public class AlgoQuery {
     public List<TypicalAlgo> getAllAlgo() {
         String sql = "SELECT * FROM typical_algo";
         return template.query(sql, new BeanPropertyRowMapper<>(TypicalAlgo.class));
+    }
+
+    /**
+     * @param startPos 起始位置
+     * @param count    每页的数量
+     * @return 典型算法分页查询
+     */
+    public List<TypicalAlgo> queryAlgoByPage(int startPos, int count) {
+        String sql = "select * from typical_algo limit ?,?";
+        return template.query(sql, new BeanPropertyRowMapper<>(TypicalAlgo.class), startPos, count);
     }
 
     /**
@@ -77,6 +88,14 @@ public class AlgoQuery {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         npjTemplate.update(sql, new BeanPropertySqlParameterSource(typicalAlgoTags), keyHolder);
         return keyHolder.getKey().intValue();
+    }
+
+    /**
+     * 查询typical_algo表总记录条数
+     */
+    public int getAlgoCounts(){
+        String sql = "SELECT count(*) from typical_algo";
+        return template.queryForObject(sql, Integer.class);
     }
 
 

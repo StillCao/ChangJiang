@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import back.wang.Dao.AlgoQuery;
 import back.wang.Domain.TypicalAlgo;
 import back.wang.Domain.TypicalAlgoTags;
+import back.wang.Service.AlgoService;
 import front.basic_page.Servlet.BaseServlet;
 
 /**
@@ -21,15 +23,19 @@ import front.basic_page.Servlet.BaseServlet;
  */
 @WebServlet("/AlgoServlet")
 public class AlgoServlet extends BaseServlet {
-    private AlgoQuery algoQuery = new AlgoQuery();
+    private final AlgoQuery algoQuery = new AlgoQuery();
 
     //返回所有的典型算法记录
     public void showAllAlgo(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        List<TypicalAlgo> typicalAlgoList = algoQuery.getAllAlgo();
+        Map<String, String[]> map = req.getParameterMap();
+        int currentPage = Integer.parseInt(map.getOrDefault("currentPage", new String[]{"1"})[0]);
+        int currentCount = Integer.parseInt(map.getOrDefault("currentCount", new String[]{"10"})[0]);
+        AlgoService algoService = new AlgoService();
+        String result = algoService.allAlgoService(currentPage,currentCount);
 
         resp.setContentType("text/html;charset=utf-8");
         resp.setHeader("Access-Control-Allow-Origin", "*");//解决跨域问题，开发完毕时应该关闭
-        resp.getWriter().append(JSON.toJSONString(typicalAlgoList));
+        resp.getWriter().append(result);
     }
 
     //根据算法id查询对应的典型算法

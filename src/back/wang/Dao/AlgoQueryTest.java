@@ -6,6 +6,7 @@ import java.util.List;
 
 import back.wang.Domain.TypicalAlgo;
 import back.wang.Domain.TypicalAlgoTags;
+import back.wang.Service.AlgoService;
 
 
 /**
@@ -52,6 +53,18 @@ public class AlgoQueryTest {
         TypicalAlgoTags typicalAlgoTags = new TypicalAlgoTags();
         typicalAlgoTags.setName("tag1.1");
         System.out.println(algoQuery.tagInsert(typicalAlgoTags));
+    }
+
+    @Test
+    public void getAlgoCountTest(){
+        System.out.println(algoQuery.getAlgoCounts());
+    }
+
+    @Test
+    public void getAlgoSTest(){
+        AlgoService allAlgoService = new AlgoService();
+        System.out.println(algoQuery.queryAlgoByPage(0,4));
+        System.out.println(allAlgoService.allAlgoService(1,4));
     }
 
 
