@@ -1,6 +1,7 @@
 package back.wang.Servlet;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 
 import java.io.IOException;
 import java.util.List;
@@ -81,6 +82,12 @@ public class AlgoServlet extends BaseServlet {
     //上传算法
     public void upAlgo(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         boolean isSuccess = false;
+        String algoString = req.getParameter("algo");
+        TypicalAlgo typicalAlgo = JSON.parseObject(algoString,TypicalAlgo.class);
+        if (typicalAlgo != null){
+
+        }
+
         resp.setContentType("text/html;charset=utf-8");
         resp.setHeader("Access-Control-Allow-Origin", "*");//解决跨域问题，开发完毕时应该关闭
         resp.getWriter().append(String.valueOf(isSuccess));

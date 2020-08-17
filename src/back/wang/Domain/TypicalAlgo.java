@@ -1,5 +1,7 @@
 package back.wang.Domain;
 
+import java.util.Date;
+
 /**
  * @author wwx-sys
  * @time 2020-08-17-14:28
@@ -14,6 +16,7 @@ public class TypicalAlgo {
     private String doc_url;
     private String up_user;
     private String up_unit;
+    private Date up_date;
 
     public int getId() {
         return id;
@@ -79,6 +82,14 @@ public class TypicalAlgo {
         this.up_unit = up_unit;
     }
 
+    public Date getUp_date() {
+        return up_date;
+    }
+
+    public void setUp_date(Date up_date) {
+        this.up_date = up_date;
+    }
+
     @Override
     public String toString() {
         return "TypicalAlgo{" +
@@ -90,6 +101,7 @@ public class TypicalAlgo {
                 ", doc_url='" + doc_url + '\'' +
                 ", up_user='" + up_user + '\'' +
                 ", up_unit='" + up_unit + '\'' +
+                ", up_date=" + up_date +
                 '}';
     }
 }

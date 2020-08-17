@@ -72,7 +72,7 @@ public class AlgoQuery {
      * @return 插入后的主键ID
      */
     public int algoInsert(TypicalAlgo typical_algo) {
-        String sql = "Insert into typical_algo (id,name,tags,digest,description,doc_url,up_user,up_unit) values (null,:name,:tags,:digest,:description,:doc_url,:up_user,:up_unit)";
+        String sql = "Insert into typical_algo (id,name,tags,digest,description,doc_url,up_user,up_unit,up_date) values (null,:name,:tags,:digest,:description,:doc_url,:up_user,:up_unit,:up_date)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         npjTemplate.update(sql, new BeanPropertySqlParameterSource(typical_algo), keyHolder);
         return keyHolder.getKey().intValue();
@@ -96,6 +96,15 @@ public class AlgoQuery {
     public int getAlgoCounts(){
         String sql = "SELECT count(*) from typical_algo";
         return template.queryForObject(sql, Integer.class);
+    }
+
+    /**
+     * 根据id判断标签是否已存在
+     * @param id 需要判断的标签id
+     */
+    public boolean isTagsExists(int id){
+        String sql = "SELECT count(*) from typical_algo_tags WHERE id = ?";
+        return template.queryForObject(sql,Integer.class,id) > 0;
     }
 
 

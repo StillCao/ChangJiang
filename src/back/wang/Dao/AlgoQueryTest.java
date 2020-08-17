@@ -67,5 +67,10 @@ public class AlgoQueryTest {
         System.out.println(allAlgoService.allAlgoService(1,4));
     }
 
+    @Test
+    public void isTagsExistsTest(){
+        System.out.println(algoQuery.isTagsExists(10));
+    }
+
 
 }

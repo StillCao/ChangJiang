@@ -31,4 +31,35 @@ public class AlgoService {
         Page<TypicalAlgo> page = new Page<>(currentPage, currentCount, totalPage, totalCount, typicalAlgos);
         return JSON.toJSONString(page);
     }
+
+    /**
+     * 插入一条典型算法
+     *
+     * @param algo TypicalAlgo对象
+     * @return 是否插入成功
+     */
+    public boolean insertAlgo(TypicalAlgo algo) {
+        AlgoQuery algoQuery = new AlgoQuery();
+
+        //先判断标签是否需要插入，需要插入则插入
+        String tags = algo.getTags();
+        if (tags != null && tags.length() >= 1) {
+            if (tags.contains(",")) {
+                String[] splits = tags.split(",");
+                for (String split : splits) {
+                    try{
+                        int id = Integer.parseInt(split);
+                        if (!algoQuery.isTagsExists(id)){       //不存在就添加
+//                            if (!algoQuery.tagInsert())
+                        }
+                    }
+                    catch (NumberFormatException e){
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        return false;
+
+    }
 }
