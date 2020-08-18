@@ -70,5 +70,15 @@ public class Page<T> {
         this.list = list;
     }
 
+    @Override
+    public String toString() {
+        return "{" +
+                "totalPage=" + totalPage +
+                ", currentPage=" + currentPage +
+                ", currentCount=" + currentCount +
+                ", totalCount=" + totalCount +
+                ", list=" + list +
+                '}';
+    }
 }
 

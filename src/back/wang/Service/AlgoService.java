@@ -2,13 +2,18 @@ package back.wang.Service;
 
 import com.alibaba.fastjson.JSON;
 
+import org.apache.commons.fileupload.FileItem;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
-import back.wang.Dao.AdminQuery;
 import back.wang.Dao.AlgoQuery;
-import back.wang.Domain.Admin;
 import back.wang.Domain.Page;
 import back.wang.Domain.TypicalAlgo;
+import back.wang.Domain.TypicalAlgoTags;
 
 /**
  * @author wwx-sys
@@ -32,34 +37,49 @@ public class AlgoService {
         return JSON.toJSONString(page);
     }
 
-    /**
-     * 插入一条典型算法
-     *
-     * @param algo TypicalAlgo对象
-     * @return 是否插入成功
+
+
+     /** 保存文件流到指定的目录
+     * @param item FileItem 对象
+     * @param projDirPath 指定的目录
+     * @return 是否保存成功
      */
-    public boolean insertAlgo(TypicalAlgo algo) {
-        AlgoQuery algoQuery = new AlgoQuery();
-
-        //先判断标签是否需要插入，需要插入则插入
-        String tags = algo.getTags();
-        if (tags != null && tags.length() >= 1) {
-            if (tags.contains(",")) {
-                String[] splits = tags.split(",");
-                for (String split : splits) {
-                    try{
-                        int id = Integer.parseInt(split);
-                        if (!algoQuery.isTagsExists(id)){       //不存在就添加
-//                            if (!algoQuery.tagInsert())
-                        }
-                    }
-                    catch (NumberFormatException e){
-                        e.printStackTrace();
-                    }
-                }
-            }
+    public boolean SaveFile(FileItem item, String projDirPath) throws IOException {
+        File file = new File(projDirPath, item.getName());
+        InputStream is = item.getInputStream();
+        //创建文件输出流
+        FileOutputStream os = new FileOutputStream(file);
+        //将输入流中的数据写出到输出流中
+        int len = -1;
+        byte[] buf = new byte[1024];
+        while ((len = is.read(buf)) != -1) {
+            os.write(buf, 0, len);
         }
-        return false;
+        //关闭流
+        os.close();
+        is.close();
+        //删除临时文件
+        item.delete();
+        return file.exists();
+    }
 
+    /**
+     * 删除一条 典型算法 ，同时删除tags表里 对应的算法记录
+     *
+     * @param algo 算法对象
+     * @return 是否删除成功
+     */
+    public boolean deleteAlgo(TypicalAlgo algo) {
+        AlgoQuery algoQuery = new AlgoQuery();
+        int algoId = algo.getId();
+        List<Integer> tagsIds = algo.byte2ints();                   //先删除tags表里 对应的算法记录
+        tagsIds.forEach(tagsId ->{
+            TypicalAlgoTags tag = algoQuery.getTagsById(tagsId);
+            tag.algo[algoId] = '0';                                   //删除就令对应 该算法id  位上的数字为 0
+            algoQuery.updateTagsAlgo(tagsId, tag.algo);
+        });
+
+        //再删除algo 表中记录
+        return algoQuery.deleteAlgo(algoId);
     }
 }

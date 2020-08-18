@@ -1,6 +1,8 @@
 package back.wang.Domain;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author wwx-sys
@@ -10,7 +12,7 @@ import java.util.Date;
 public class TypicalAlgo {
     private int id;
     private String name;
-    private String tags;
+    public byte[] tags;
     private String digest;
     private String description;
     private String doc_url;
@@ -35,10 +37,10 @@ public class TypicalAlgo {
     }
 
     public String getTags() {
-        return tags;
+        return byte2String(tags);
     }
 
-    public void setTags(String tags) {
+    public void setTags(byte[] tags) {
         this.tags = tags;
     }
 
@@ -90,12 +92,43 @@ public class TypicalAlgo {
         this.up_date = up_date;
     }
 
+    //从数据库的二进制的algo转化为对应的id
+    public String byte2String(byte[] tags) {
+        if (tags == null) {
+            return null;
+        }
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < tags.length; i++) {
+            if (tags[i] == '1') {
+                sb.append(i + 1).append(",");
+            }
+        }
+        if (sb.toString().endsWith(",")) {
+            sb.deleteCharAt(sb.length() - 1);
+        }
+        return sb.toString();
+    }
+
+    //从数据库的二进制的algo转化为对应的id
+    public List<Integer> byte2ints() {
+        if (tags == null) {
+            return null;
+        }
+        List<Integer> idLists = new ArrayList<>();
+        for (int i = 0; i < tags.length; i++) {
+            if (tags[i] == '1') {
+                idLists.add(i + 1);
+            }
+        }
+        return idLists;
+    }
+
     @Override
     public String toString() {
-        return "TypicalAlgo{" +
+        return "{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", tags='" + tags + '\'' +
+                ", tags='" + byte2String(tags) + '\'' +
                 ", digest='" + digest + '\'' +
                 ", description='" + description + '\'' +
                 ", doc_url='" + doc_url + '\'' +
