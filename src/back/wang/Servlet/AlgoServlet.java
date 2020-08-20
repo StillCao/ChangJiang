@@ -182,6 +182,9 @@ public class AlgoServlet extends BaseServlet {
                     if (service.SaveFile(item, projDirPath)) {
                         resp.getWriter().append(fileName).append("文件上传成功！");
                         doc_url = docRootUrl + projName + "/" + fileName;
+                        if (typicalAlgo != null) {
+                            typicalAlgo.setDoc_url(doc_url);
+                        }
                     } else {
                         resp.getWriter().append("文件上传失败！");
                         return;
