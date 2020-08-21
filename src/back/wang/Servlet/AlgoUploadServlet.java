@@ -9,7 +9,6 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -22,8 +21,6 @@ import back.wang.Dao.AlgoQuery;
 import back.wang.Domain.TypicalAlgo;
 import back.wang.Domain.TypicalAlgoTags;
 import back.wang.Service.AlgoService;
-
-import static java.lang.Math.max;
 
 
 /**
@@ -144,7 +141,7 @@ public class AlgoUploadServlet extends HttpServlet {
         if (tagsName != null) {
             newTagIds = new int[tagsName.length];            //所有标签ID
             for (int i = 0; i < tagsName.length; i++) {
-                if (!algoQuery.isTagsExistsByName(tagsName[i])) {
+                if (!algoQuery.isTagsExistsByName(tagsName[i])) {   //不存在则添加
                     TypicalAlgoTags tag = new TypicalAlgoTags();
                     tag.setName(tagsName[i]);
                     newTagIds[i] = algoQuery.tagInsert(tag);
@@ -160,13 +157,6 @@ public class AlgoUploadServlet extends HttpServlet {
         //插入算法数据
         int algoId = 0;         //插入后的算法ID，
         if (typicalAlgo != null) {
-            int shijinzhi = 0;
-            if (newTagIds != null) {
-                for (int i = 0; i < newTagIds.length; i++) {
-                    shijinzhi |= (1 << (newTagIds[i] -1));
-                }
-            }
-            typicalAlgo.setTags(Integer.toBinaryString(shijinzhi).getBytes());
             algoId = algoQuery.algoInsert(typicalAlgo);
             if (algoId > 0) {
                 isSuccess = true;
@@ -174,21 +164,12 @@ public class AlgoUploadServlet extends HttpServlet {
         }
 
         //再遍历tagsName一遍，关联标签的算法ID
-        if (tagsName != null) {
-            for (int i = 0; i < tagsName.length; i++) {
-                TypicalAlgoTags tag = algoQuery.getTagsByName(tagsName[i]);
-                if (tag != null) {
-                    if (tag.algo == null) {
-                        tag.algo = new byte[algoId];
-                    }
-                    else {
-                        tag.algo = Arrays.copyOf(tag.algo,max(tag.algo.length,algoId));
-                    }
-                    tag.algo[tag.algo.length - algoId] = '1';                  //将algo的从右往左数第algoId位设为'1'即ASCII码59
-                    algoQuery.updateTagsAlgo(tag.getId(), tag.algo);
+        if (newTagIds != null) {
+            for (int newTagId : newTagIds) {
+                if (algoId != 0 && newTagId != 0) {
+                    algoQuery.insertRelate(algoId, newTagId);
                 }
             }
-
         }
 
         resp.setContentType("text/html;charset=utf-8");

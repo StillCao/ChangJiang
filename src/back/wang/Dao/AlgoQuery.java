@@ -8,9 +8,10 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.zip.DataFormatException;
 
+import back.wang.Domain.AlgoTagsRelate;
 import back.wang.Domain.TypicalAlgo;
 import back.wang.Domain.TypicalAlgoTags;
 import utils.JDBCUtils;
@@ -80,34 +81,13 @@ public class AlgoQuery {
     }
 
     /**
-     * 根据标签name 获取对应的标签
-     */
-    public TypicalAlgoTags getTagsByName(String name) {
-        String sql = "SELECT * FROM typical_algo_tags WHERE name = ?";
-        try {
-            return template.queryForObject(sql, new BeanPropertyRowMapper<>(TypicalAlgoTags.class), name);
-        } catch (DataAccessException exception) {
-            return null;
-        }
-
-    }
-
-    /**
      * 插入一条数据到 typical_algo 表
      *
      * @param typical_algo typical_algo 对象
      * @return 插入后的主键ID
      */
     public int algoInsert(TypicalAlgo typical_algo) {
-//        String sql = "Insert into typical_algo (id,name,tags,digest,description,doc_url,up_user,up_unit,up_date) values (null,:name,:tags,:digest,:description,:doc_url,:up_user,:up_unit,CURRENT_TIMESTAMP)";
-        //用上面sql语句插入tags时会自动调用tags的get方法，由于我们重写了tags 的get方法，使得它不是原本的值，因此sql使用字符串拼接tags
-        String sql = "";
-        if (typical_algo.tags !=null) {
-            sql = "Insert into typical_algo (id,name,digest,description,doc_url,up_user,up_unit,up_date,tags) values (null,:name,:digest,:description,:doc_url,:up_user,:up_unit,CURRENT_TIMESTAMP," + new String(typical_algo.tags) + ")";
-        }
-        else {
-            sql = "Insert into typical_algo (id,name,digest,description,doc_url,up_user,up_unit,up_date,tags) values (null,:name,:digest,:description,:doc_url,:up_user,:up_unit,CURRENT_TIMESTAMP,null)";
-        }
+        String sql = "Insert into typical_algo (id,name,digest,description,doc_url,up_user,up_unit,up_date) values (null,:name,:digest,:description,:doc_url,:up_user,:up_unit,CURRENT_TIMESTAMP)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         npjTemplate.update(sql, new BeanPropertySqlParameterSource(typical_algo), keyHolder);
         return keyHolder.getKey().intValue();
@@ -120,15 +100,7 @@ public class AlgoQuery {
      * @return 插入后的主键ID
      */
     public int tagInsert(TypicalAlgoTags typicalAlgoTags) {
-//        String sql = "Insert into typical_algo_tags (id,name,algo) values (null,:name,:algo)";
-        //原理同上
-        String sql = "";
-        if (typicalAlgoTags.algo !=null) {
-           sql  = "Insert into typical_algo_tags (id,name,algo) values (null,:name," + new String(typicalAlgoTags.algo) + ")";
-        }
-        else {
-            sql  = "Insert into typical_algo_tags (id,name,algo) values (null,:name,null)";
-        }
+        String sql = "Insert into typical_algo_tags (id,name) values (null,:name)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         npjTemplate.update(sql, new BeanPropertySqlParameterSource(typicalAlgoTags), keyHolder);
         return keyHolder.getKey().intValue();
@@ -162,27 +134,6 @@ public class AlgoQuery {
         return template.queryForObject(sql, Integer.class, name) > 0;
     }
 
-    /**
-     * 更新tags表中的 algo 字段
-     *
-     * @param tagId 需要更改algo的tagId
-     * @param algo  修改后的algo
-     */
-    public boolean updateTagsAlgo(int tagId, byte[] algo) {
-        String sql = "UPDATE typical_algo_tags SET algo = ? WHERE id = ?";
-        return template.update(sql, algo, tagId) > 0;
-    }
-
-    /**
-     * 更新algo表中的 tags 字段
-     *
-     * @param id   需要更改的algoId
-     * @param tags 修改后的tags
-     */
-    public boolean updateAlgoTags(int id, byte[] tags) {
-        String sql = "UPDATE typical_algo SET tags = ? WHERE id = ?";
-        return template.update(sql, tags, id) > 0;
-    }
 
     /**
      * 根据id 删除 算法数据
@@ -193,6 +144,98 @@ public class AlgoQuery {
     public boolean deleteAlgo(int id) {
         String sql = "DELETE FROM typical_algo WHERE id = ?";
         return template.update(sql, id) > 0;
+    }
+
+    /**
+     * @param field    字段名称
+     * @param value    字段值
+     * @param startPos 起始位置
+     * @param count    每页的数量
+     * @return 典型算法模糊分页查询
+     */
+    public List<TypicalAlgo> queryAlgoByFieldLike(String field, String value, int startPos, int count) {
+        value = "%" + value + "%";
+        String sql = "select * from typical_algo WHERE " + field + " LIKE '" + value + "' limit ?,?";
+        return template.query(sql, new BeanPropertyRowMapper<>(TypicalAlgo.class), startPos, count);
+    }
+
+    /**
+     * 典型算法根据条件模糊查询条数
+     *
+     * @param field 字段名称
+     * @param value 字段值
+     * @return
+     */
+    public int queryAlgoCountByFieldLike(String field, String value) {
+        value = "%" + value + "%";
+        String sql = "select count(*) from typical_algo WHERE " + field + " LIKE '" + value + "';";
+        return template.queryForObject(sql, Integer.class);
+    }
+
+    /**
+     * 根据算法ID查询对应的关联表记录
+     *
+     * @param algo_id 算法ID
+     * @return
+     */
+    public List<AlgoTagsRelate> queryRelateByAlgoId(int algo_id) {
+        String sql = "SELECT * FROM algo_tag_rela WHERE algo_id = ?";
+        try {
+            return template.query(sql, new BeanPropertyRowMapper<>(AlgoTagsRelate.class), algo_id);
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    /**
+     * 根据标签ID查询对应的关联表记录
+     *
+     * @param tag_id 标签ID
+     * @return
+     */
+    public List<AlgoTagsRelate> queryRelateByTagId(int tag_id) {
+        String sql = "SELECT * FROM algo_tag_rela WHERE tag_id = ?";
+        try {
+            return template.query(sql, new BeanPropertyRowMapper<>(AlgoTagsRelate.class), tag_id);
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * 插入关联表记录
+     *
+     * @param algo_id 算法ID
+     * @param tag_id 标签ID
+     * @return
+     */
+    public boolean insertRelate(int algo_id, int tag_id) {
+        String sql = "INSERT INTO algo_tag_rela (id,algo_id,tag_id) values (null ,?, ?)";
+        try {
+            return template.update(sql, algo_id, tag_id) > 0;
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
+     * 删除关联表记录
+     *
+     * @param id  关联表ID
+     * @return 是否删除成功
+     */
+    public boolean deleteRelate(int id) {
+        String sql = "DELETE FROM algo_tag_rela WHERE id = ?";
+        try {
+            return template.update(sql,id) > 0;
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
 

@@ -105,12 +105,6 @@ public class AlgoQueryTest {
     }
 
     @Test
-    public void updateTagsAlgo() {
-        byte[] bytes = new byte[]{Byte.parseByte("49")};
-        System.out.println(algoQuery.updateTagsAlgo(7, bytes));
-    }
-
-    @Test
     public void deleteAlgoTest() {
         System.out.println(algoQuery.deleteAlgo(4));
     }
@@ -120,10 +114,6 @@ public class AlgoQueryTest {
         System.out.println(algoQuery.getTagsIdByName("tag1"));
     }
 
-    @Test
-    public void getTagsByNameTest() {
-        System.out.println(algoQuery.getTagsByName("tag1111"));
-    }
 
     @Test
     public void intTest() {
@@ -139,32 +129,25 @@ public class AlgoQueryTest {
     }
 
     @Test
-    public void tagTest() {
-        TypicalAlgoTags tag = algoQuery.getTagsByName("11");
-        if (tag != null) {
-            if (tag.algo == null) {
-                tag.algo = new byte[4];
-            }
-            tag.algo[4 - 1] = '1';
-            algoQuery.updateTagsAlgo(tag.getId(), tag.algo);
-        }
-    }
-
-    @Test
     public void bytesIncreaseTest() {
-        TypicalAlgoTags algoTags =new TypicalAlgoTags();
+//        TypicalAlgoTags algoTags = new TypicalAlgoTags();
 //        int a = 0;
 //        a |= (1 << 6-1);
 //        a |= (1 << 8-1);
         String s = "110000001";
-        algoTags.setAlgo(s.getBytes());
-        algoQuery.tagInsert(algoTags);
+        byte[] ss = s.getBytes();
+        for (byte b :ss){
+            System.out.println(Integer.parseInt(String.valueOf(b)));
+        }
+//        algoTags.setAlgo(s.getBytes());
+
+//        algoQuery.tagInsert(algoTags);
 //        System.out.println(Arrays.toString(Integer.toBinaryString(a).getBytes()));
 //        algo.setTags(Integer.toBinaryString(a).getBytes());
 //        algoQuery.algoInsert(algo);
 
-        TypicalAlgo algo1 = algoQuery.getAlgoById(11);
-        System.out.println(algo1);
+//        TypicalAlgo algo1 = algoQuery.getAlgoById(11);
+//        System.out.println(algo1);
 
 //        TypicalAlgoTags tags = algoQuery.getTagsById(1);
 //        tags.algo = new byte[]{49,48,48,48};
@@ -180,23 +163,26 @@ public class AlgoQueryTest {
 
 
     @Test
-    public void pathDeal(){
+    public void pathDeal() {
 //        String root = "C:/ftp/ChangJiang/典型数据文档/";
         String root = "D:/ftp/ChangJiang/典型数据文档/";
 //        File file = new File(root);
 //        System.out.println(Arrays.toString(file.list()));
         String url = "http://101.37.83.223:8025/典型数据文档/爬虫算法/hu2019.pdf";
         String[] rootSplits = root.split("/");
-        if (rootSplits.length > 0){
-            String rootDirName = rootSplits[rootSplits.length -1];
+        if (rootSplits.length > 0) {
+            String rootDirName = rootSplits[rootSplits.length - 1];
             String[] urlSplits = url.split(rootDirName);
             String docSuffixPath = urlSplits[urlSplits.length - 1];
-            File doc = new File(root,docSuffixPath);
+            File doc = new File(root, docSuffixPath);
             System.out.println(doc.delete());
             System.out.println(doc.getParentFile().delete());
         }
+    }
 
-
+    @Test
+    public void queryAlgoTagRelaByAlgoIdTest(){
+        System.out.println(algoQuery.deleteRelate(7));
     }
 
 

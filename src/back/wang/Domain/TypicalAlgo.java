@@ -1,8 +1,6 @@
 package back.wang.Domain;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 /**
  * @author wwx-sys
@@ -12,7 +10,6 @@ import java.util.List;
 public class TypicalAlgo {
     private int id;
     private String name;
-    public byte[] tags;
     private String digest;
     private String description;
     private String doc_url;
@@ -35,14 +32,6 @@ public class TypicalAlgo {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getTags() {
-        return byte2String(tags);
-    }
-
-    public void setTags(byte[] tags) {
-        this.tags = tags;
     }
 
     public String getDigest() {
@@ -101,44 +90,11 @@ public class TypicalAlgo {
         this.tagNames = tagNames;
     }
 
-    //从数据库的二进制的algo转化为对应的id    (1,2,3,4)这种
-    public String byte2String(byte[] tags) {
-        if (tags == null) {
-            return null;
-        }
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < tags.length; i++) {
-            if (tags[i] == '1') {
-                sb.append(tags.length - i).append(",");
-            }
-        }
-        if (sb.toString().endsWith(",")) {
-            sb.deleteCharAt(sb.length() - 1);
-        }
-        return sb.toString();
-    }
-
-    //从数据库的二进制的algo转化为对应的id
-    public List<Integer> byte2ints() {
-        if (tags == null) {
-            return null;
-        }
-        List<Integer> idLists = new ArrayList<>();
-        for (int i = 0; i < tags.length; i++) {
-            if (tags[i] == '1') {
-                idLists.add(tags.length - i);
-            }
-        }
-        return idLists;
-    }
-
-
     @Override
     public String toString() {
         return "{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", tags='" + byte2String(tags) + '\'' +
                 ", digest='" + digest + '\'' +
                 ", description='" + description + '\'' +
                 ", doc_url='" + doc_url + '\'' +
