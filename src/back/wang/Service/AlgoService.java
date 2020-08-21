@@ -89,10 +89,11 @@ public class AlgoService {
     /**
      * 删除一条 典型算法 ，同时删除tags表里 对应的算法记录
      *
-     * @param algo 算法对象
+     * @param algo           算法对象
+     * @param docRootDirPath 本地文档存储根目录                              //  C:/ftp/ChangJiang/典型数据文档/
      * @return 是否删除成功
      */
-    public boolean deleteAlgo(TypicalAlgo algo) {
+    public boolean deleteAlgo(TypicalAlgo algo, String docRootDirPath) {
         AlgoQuery algoQuery = new AlgoQuery();
         int algoId = algo.getId();
         List<Integer> tagsIds = algo.byte2ints();                   //先删除tags表里 对应的算法记录
@@ -103,7 +104,18 @@ public class AlgoService {
         });
 
         //再删除文件
-
+        String fileUrlPath = algo.getDoc_url();                     // 类似于   http://101.37.83.223:8025/典型数据文档/爬虫算法/hu2019.pdf
+        if (fileUrlPath != null) {
+            String[] rootSplits = docRootDirPath.split("/");
+            if (rootSplits.length > 0) {
+                String rootDirName = rootSplits[rootSplits.length - 1];
+                String[] urlSplits = fileUrlPath.split(rootDirName);
+                String docSuffixPath = urlSplits[urlSplits.length - 1];
+                File doc = new File(docRootDirPath, docSuffixPath);
+                doc.delete();
+                doc.getParentFile().delete();
+            }
+        }
 
         //再删除algo 表中记录
         return algoQuery.deleteAlgo(algoId);

@@ -2,6 +2,7 @@ package back.wang.Dao;
 
 import org.junit.Test;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
@@ -175,6 +176,27 @@ public class AlgoQueryTest {
 //        algos = java.util.Arrays.copyOf(algos, 11);
 //        algos[11 -1] = '1';
 //        System.out.println(Arrays.toString(algos));
+    }
+
+
+    @Test
+    public void pathDeal(){
+//        String root = "C:/ftp/ChangJiang/典型数据文档/";
+        String root = "D:/ftp/ChangJiang/典型数据文档/";
+//        File file = new File(root);
+//        System.out.println(Arrays.toString(file.list()));
+        String url = "http://101.37.83.223:8025/典型数据文档/爬虫算法/hu2019.pdf";
+        String[] rootSplits = root.split("/");
+        if (rootSplits.length > 0){
+            String rootDirName = rootSplits[rootSplits.length -1];
+            String[] urlSplits = url.split(rootDirName);
+            String docSuffixPath = urlSplits[urlSplits.length - 1];
+            File doc = new File(root,docSuffixPath);
+            System.out.println(doc.delete());
+            System.out.println(doc.getParentFile().delete());
+        }
+
+
     }
 
 

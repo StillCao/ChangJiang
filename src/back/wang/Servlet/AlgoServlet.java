@@ -93,7 +93,8 @@ public class AlgoServlet extends BaseServlet {
             TypicalAlgo algo = algoQuery.getAlgoById(id);
             if (algo != null) {
                 AlgoService algoService = new AlgoService();
-                isSuccess = algoService.deleteAlgo(algo);
+                String docRootDirPath = "C:/ftp/ChangJiang/典型数据文档/";
+                isSuccess = algoService.deleteAlgo(algo,docRootDirPath);
             }
             resp.setContentType("text/html;charset=utf-8");
             resp.setHeader("Access-Control-Allow-Origin", "*");//解决跨域问题，开发完毕时应该关闭
