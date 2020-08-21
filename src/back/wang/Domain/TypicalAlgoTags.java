@@ -49,7 +49,7 @@ public class TypicalAlgoTags {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < algo.length; i++) {
             if (algo[i] == '1') {
-                sb.append(i + 1).append(",");
+               sb.append(algo.length - i).append(",");
             }
         }
         if (sb.toString().endsWith(",")) {
@@ -66,7 +66,7 @@ public class TypicalAlgoTags {
         List<Integer> idLists = new ArrayList<>();
         for (int i = 0; i < algo.length; i++) {
             if (algo[i] == '1') {
-                idLists.add(i + 1);
+                idLists.add(algo.length - i);
             }
         }
         return idLists;

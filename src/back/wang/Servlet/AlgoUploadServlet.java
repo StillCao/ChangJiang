@@ -9,6 +9,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -21,6 +22,9 @@ import back.wang.Dao.AlgoQuery;
 import back.wang.Domain.TypicalAlgo;
 import back.wang.Domain.TypicalAlgoTags;
 import back.wang.Service.AlgoService;
+
+import static java.lang.Math.max;
+
 
 /**
  * @author wwx-sys
@@ -90,12 +94,12 @@ public class AlgoUploadServlet extends HttpServlet {
                         tagsName = value.split(",");
                     }
                     System.out.println(name + ":" + value);
-                    break;
                 }
             }
             for (FileItem item : items) {   //再循环一次，保存文件
                 if (!item.isFormField()) {  //若item为文件表单项目
-                    String docRootDirPath = "C:\\ftp\\ChangJiang\\典型数据文档\\";
+//                    String docRootDirPath = "C:\\ftp\\ChangJiang\\典型数据文档\\";
+                    String docRootDirPath = "D:\\ftp\\ChangJiang\\典型数据文档\\";
                     String docRootUrl = "http://101.37.83.223:8025/典型数据文档/";
                     String fileName = item.getName();
                     String projName = "这是一个默认的项目目录";
@@ -159,7 +163,7 @@ public class AlgoUploadServlet extends HttpServlet {
             int shijinzhi = 0;
             if (newTagIds != null) {
                 for (int i = 0; i < newTagIds.length; i++) {
-                    shijinzhi |= (1 << newTagIds[i]);
+                    shijinzhi |= (1 << (newTagIds[i] -1));
                 }
             }
             typicalAlgo.setTags(Integer.toBinaryString(shijinzhi).getBytes());
@@ -174,10 +178,17 @@ public class AlgoUploadServlet extends HttpServlet {
             for (int i = 0; i < tagsName.length; i++) {
                 TypicalAlgoTags tag = algoQuery.getTagsByName(tagsName[i]);
                 if (tag != null) {
-                    tag.algo[algoId] = 1;
+                    if (tag.algo == null) {
+                        tag.algo = new byte[algoId];
+                    }
+                    else {
+                        tag.algo = Arrays.copyOf(tag.algo,max(tag.algo.length,algoId));
+                    }
+                    tag.algo[tag.algo.length - algoId] = '1';                  //将algo的从右往左数第algoId位设为'1'即ASCII码59
                     algoQuery.updateTagsAlgo(tag.getId(), tag.algo);
                 }
             }
+
         }
 
         resp.setContentType("text/html;charset=utf-8");

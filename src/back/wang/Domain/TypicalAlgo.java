@@ -19,6 +19,7 @@ public class TypicalAlgo {
     private String up_user;
     private String up_unit;
     private Date up_date;
+    private String tagNames;
 
     public int getId() {
         return id;
@@ -92,7 +93,15 @@ public class TypicalAlgo {
         this.up_date = up_date;
     }
 
-    //从数据库的二进制的algo转化为对应的id
+    public String getTagNames() {
+        return tagNames;
+    }
+
+    public void setTagNames(String tagNames) {
+        this.tagNames = tagNames;
+    }
+
+    //从数据库的二进制的algo转化为对应的id    (1,2,3,4)这种
     public String byte2String(byte[] tags) {
         if (tags == null) {
             return null;
@@ -100,7 +109,7 @@ public class TypicalAlgo {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < tags.length; i++) {
             if (tags[i] == '1') {
-                sb.append(i + 1).append(",");
+                sb.append(tags.length - i).append(",");
             }
         }
         if (sb.toString().endsWith(",")) {
@@ -117,11 +126,12 @@ public class TypicalAlgo {
         List<Integer> idLists = new ArrayList<>();
         for (int i = 0; i < tags.length; i++) {
             if (tags[i] == '1') {
-                idLists.add(i + 1);
+                idLists.add(tags.length - i);
             }
         }
         return idLists;
     }
+
 
     @Override
     public String toString() {
@@ -134,6 +144,7 @@ public class TypicalAlgo {
                 ", doc_url='" + doc_url + '\'' +
                 ", up_user='" + up_user + '\'' +
                 ", up_unit='" + up_unit + '\'' +
+                ", tagNames='" + tagNames + '\'' +
                 ", up_date=" + up_date +
                 '}';
     }

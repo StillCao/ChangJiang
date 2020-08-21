@@ -8,7 +8,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import back.wang.Dao.AlgoQuery;
 import back.wang.Domain.Page;
@@ -33,14 +35,35 @@ public class AlgoService {
         int totalPage = totalCount % currentCount == 0 ? totalCount / currentCount : totalCount / currentCount + 1;
         int startPosition = (currentPage - 1) * currentCount;
         List<TypicalAlgo> typicalAlgos = algoQuery.queryAlgoByPage(startPosition, currentCount);
+
+        Map<Integer, String> tagMap = new HashMap<>();           //先把所有标签Id 和 Name 对应关系存起来，避免多次查询
+        List<TypicalAlgoTags> tagsList = algoQuery.getAllTags();
+        tagsList.forEach(tag -> {
+            tagMap.put(tag.getId(), tag.getName());
+        });
+
+        typicalAlgos.forEach(algo -> {
+            List<Integer> tagsIds = algo.byte2ints();
+            StringBuilder tagNames = new StringBuilder();
+            tagsIds.forEach(id -> {
+                tagNames.append(tagMap.get(id)).append(",");
+            });
+            if (tagNames.toString().endsWith(",")) {
+                tagNames.deleteCharAt(tagNames.length() - 1);
+            }
+            algo.setTagNames(tagNames.toString());
+        });
+
+
         Page<TypicalAlgo> page = new Page<>(currentPage, currentCount, totalPage, totalCount, typicalAlgos);
         return JSON.toJSONString(page);
     }
 
 
-
-     /** 保存文件流到指定的目录
-     * @param item FileItem 对象
+    /**
+     * 保存文件流到指定的目录
+     *
+     * @param item        FileItem 对象
      * @param projDirPath 指定的目录
      * @return 是否保存成功
      */
@@ -73,11 +96,14 @@ public class AlgoService {
         AlgoQuery algoQuery = new AlgoQuery();
         int algoId = algo.getId();
         List<Integer> tagsIds = algo.byte2ints();                   //先删除tags表里 对应的算法记录
-        tagsIds.forEach(tagsId ->{
+        tagsIds.forEach(tagsId -> {
             TypicalAlgoTags tag = algoQuery.getTagsById(tagsId);
-            tag.algo[algoId] = '0';                                   //删除就令对应 该算法id  位上的数字为 0
+            tag.algo[tag.algo.length - algoId] = '0';                                   //删除就令对应 该算法id  位上的数字为 0
             algoQuery.updateTagsAlgo(tagsId, tag.algo);
         });
+
+        //再删除文件
+
 
         //再删除algo 表中记录
         return algoQuery.deleteAlgo(algoId);

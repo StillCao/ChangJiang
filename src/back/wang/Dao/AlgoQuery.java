@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
+import java.util.Arrays;
 import java.util.List;
 
 import back.wang.Domain.TypicalAlgo;
@@ -98,7 +99,15 @@ public class AlgoQuery {
      * @return 插入后的主键ID
      */
     public int algoInsert(TypicalAlgo typical_algo) {
-        String sql = "Insert into typical_algo (id,name,tags,digest,description,doc_url,up_user,up_unit,up_date) values (null,:name,:tags,:digest,:description,:doc_url,:up_user,:up_unit,:up_date)";
+//        String sql = "Insert into typical_algo (id,name,tags,digest,description,doc_url,up_user,up_unit,up_date) values (null,:name,:tags,:digest,:description,:doc_url,:up_user,:up_unit,CURRENT_TIMESTAMP)";
+        //用上面sql语句插入tags时会自动调用tags的get方法，由于我们重写了tags 的get方法，使得它不是原本的值，因此sql使用字符串拼接tags
+        String sql = "";
+        if (typical_algo.tags !=null) {
+            sql = "Insert into typical_algo (id,name,digest,description,doc_url,up_user,up_unit,up_date,tags) values (null,:name,:digest,:description,:doc_url,:up_user,:up_unit,CURRENT_TIMESTAMP," + new String(typical_algo.tags) + ")";
+        }
+        else {
+            sql = "Insert into typical_algo (id,name,digest,description,doc_url,up_user,up_unit,up_date,tags) values (null,:name,:digest,:description,:doc_url,:up_user,:up_unit,CURRENT_TIMESTAMP,null)";
+        }
         KeyHolder keyHolder = new GeneratedKeyHolder();
         npjTemplate.update(sql, new BeanPropertySqlParameterSource(typical_algo), keyHolder);
         return keyHolder.getKey().intValue();
@@ -111,7 +120,15 @@ public class AlgoQuery {
      * @return 插入后的主键ID
      */
     public int tagInsert(TypicalAlgoTags typicalAlgoTags) {
-        String sql = "Insert into typical_algo_tags (id,name,algo) values (null,:name,:algo)";
+//        String sql = "Insert into typical_algo_tags (id,name,algo) values (null,:name,:algo)";
+        //原理同上
+        String sql = "";
+        if (typicalAlgoTags.algo !=null) {
+           sql  = "Insert into typical_algo_tags (id,name,algo) values (null,:name," + new String(typicalAlgoTags.algo) + ")";
+        }
+        else {
+            sql  = "Insert into typical_algo_tags (id,name,algo) values (null,:name,null)";
+        }
         KeyHolder keyHolder = new GeneratedKeyHolder();
         npjTemplate.update(sql, new BeanPropertySqlParameterSource(typicalAlgoTags), keyHolder);
         return keyHolder.getKey().intValue();
