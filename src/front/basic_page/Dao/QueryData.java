@@ -2,9 +2,11 @@ package front.basic_page.Dao;
 
 import back.wang.Domain.BasicInfoAll;
 import front.basic_page.Domain.*;
+
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+
 import utils.JDBCUtils;
 
 import java.util.ArrayList;
@@ -232,7 +234,7 @@ public class QueryData {
      * @return 查询数据ID和点击量
      */
     public List<BasicInfoAll> queryDataClickCounts() {
-        String sql = "Select id from basic_info";
+        String sql = "Select id, click_count from basic_info";
         return template.query(sql, new BeanPropertyRowMapper<>(BasicInfoAll.class));
     }
 
@@ -250,6 +252,32 @@ public class QueryData {
         } catch (DataAccessException e) {
             return null;
         }
+    }
+
+    /**
+     * 根据id更新数据点击量
+     *
+     * @param id 数据id
+     * @param click_count 数据点击量
+     * @return 是否修改成功
+     */
+    public boolean updateClickCounts(int id, int click_count) {
+        String sql = "update basic_info set click_count = ? where id = ?";
+        return template.update(sql,click_count,id) > 0;
+    }
+
+    /**
+     * 根据id获取点击量
+     * @param id    数据id
+     */
+    public int getClickCountById(int id){
+        String sql = "select click_count from basic_info where id = ?";
+        try {
+            return template.queryForObject(sql,Integer.class,id);
+        } catch (DataAccessException e) {
+            return 0;
+        }
+
     }
 
 

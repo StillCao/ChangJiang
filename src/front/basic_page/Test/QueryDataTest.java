@@ -103,6 +103,16 @@ public class QueryDataTest {
         System.out.println(new QueryData().QueryAttrKeyAll().toString());
     }
 
+    @org.junit.Test
+    public void UpdateClickCounts() {
+        System.out.println(new QueryData().updateClickCounts(1,0));
+    }
+
+    @org.junit.Test
+    public void GetClickCountById() {
+        System.out.println(new QueryData().getClickCountById(1));
+    }
+
 
 
 }

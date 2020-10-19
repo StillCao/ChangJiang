@@ -27,7 +27,7 @@ import java.util.Map;
 
 @WebServlet("/showDataServlet")
 public class ShowDataServlet extends HttpServlet {
-//    private Map<Integer, Integer> dataCounts = null;
+    private Map<Integer, Integer> dataCounts = null;
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -35,9 +35,9 @@ public class ShowDataServlet extends HttpServlet {
         //1.获取请求参数，type=0，1，2为三种新闻类型
         String idString = req.getParameter("id");
         int id = Integer.parseInt(idString);
-//
-//        //增加点击量
-//        dataCounts.put(id, dataCounts.getOrDefault(id, 0) + 1);
+
+        //增加点击量
+        dataCounts.put(id, dataCounts.getOrDefault(id, 0) + 1);
 
         //2.根据id,查询数据详情页
         DataDetails dataDetails = new DataDetailsContr().dataDetails(id);
@@ -59,29 +59,29 @@ public class ShowDataServlet extends HttpServlet {
         this.doPost(req, resp);
     }
 
-//    @Override
-//    public void init() throws ServletException {
-//        //从数据库初始化
-//
-//        dataCounts = (Map<Integer, Integer>) this.getServletContext().getAttribute("dataCounts");
-//        if (dataCounts == null) {
-//            dataCounts = new HashMap<>();
-//            List<BasicInfoAll> basicInfoList = new QueryData().queryDataClickCounts();
-//            basicInfoList.forEach(basicInfo -> dataCounts.put(basicInfo.getId(), basicInfo.getClick_count()));
-//        }
-//
-//        this.getServletContext().setAttribute("dataCounts", dataCounts);
-//
-//    }
-//
-//    @Override
-//    public void destroy() {
-//        //更新到数据库
-//        QueryData queryData = new QueryData();
-//        for (Integer id : dataCounts.keySet()) {
-//            queryData.updateClickCounts(id, dataCounts.get(id));
-//        }
-//        this.getServletContext().removeAttribute("dataCounts");
-//    }
+    @Override
+    public void init() {
+        //从数据库初始化
+
+        dataCounts = (Map<Integer, Integer>) this.getServletContext().getAttribute("dataCounts");
+        if (dataCounts == null) {
+            dataCounts = new HashMap<Integer, Integer>();
+            List<BasicInfoAll> basicInfoList = new QueryData().queryDataClickCounts();
+            basicInfoList.forEach(basicInfo -> dataCounts.put(basicInfo.getId(), basicInfo.getClick_count()));
+        }
+
+        this.getServletContext().setAttribute("dataCounts", dataCounts);
+
+    }
+
+    @Override
+    public void destroy() {
+        //更新到数据库
+        QueryData queryData = new QueryData();
+        for (Integer id : dataCounts.keySet()) {
+            queryData.updateClickCounts(id, dataCounts.get(id));
+        }
+        this.getServletContext().removeAttribute("dataCounts");
+    }
 
 }
