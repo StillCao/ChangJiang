@@ -150,7 +150,6 @@ public class UpLoadServlet extends HttpServlet {
                     //判断文件是否重名或者存在
                     if (file.exists()) {
                         resp.getWriter().append("文件已经存在或者重名！");
-                        return;
                     }
 
                     if (service.SaveFile(item, fileFolderPath)) {
@@ -158,13 +157,13 @@ public class UpLoadServlet extends HttpServlet {
                         proPath = projDirPath;
                     } else {
                         resp.getWriter().append("文件上传失败！");
-                        return;
                     }
                 }
             }
         }
 
         if (basic_info == null) {
+            resp.getWriter().append("basic_info 为空！");
             return;
         }
 
@@ -197,6 +196,7 @@ public class UpLoadServlet extends HttpServlet {
         if (basicId != 0) {
             result.append("插入基本信息表成功！\n");
             if (attr_valueList == null) {
+                result.append("数据主题词为空！上传失败\n");
                 return;
             }
             attr_valueList.forEach(attr_value -> {

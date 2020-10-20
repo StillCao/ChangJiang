@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,6 +31,14 @@ public class LinkServlet extends HttpServlet{
 
             int type = 0;
             //2.或取请求参数
+            //2.1 获取文件列表分页查询的请求参数
+            String updated = req.getParameter("updated");
+            boolean update = Boolean.parseBoolean(updated);
+            String pageSize = req.getParameter("PageSize");
+            String currentPage = req.getParameter("currentPage");
+            int page = Integer.parseInt(pageSize);
+            int curpage = Integer.parseInt(currentPage);
+
             List<String> list = new ArrayList<>();
             if(req.getParameter("keyWords") != null){
                 list.add(req.getParameter("keyWords"));
@@ -81,22 +90,59 @@ public class LinkServlet extends HttpServlet{
                 type = 1;
             }
 
+            System.out.println("LinkServlet?参数集合="+list);
+
             //3.将查询结果转换成json;借助工具类ObjectMapper
             List<Integer> label_idlist = new ArrayList<>();
             ObjectMapper mapper = new ObjectMapper();
-            List<Map> mapList = new ArrayList<>();
+            List<Map> mapList = new ArrayList<>();//存放最终结果
+
+            Map map = new HashMap();//存入文件列表相关信息
+            List<Map> doc_list = new ArrayList<>();//存放文件列表分页查询中间结果
+            List<Map> map_nopage = new ArrayList<>();//存放未分页的文件动态查询结果
+
+            //4. 采用session存下这次标签查询得到的id集合，以便下个接口使用
             List<Integer> firstSearch = (List<Integer>) ses.getAttribute("firstSearch");
 
+            //type=0，根据原始数据查询标签，不会反向联动分类体系
+            //需要判断全局检索后是否点了分类体系，要分两种情况。同理，点击标签反向联动分类体系表也是如此考虑。
             if(type == 0){
+
                 if(firstSearch != null){
                     mapList = new Query().query_by_id(firstSearch);
+                    //对结果进行文件列表查询
+                    doc_list = new Query().doclist_dyn(update,curpage,page,firstSearch);
+                    map.put("docList",doc_list);
+                    mapList.add(map);
+
+                    //保存未分页的查询结果
+                    map_nopage = new Query().doclist_dyn(update,0,0,firstSearch);
+                    ses.setAttribute("doclist_nopage",map_nopage);
+
                 }else {
                     if (cate_idlist != null){
                         mapList = new Query().query_by_id(cate_idlist);
+                        //对结果进行文件列表查询
+                        doc_list = new Query().doclist_dyn(update,curpage,page,cate_idlist);
+                        map.put("docList",doc_list);
+                        mapList.add(map);
+
+                        //保存未分页的查询结果
+                        map_nopage = new Query().doclist_dyn(update,0,0,cate_idlist);
+                        ses.setAttribute("doclist_nopage",map_nopage);
                     }else {
                         mapList = new Query().queryStatic();
+                        //对结果进行文件列表查询
+                        doc_list = new Query().doclist_sta(update,curpage,page);
+                        map.put("docList",doc_list);
+                        mapList.add(map);
+
+                        //保存未分页的查询结果
+                        map_nopage = new Query().doclist_sta(update,0,0);
+                        ses.setAttribute("doclist_nopage",map_nopage);
                     }
                 }
+
             }else{
                 //type不为0，判断是在分类体系的条件下查询，还是全局搜素的条件下查询
                 if (f_idlist!= null){
@@ -104,6 +150,16 @@ public class LinkServlet extends HttpServlet{
                     label_idlist = new Query().query_link(list);
                     List<Integer> id_union = new Query().id_union(label_idlist, f_idlist);
                     mapList = new Query().query_by_id(id_union);
+
+                    //对结果进行文件列表查询
+                    doc_list = new Query().doclist_dyn(update,curpage,page,id_union);
+                    map.put("docList",doc_list);
+                    mapList.add(map);
+
+                    //保存未分页的查询结果
+                    map_nopage = new Query().doclist_dyn(update,0,0,id_union);
+                    ses.setAttribute("doclist_nopage",map_nopage);
+
                     System.out.println("分类体系查询和标签查询的交集"+id_union);
                     //存放分类体系查询和标签查询后的共同集合
                     ses.setAttribute("label_idlist",id_union);
@@ -112,17 +168,34 @@ public class LinkServlet extends HttpServlet{
                     //没经过全局查询和分类体系查询
                     label_idlist = new Query().query_link(list);
                     mapList = new Query().query_by_id(label_idlist);
-                    System.out.println("标签查询的集合"+label_idlist);
+
+                    //对结果进行文件列表查询
+                    doc_list = new Query().doclist_dyn(update,curpage,page,label_idlist);
+                    map.put("docList",doc_list);
+                    mapList.add(map);
+
+                    //保存未分页的查询结果
+                    map_nopage = new Query().doclist_dyn(update,0,0,label_idlist);
+                    ses.setAttribute("doclist_nopage",map_nopage);
+
+                    System.out.println("分类体系查询和标签查询的交集"+label_idlist);
                     //存放分类体系查询和标签查询后的共同集合
                     ses.setAttribute("label_idlist",label_idlist);
                     ses.setAttribute("f_idlist",label_idlist);
                 }
             }
+
+
+
             String result = mapper.writeValueAsString(mapList);
             String f_str = mapper.writeValueAsString(f_idlist);
             System.out.println("上一步查询的id集合："+f_str);
 
-            //4.向前端响应数据response对象
+            //控制台输出结果，测试用
+            Object f_idlist1 = ses.getAttribute("f_idlist");
+            System.out.println("LinkServlet?f_idlist="+f_idlist1);
+
+            //5.向前端响应数据response对象
             resp.setHeader("Access-Control-Allow-Origin","*"); //解决跨域问题，让返回结果可远程调用
             resp.getWriter().append(result);
         }

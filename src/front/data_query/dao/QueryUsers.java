@@ -130,6 +130,12 @@ public class QueryUsers {
      */
     public boolean deleteUser(int id){
 
+        //先删除与user表关联的order_confirm表和data_shopcar表的相关数据，才能删除
+        String sql1 = "DELETE FROM order_confirm WHERE userId = ?";
+        template.update(sql1,id);
+        String sql2 = "DELETE FROM data_shopcar WHERE  u_id = ?";
+        template.update(sql2,id);
+
         //1.创建sql语句，完成相关操作
         String sql = "DELETE FROM user WHERE u_id = ?";
 

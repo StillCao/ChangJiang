@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,19 +32,38 @@ public class FirstSearch extends HttpServlet{
         String name = searchWord;
         String uper_place = searchWord;
 
+        String updated = req.getParameter("updated");
+        boolean update = Boolean.parseBoolean(updated);
+        String pageSize = req.getParameter("PageSize");
+        String currentPage = req.getParameter("currentPage");
+        int page = Integer.parseInt(pageSize);
+        int curpage = Integer.parseInt(currentPage);
+
         //3. 查询数据
         List<Integer> list = new Query().search_fir(name, uper_place);
+        List<Map> map_nopage = new ArrayList<>();//存放未分页的文件动态查询结果
         //3.1 先用session暂存该数据id集合，方便后续筛选
         HttpSession session = req.getSession();
         session.setAttribute("firstSearch",list);
+        map_nopage = new Query().doclist_dyn(update,0,0,list);
+        session.setAttribute("doclist_nopage",map_nopage);
+
+        //控制台输出结果，测试用
+        System.out.println("FirstSearch?f_idlist="+list);
 
         //3.2 设置f_idlist，放置最终集合
         session.setAttribute("f_idlist",list);
-        //3.3 将查询结果转换成字符串
-        //String result = list.toString();
+        session.getAttributeNames();
+
+        //3.2 查询标签结果
+
+        List<Map> mapList = new Query().query_by_id(list);
 
         //3.3 根据id集合查询数据基本信息
-        List<Map> mapList = new Query().doclist_dyn(true, 0, 0, list);
+        List<Map> mapList1 = new Query().doclist_dyn(update, curpage, page, list);
+        Map map = new HashMap();
+        map.put("docList",mapList1);
+        mapList.add(map);
         ObjectMapper mapper = new ObjectMapper();
         String result = mapper.writeValueAsString(mapList);
 
