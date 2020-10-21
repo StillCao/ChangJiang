@@ -257,27 +257,55 @@ public class QueryData {
     /**
      * 根据id更新数据点击量
      *
-     * @param id 数据id
+     * @param id          数据id
      * @param click_count 数据点击量
      * @return 是否修改成功
      */
     public boolean updateClickCounts(int id, int click_count) {
         String sql = "update basic_info set click_count = ? where id = ?";
-        return template.update(sql,click_count,id) > 0;
+        return template.update(sql, click_count, id) > 0;
     }
 
     /**
      * 根据id获取点击量
-     * @param id    数据id
+     *
+     * @param id 数据id
      */
-    public int getClickCountById(int id){
+    public int getClickCountById(int id) {
         String sql = "select click_count from basic_info where id = ?";
         try {
-            return template.queryForObject(sql,Integer.class,id);
+            return template.queryForObject(sql, Integer.class, id);
         } catch (DataAccessException e) {
             return 0;
         }
 
+    }
+
+    /**
+     * 在统计信息表中查询对应种类信息的 数量
+     *
+     * @param name 种类如：页面访问量、本月服务量
+     * @return
+     */
+    public int queryStatisticsNumByName(String name) {
+        String sql = "select num from statistics where name = ?";
+        try {
+            return template.queryForObject(sql, Integer.class, name);
+        } catch (DataAccessException e) {
+            return 0;
+        }
+
+    }
+
+    /**
+     * 在统计信息表中查询对应种类信息的 数量
+     *
+     * @param name 种类如：页面访问量、本月服务量
+     * @return
+     */
+    public boolean updateStatisticsNumByName(String name, int value) {
+        String sql = "update statistics set num = ? where name = ?";
+        return template.update(sql, value, name) > 0;
     }
 
 

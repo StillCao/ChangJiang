@@ -113,6 +113,16 @@ public class QueryDataTest {
         System.out.println(new QueryData().getClickCountById(1));
     }
 
+    @org.junit.Test
+    public void QueryStatisticsNumByName() {
+        System.out.println(new QueryData().queryStatisticsNumByName("visitCount"));
+    }
+
+    @org.junit.Test
+    public void UpdateStatisticsNumByName() {
+        System.out.println(new QueryData().updateStatisticsNumByName("visitCount",2));
+    }
+
 
 
 }
