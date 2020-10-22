@@ -238,6 +238,14 @@ public class QueryData {
         return template.query(sql, new BeanPropertyRowMapper<>(BasicInfoAll.class));
     }
 
+    /**
+     * @return 查询数据ID和下载量
+     */
+    public List<BasicInfoAll> queryDataDownloadCounts() {
+        String sql = "Select id, download_count from basic_info";
+        return template.query(sql, new BeanPropertyRowMapper<>(BasicInfoAll.class));
+    }
+
 
     /**
      * 根据数据id 查询id,name,image字段
@@ -281,6 +289,49 @@ public class QueryData {
 
     }
 
+
+    /**
+     * 根据id更新数据下载量
+     *
+     * @param id          数据id
+     * @param download_count 数据下载量
+     * @return 是否修改成功
+     */
+    public boolean updateDownloadCounts(int id, int download_count) {
+        String sql = "update basic_info set download_count = ? where id = ?";
+        return template.update(sql, download_count, id) > 0;
+    }
+
+
+    /**
+     * 根据id获取下载量
+     *
+     * @param id 数据id
+     */
+    public int getDownloadCountById(int id) {
+        String sql = "select download_count from basic_info where id = ?";
+        try {
+            return template.queryForObject(sql, Integer.class, id);
+        } catch (DataAccessException e) {
+            return 0;
+        }
+
+    }
+
+
+    /**
+     * 获取总下载量
+     */
+    public int getSumDownloadCount() {
+        String sql = "select sum(download_count) from basic_info";
+        try {
+            return template.queryForObject(sql, Integer.class);
+        } catch (DataAccessException e) {
+            return 0;
+        }
+
+    }
+
     /**
      * 在统计信息表中查询对应种类信息的 数量
      *
@@ -306,6 +357,18 @@ public class QueryData {
     public boolean updateStatisticsNumByName(String name, int value) {
         String sql = "update statistics set num = ? where name = ?";
         return template.update(sql, value, name) > 0;
+    }
+
+    /**
+     * 查询用户表中的记录条数
+     */
+    public int queryUserCount(){
+        String sql = "select count(*) from user";
+        try {
+            return template.queryForObject(sql, Integer.class);
+        } catch (DataAccessException e) {
+            return 0;
+        }
     }
 
 
