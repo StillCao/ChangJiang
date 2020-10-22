@@ -38,9 +38,8 @@ public class StatisticsServlet extends HttpServlet {
         //判断count是否为null，不为null表示曾经访问过，直接将count赋值给totalCount
         if (count != null) {
             totalCount = (int) count;
-        }
-        else {
-            totalCount =  queryData.queryStatisticsNumByName("visitCount");
+        } else {
+            totalCount = queryData.queryStatisticsNumByName("visitCount");
         }
 
         totalCount += 1;
@@ -53,10 +52,9 @@ public class StatisticsServlet extends HttpServlet {
         Object serviceCounts = this.getServletContext().getAttribute("serviceCounts");
         if (serviceCounts == null) {
             serviceCountSum = queryData.getSumDownloadCount();
-        }
-        else {
-            Map<Integer,Integer> serviceCountMap = (Map<Integer,Integer>) serviceCounts;
-            for (int serviceCount : serviceCountMap.values()){
+        } else {
+            Map<Integer, Integer> serviceCountMap = (Map<Integer, Integer>) serviceCounts;
+            for (int serviceCount : serviceCountMap.values()) {
                 serviceCountSum += serviceCount;
             }
         }
@@ -68,25 +66,37 @@ public class StatisticsServlet extends HttpServlet {
         File fileDir = new File("D:\\doc");
         float size = getDirSize(fileDir);
         int level = 0;
-        while (size >= 1024 && level <= 4){
+        while (size >= 1024 && level <= 4) {
             size = size / 1024;
             level += 1;
         }
-        String unit = switch (level) {
-            case 0 -> "bytes";
-            case 1 -> "KB";
-            case 2 -> "MB";
-            case 3 -> "GB";
-            case 4 -> "TB";
-            default -> "";
-        };
+        String unit = "";
+        switch (level) {
+            case 0:
+                unit = "bytes";
+                break;
+            case 1:
+                unit = "KB";
+                break;
+            case 2:
+                unit = "MB";
+                break;
+            case 3:
+                unit = "GB";
+                break;
+            case 4:
+                unit = "TB";
+                break;
+        }
+        ;
+
 
         resp.getWriter().append("数据资源量：").append(String.valueOf(size)).append(unit).append("<br/>");
 
         resp.setHeader("Access-Control-Allow-Origin", "*");//解决跨域问题，开发完毕时应该关闭
     }
 
-    public float getDirSize(File fileDir){
+    public float getDirSize(File fileDir) {
         File[] files = fileDir.listFiles();
         float fileSize = 0;
         if (files != null) {
@@ -112,7 +122,7 @@ public class StatisticsServlet extends HttpServlet {
     public void destroy() {
         //更新到数据库
         QueryData queryData = new QueryData();
-        queryData.updateStatisticsNumByName("visitCount",totalCount);
+        queryData.updateStatisticsNumByName("visitCount", totalCount);
         this.getServletContext().removeAttribute("visitCount");
     }
 
