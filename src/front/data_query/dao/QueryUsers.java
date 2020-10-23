@@ -113,7 +113,7 @@ public class QueryUsers {
         String sql = "UPDATE user SET userName = ?,password = ?,realName = ?,email = ?,phone = ?,workUnit = ? WHERE u_id = ?" ;
 
         //2. 执行sql语句
-        int flag = template.update(sql,account, password, phone,name, email, unit,id);
+        int flag = template.update(sql,account, password,name, email,phone,unit,id);
         System.out.println("flag="+flag);
 
         boolean bool = false;
