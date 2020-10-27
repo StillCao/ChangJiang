@@ -56,4 +56,11 @@ public class ThematicTest {
         System.out.println(query.updateDataById(data));
     }
 
+    @Test
+    public void calculate(){
+        double sum = 86 * 2 + 84*3 + 86 * 2 + 90 * 3 + 81 + 86*3 + 91*3 + 85*3 + 88 *3 + 83;
+        double a = sum/24;
+        System.out.println(a);
+    }
+
 }
