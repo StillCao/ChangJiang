@@ -479,7 +479,7 @@ public class Query {
             //3. 用集合存下上步得到的所有数据id
 
             //4. 封装二级分类体系id的数量和名称
-            Lable lable = new Lable();
+            /*Lable lable = new Lable();
             lable.setCounts(infolist.size());
 
             String value_sql = "SELECT t1_name FROM da_type1 WHERE id = ?";
@@ -488,7 +488,7 @@ public class Query {
 
             Map da_typesec =new HashMap();
             da_typesec.put("dataType2",lable);
-            maplist.add(da_typesec);
+            maplist.add(da_typesec);*/
             //5. 用集合存下上步得到的所有数据id
             List<Integer> idlist = new ArrayList<>();
             for (int i = 0; i < infolist.size(); i++) {

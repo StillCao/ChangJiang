@@ -1,9 +1,12 @@
 package front.basic_page.Test;
 
 
+import org.junit.Test;
+
 import front.basic_page.Dao.QueryData;
 import front.basic_page.Domain.*;
 
+import java.io.File;
 import java.util.List;
 
 public class QueryDataTest {
@@ -58,7 +61,7 @@ public class QueryDataTest {
 
     @org.junit.Test
     public void QueryBasicByTag2IdLimit() {
-        List<BasicInfo> typeLevel2s = new QueryData().QueryBasicByTag2IdLimit(9,5);
+        List<BasicInfo> typeLevel2s = new QueryData().QueryBasicByTag2IdLimit(9, 5);
         System.out.println(typeLevel2s.size());
     }
 
@@ -71,7 +74,7 @@ public class QueryDataTest {
 
     @org.junit.Test
     public void QueryRelateByValueIdLimit() {
-        List<RelateKeyNData> relateKeyNData = new QueryData().QueryRelateByValueIdLimit(1,10);
+        List<RelateKeyNData> relateKeyNData = new QueryData().QueryRelateByValueIdLimit(1, 10);
         System.out.println(relateKeyNData.size());
     }
 
@@ -89,7 +92,7 @@ public class QueryDataTest {
 
     @org.junit.Test
     public void QueryAttrValueByKeyIdLimit() {
-        List<Attr_value> attr_value = new QueryData().QueryAttrValueByKeyId(1,10);
+        List<Attr_value> attr_value = new QueryData().QueryAttrValueByKeyId(1, 10);
         System.out.println(attr_value);
     }
 
@@ -105,7 +108,7 @@ public class QueryDataTest {
 
     @org.junit.Test
     public void UpdateClickCounts() {
-        System.out.println(new QueryData().updateClickCounts(1,0));
+        System.out.println(new QueryData().updateClickCounts(1, 0));
     }
 
     @org.junit.Test
@@ -113,6 +116,49 @@ public class QueryDataTest {
         System.out.println(new QueryData().getClickCountById(1));
     }
 
+    @org.junit.Test
+    public void QueryStatisticsNumByName() {
+        System.out.println(new QueryData().queryStatisticsNumByName("visitCount"));
+    }
+
+    @org.junit.Test
+    public void UpdateStatisticsNumByName() {
+        System.out.println(new QueryData().updateStatisticsNumByName("visitCount", 2));
+    }
+
+    @org.junit.Test
+    public void QueryUserCount() {
+        System.out.println(new QueryData().queryUserCount());
+    }
+
+    @org.junit.Test
+    public void calculateDirSize() {
+        File fileDir = new File("D:\\向日葵");
+        double size = (double) getDirSize(fileDir) / 1024 / 1024;
+        System.out.println(size + " mb");
+
+    }
+
+    public long getDirSize(File fileDir) {
+        File[] files = fileDir.listFiles();
+        long fileSize = 0;
+        for (File file : files) {
+
+            if (file.isFile()) {
+                System.out.println(file.getName() + "  :  " + file.length());
+                fileSize += file.length();
+            } else {
+                fileSize += getDirSize(file);
+            }
+        }
+        return fileSize;
+    }
+
+    @org.junit.Test
+    public void GetSumDownloadCount() {
+        System.out.println(new QueryData().getSumDownloadCount());
+
+    }
 
 
 }
