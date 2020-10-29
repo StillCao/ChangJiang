@@ -32,15 +32,8 @@ public class addPlatformLinkData extends HttpServlet {
         response.setContentType("text/html;charset=utf-8");
 
         //2.获取post请求中的json字符串
-        StringBuffer sb = new StringBuffer();
-        InputStream is = request.getInputStream();
-        InputStreamReader isr = new InputStreamReader(is);
-        BufferedReader br = new BufferedReader(isr);
-        String s = "";
-        while ((s = br.readLine()) != null){
-            sb.append(s);
-        }
-        String str = sb.toString();
+        //2.1json字符串参数名是linkArray，通过参数名获取参数
+        String str = request.getParameter("linkArray");
 
         JSONArray jsonArray = JSONArray.parseArray(str);
 
