@@ -43,15 +43,10 @@ public class PlatQuery {
      */
     public List<PlatformLink> queryPlatformLink(String searchWord,int currentPage, int pageSize){
         List<PlatformLink> result = new ArrayList<>();
-        if (searchWord == null){
-            String sql = "SELECT * FROM pla_link LIMIT ?,? ";
-            result = template.query(sql, new BeanPropertyRowMapper<>(PlatformLink.class), (currentPage - 1) * pageSize, pageSize);
+            String sql1 = "SELECT * FROM pla_link WHERE name LIKE '%" +searchWord+ "%' OR url LIKE '%" +searchWord+ "%' LIMIT ?,? ";
+            //2.执行sql语句，获取所有数据
+             result = template.query(sql1, new BeanPropertyRowMapper<>(PlatformLink.class), (currentPage - 1) * pageSize, pageSize);
             return result;
-        }
-        String sql1 = "SELECT * FROM pla_link WHERE name LIKE '%" +searchWord+ "%' OR url LIKE '%" +searchWord+ "%' LIMIT ?,? ";
-        //2.执行sql语句，获取所有数据
-        result = template.query(sql1, new BeanPropertyRowMapper<>(PlatformLink.class), (currentPage - 1) * pageSize, pageSize);
-        return result;
     }
 
     /**
