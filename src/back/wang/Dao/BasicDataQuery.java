@@ -2,6 +2,7 @@ package back.wang.Dao;
 
 import back.wang.Domain.BasicInfoAll;
 import back.wang.Domain.News;
+import front.basic_page.Domain.BasicData;
 import front.basic_page.Domain.BasicInfo;
 
 import org.springframework.dao.DataAccessException;
@@ -11,6 +12,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import utils.JDBCUtils;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 描述:
@@ -97,6 +99,19 @@ public class BasicDataQuery {
     public boolean deleteBasicData(int id) {
         String sql = "delete from basic_info where id =?";
         return template.update(sql, id) > 0;
+    }
+
+    /**
+     *
+     * @param sql 拼接好的sql语句
+     * @return 是否修改成功
+     */
+    public boolean updateBasicData(String sql) {
+        try{
+            return template.update(sql) > 0;
+        }catch (DataAccessException e){
+            return false;
+        }
     }
 
     /**
