@@ -1,12 +1,15 @@
 package back.simba.dao;
 
+import back.simba.domain.RollingData;
 import com.alibaba.fastjson.JSONObject;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import utils.JDBCUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 对rolling执行相关操作
@@ -42,6 +45,53 @@ public class RollingQuery {
             flag = true;
         }
         return flag;
+    }
+
+    /**
+     * 返回所有轮播图数据
+     * @return
+     */
+    public List<RollingData> queryAllData(){
+
+        String sql = "SELECT * FROM rolling";
+        List<RollingData> res = template.query(sql, new BeanPropertyRowMapper<>(RollingData.class));
+        return res;
+    }
+
+    /**
+     * 根据id获取某一条数据
+     * @param id
+     * @return
+     */
+    public RollingData queryRollingById(Integer id){
+
+        String sql = "SELECT * FROM rolling WHERE id = ?";
+        RollingData res = template.queryForObject(sql, RollingData.class);
+        return res;
+    }
+
+    /**
+     * 删除操作。结果为true，删除成功；结果为false，删除失败。
+     * @param id
+     * @return
+     */
+    public boolean deleteRollingById(Integer id){
+
+        String sql = "DELETE FROM rolling WHERE id = ?";
+        int res = template.update(sql);
+        boolean flag = false;
+        if (res != 0){
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 编辑操作
+     * @return
+     */
+    public boolean updateRollingById(){
+        return false;
     }
 
 }

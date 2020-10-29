@@ -35,46 +35,28 @@ public class PlatQuery {
     }
 
     /**
-     * 根据id，返回满足不同要求的请求数据
-     * @param id
+     * 返回分页查询和条件查询的结果
+     * @param searchWord
      * @param currentPage
      * @param pageSize
      * @return
      */
-    public List<PlatformLink> queryPlatformLink(Integer id,int currentPage, int pageSize){
+    public List<PlatformLink> queryPlatformLink(String searchWord,int currentPage, int pageSize){
         List<PlatformLink> result = new ArrayList<>();
-        if (id == null){
-            //1.创建sql语句，分页查询所有数据
-            String sql1 = "SELECT * FROM pla_link LIMIT ?,?";
+            String sql1 = "SELECT * FROM pla_link WHERE name LIKE '%" +searchWord+ "%' OR url LIKE '%" +searchWord+ "%' LIMIT ?,? ";
             //2.执行sql语句，获取所有数据
-             result = template.query(sql1, new BeanPropertyRowMapper<>(PlatformLink.class), currentPage - 1, pageSize);
+             result = template.query(sql1, new BeanPropertyRowMapper<>(PlatformLink.class), (currentPage - 1) * pageSize, pageSize);
             return result;
-        }
-        //id != null, ，返回对应数据
-        String sql2 = "SELECT FORM pla_link WHERE id = ?";
-        result = template.query(sql2, new BeanPropertyRowMapper<>(PlatformLink.class), id);
-        return result;
     }
 
     /**
-     * 根据id，更新对应数据的属性值
-     * @param id
-     * @param name
-     * @param url
-     * @param type
-     * @param status
+     * 对pla_link(平台连接表)进行全表查询
      * @return
      */
-    public boolean updatePlatformLink(Integer id,String name,String url,String type,String status){
-        //1.创建sql语句，更新表中数据
-        String sql = "UPDATE pla_link SET name = ?,url = ?, type = ?, status = ? WHERE id = ?";
-        //2.执行sql语句，返回是否成功
-        int res = template.update(sql, name, url, type, status);
-        boolean flag = false;
-        if (res != 0){
-            flag = true;
-        }
-        return true;
+    public List<PlatformLink> queryAllPLs(){
+        String sql = "SELECT * FROM pla_link";
+        List<PlatformLink> res = template.query(sql, new BeanPropertyRowMapper<>(PlatformLink.class));
+        return res;
     }
 
     /**
@@ -85,8 +67,10 @@ public class PlatQuery {
     public boolean deletePlatformLinkById(Integer id){
         //1.创建sql语句，删除id对应的数据
         String sql = "DELETE FROM pla_link WHERE id = ?";
+        String sql1 = "ALTER TABLE pla_link AUTO_INCREMENT = 1";
         //2.执行sql语句，返回是否成功
         int res = template.update(sql, id);
+        template.update(sql1);//防止删除数据后，新增数据的id不连续
         //3.返回结果为0，表示删除成功；反之，删除不成功
         boolean flag = false;//保存对数据库的删除功能执行结果
         if (res != 0){
