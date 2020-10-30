@@ -74,16 +74,10 @@ public class DeployRollingImage extends HttpServlet {
             }
         }
 
-        //开始顺序存取非文件参数
-        Map<String,String> map = new HashMap<>();//用一个map集合存储对应字段及数据
-        map.put("title",pList.get(0));
-        map.put("link",pList.get(1));
-        map.put("time",pList.get(2));
-
         ObjectMapper mapper = new ObjectMapper();//操作java对象转为JSON对象
 
-        String jsonString = mapper.writeValueAsString(map);
-        JSONObject jsonObject = JSONObject.parseObject(jsonString);//把得到的map集合转为json对象
+        //DeBug发现，plist存放的就是非文件的json字符串
+        JSONObject jsonObject = JSONObject.parseObject(pList.get(0));//把得到的map集合转为json对象
         jsonObject.put("file", url);
         System.out.println(jsonObject.toJSONString());
 
