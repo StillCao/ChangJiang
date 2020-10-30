@@ -35,7 +35,7 @@ public class PlatQuery {
     }
 
     /**
-     * 返回分页查询和条件查询的结果
+     * 返回分页查询和条件查询的结果。条件查询可以为空
      * @param searchWord
      * @param currentPage
      * @param pageSize
@@ -43,10 +43,15 @@ public class PlatQuery {
      */
     public List<PlatformLink> queryPlatformLink(String searchWord,int currentPage, int pageSize){
         List<PlatformLink> result = new ArrayList<>();
-            String sql1 = "SELECT * FROM pla_link WHERE name LIKE '%" +searchWord+ "%' OR url LIKE '%" +searchWord+ "%' LIMIT ?,? ";
-            //2.执行sql语句，获取所有数据
-             result = template.query(sql1, new BeanPropertyRowMapper<>(PlatformLink.class), (currentPage - 1) * pageSize, pageSize);
+        if (searchWord == null){
+            String sql = "SELECT * FROM pla_link LIMIT ?,?";
+            result = template.query(sql,new BeanPropertyRowMapper<>(PlatformLink.class),(currentPage - 1) * pageSize,pageSize);
             return result;
+        }
+        String sql1 = "SELECT * FROM pla_link WHERE name LIKE '%" +searchWord+ "%' OR url LIKE '%" +searchWord+ "%' LIMIT ?,? ";
+        //2.执行sql语句，获取所有数据
+        result = template.query(sql1, new BeanPropertyRowMapper<>(PlatformLink.class), (currentPage - 1) * pageSize, pageSize);
+        return result;
     }
 
     /**
