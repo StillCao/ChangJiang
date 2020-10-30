@@ -239,6 +239,12 @@ public class UpLoadTest {
         System.out.println(new DownAimInsert().queryBasicInfoById(1));
     }
 
+    @org.junit.Test
+    public void StringReplace() {
+        String a = "adasda:\\asdasd\\ad1e1dasdas\\qdqdq11e1dsada";
+        System.out.println(a.replace("\\","/"));
+    }
+
 
 
 
