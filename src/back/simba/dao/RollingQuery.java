@@ -80,7 +80,7 @@ public class RollingQuery {
 
         //删除对应的图片
         String sql1 = "SELECT file FROM rolling WHERE id = ?";
-        String filepath = template.queryForObject(sql1, String.class);
+        String filepath = template.queryForObject(sql1, String.class,id);
         File file = new File(filepath);
         boolean b = file.delete();
         System.out.println("是否删除成功："+b);
