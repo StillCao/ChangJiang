@@ -74,10 +74,11 @@ public class DeployRollingImage extends HttpServlet {
             }
         }
 
-        //
+        //开始顺序存取非文件参数
 
 
-        String roundNewInfo = request.getParameter("roundNewInfo");
+
+        String roundNewInfo = request.getParameter("data");
         JSONObject jsonObject = JSONObject.parseObject(roundNewInfo);//把得到的json字符串转为json对象
 
         jsonObject.put("file", url);
