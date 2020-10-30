@@ -20,10 +20,8 @@ public class QueryAllRecommenedDatas extends HttpServlet {
         req.setCharacterEncoding("utf-8");
         resp.setContentType("text/html;charset=utf-8");
 
-        Integer counts = new RecommendQuery().queryAllRecommenedDatas();
-        Map<String,Integer> map = new HashMap<>();
-        map.put("allCounts",counts);
-        String result = new ObjectMapper().writeValueAsString(map);
+        Map<String,Object> res = new RecommendQuery().queryAllRecommenedDatas();
+        String result = new ObjectMapper().writeValueAsString(res);
 
         resp.setHeader("Access-Control-Allow-Origin","*"); //解决跨域问题，让返回结果可远程调用
         resp.getWriter().append(result);
