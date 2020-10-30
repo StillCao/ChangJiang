@@ -82,7 +82,7 @@ public class RollingQuery {
         String sql1 = "SELECT file FROM rolling WHERE id = ?";
         String filepath = template.queryForObject(sql1, String.class,id);
         String filename = filepath.substring(filepath.lastIndexOf("/")+1);
-        File file = new File("C:\\ftp\\ChangJiang\\rolling\\" + filename);
+        File file = new File("C:\\ftp\\ChangJiang\\rollingData\\" + filename);
         file.delete();
 
         //删除表中对应的数据
