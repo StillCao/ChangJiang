@@ -1,5 +1,7 @@
 package back.simba.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 
 /**
@@ -13,6 +15,8 @@ public class RollingData {
     private String title;
     private String link;
     private String file;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date time;
 
     public int getId() {

@@ -64,10 +64,10 @@ public class RollingQuery {
      * @param id
      * @return
      */
-    public RollingData queryRollingById(Integer id){
+    public List<RollingData> queryRollingById(Integer id){
 
         String sql = "SELECT * FROM rolling WHERE id = ?";
-        RollingData res = template.queryForObject(sql, RollingData.class);
+        List<RollingData> res = template.query(sql, new BeanPropertyRowMapper<>(RollingData.class), id);
         return res;
     }
 
