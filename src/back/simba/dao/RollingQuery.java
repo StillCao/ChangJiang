@@ -83,11 +83,10 @@ public class RollingQuery {
         String filepath = template.queryForObject(sql1, String.class,id);
         File file = new File(filepath);
         boolean b = file.delete();
-        System.out.println("是否删除成功："+b);
 
-
+        //删除表中对应的数据
         String sql = "DELETE FROM rolling WHERE id = ?";
-        int res = template.update(sql);
+        int res = template.update(sql,id);
         Integer flag = 0;
         if (res != 0){
             flag = 1;
