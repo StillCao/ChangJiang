@@ -55,6 +55,16 @@ public class PlatQuery {
     }
 
     /**
+     * 查询pla_link的所有数据总数
+     * @return
+     */
+    public Integer queryAllCounts(){
+        String sql = "SELECT COUNT(*) FROM pla_link";
+        Integer counts = template.queryForObject(sql, Integer.class);
+        return counts;
+    }
+
+    /**
      * 对pla_link(平台连接表)进行全表查询
      * @return
      */
