@@ -75,13 +75,17 @@ public class DeployRollingImage extends HttpServlet {
         }
 
         //开始顺序存取非文件参数
+        Map<String,String> map = new HashMap<>();//用一个map集合存储对应字段及数据
+        map.put("title",pList.get(0));
+        map.put("link",pList.get(1));
+        map.put("time",pList.get(2));
 
+        ObjectMapper mapper = new ObjectMapper();//操作java对象转为JSON对象
 
-
-        String roundNewInfo = request.getParameter("data");
-        JSONObject jsonObject = JSONObject.parseObject(roundNewInfo);//把得到的json字符串转为json对象
-
+        String jsonString = mapper.writeValueAsString(map);
+        JSONObject jsonObject = JSONObject.parseObject(jsonString);//把得到的map集合转为json对象
         jsonObject.put("file", url);
+        System.out.println(jsonObject.toJSONString());
 
         //3.调用方法，在rolling表中添加新增数据
         int flag = 0;//表示添加状态：0表示添加失败，1表示添加成功。
@@ -92,7 +96,7 @@ public class DeployRollingImage extends HttpServlet {
                 flag = 1;
             }
             res.put(jsonObject.getString("title"),flag);
-            String result = new ObjectMapper().writeValueAsString(res);
+            String result = mapper.writeValueAsString(res);
 
             //4.向前端响应json数据
             response.setHeader("Access-Control-Allow-Origin","*"); //解决跨域问题，让返回结果可远程调用
