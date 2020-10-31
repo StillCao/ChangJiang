@@ -28,7 +28,7 @@ import java.util.List;
 
 /**
  * 描述:
- * 专题数据上传接口
+ * 基础数据上传接口
  *
  * @author black-leaves
  * @createTime 2020-06-24  9:26
@@ -111,8 +111,8 @@ public class UpLoadServlet extends HttpServlet {
                 if (!item.isFormField()) {  //若item为文件表单项目
                     String picRootDirPath = "C:\\ftp\\ChangJiang\\基础数据上传图片\\";
                     String picRootUrl = "http://101.37.83.223:8025/基础数据上传图片/";
-//                    String rootDirPath = "C:\\Users\\Administrator\\Desktop\\长江中游地学数据集\\";
-                    String rootDirPath = "D:\\长江中游地学数据集\\";
+                    String rootDirPath = "C:\\Users\\Administrator\\Desktop\\长江中游地学数据集\\";
+//                    String rootDirPath = "D:\\长江中游地学数据集\\";
                     String fileName = item.getName();
 //                    String projName = item.getName();
 
