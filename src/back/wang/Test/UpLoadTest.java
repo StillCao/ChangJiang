@@ -1,6 +1,7 @@
 package back.wang.Test;
 
 import back.wang.Dao.AdminQuery;
+import back.wang.Dao.AlgoQuery;
 import back.wang.Dao.DownAimInsert;
 import back.wang.Dao.UpLoadInsert;
 import back.wang.Domain.Admin;
@@ -244,6 +245,13 @@ public class UpLoadTest {
         String a = "adasda:\\asdasd\\ad1e1dasdas\\qdqdq11e1dsada";
         System.out.println(a.replace("\\","/"));
     }
+
+    @org.junit.Test
+    public void DeleteRelateByAlgoId() {
+        System.out.println(new AlgoQuery().deleteRelateByAlgoId(15));
+    }
+
+
 
 
 

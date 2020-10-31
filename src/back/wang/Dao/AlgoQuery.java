@@ -238,5 +238,21 @@ public class AlgoQuery {
         return false;
     }
 
+    /**
+     * 删除关联表记录
+     *
+     * @param algo_id  需要删除算法的id
+     * @return 是否删除成功
+     */
+    public boolean deleteRelateByAlgoId(int algo_id) {
+        String sql = "DELETE FROM algo_tag_rela WHERE algo_id = ?";
+        try {
+            return template.update(sql,algo_id) > 0;
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 
 }

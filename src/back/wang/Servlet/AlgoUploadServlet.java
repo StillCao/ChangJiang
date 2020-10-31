@@ -1,6 +1,7 @@
 package back.wang.Servlet;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
@@ -18,6 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import back.wang.Dao.AlgoQuery;
+import back.wang.Dao.BasicDataQuery;
+import back.wang.Domain.BasicInfoAll;
 import back.wang.Domain.TypicalAlgo;
 import back.wang.Domain.TypicalAlgoTags;
 import back.wang.Service.AlgoService;
@@ -70,6 +73,7 @@ public class AlgoUploadServlet extends HttpServlet {
         TypicalAlgo typicalAlgo = null;         //准备上传的algo对象
         String[] tagsName = null;               //algo对象关联的 tags 名称
         String doc_url = "";                    //文档url
+        JSONObject algoObj = null;
 
 
         //item分类处理
@@ -86,6 +90,7 @@ public class AlgoUploadServlet extends HttpServlet {
                     String name = item.getFieldName();
                     String value = item.getString("utf-8");
                     if (name.equals("data")) {
+                        algoObj = JSON.parseObject(value);
                         typicalAlgo = JSON.parseObject(value, TypicalAlgo.class);
                     } else if (name.equals("tags")) {
                         tagsName = value.split(",");
@@ -157,14 +162,28 @@ public class AlgoUploadServlet extends HttpServlet {
         //插入算法数据
         int algoId = 0;         //插入后的算法ID，
         if (typicalAlgo != null) {
-            algoId = algoQuery.algoInsert(typicalAlgo);
-            if (algoId > 0) {
-                isSuccess = true;
+            if (typicalAlgo.getId() != 0) {      //修改数据
+                algoId = typicalAlgo.getId();
+                String sql = sqlBuilder(algoObj, typicalAlgo);
+                if (sql != null) {
+                    System.out.println(sql);
+                    if (new BasicDataQuery().updateBasicData(sql)) {
+                        isSuccess = true;
+                    }
+                }
+            } else {                            //插入数据
+                algoId = algoQuery.algoInsert(typicalAlgo);
+                if (algoId > 0) {
+                    isSuccess = true;
+                }
             }
         }
 
         //再遍历tagsName一遍，关联标签的算法ID
         if (newTagIds != null) {
+            if (typicalAlgo != null && typicalAlgo.getId() != 0) { //修改数据的话，先删除关联表中该算法id的关联记录,然后再插入
+                algoQuery.deleteRelateByAlgoId(typicalAlgo.getId());
+            }
             for (int newTagId : newTagIds) {
                 if (algoId != 0 && newTagId != 0) {
                     algoQuery.insertRelate(algoId, newTagId);
@@ -175,10 +194,43 @@ public class AlgoUploadServlet extends HttpServlet {
         resp.setContentType("text/html;charset=utf-8");
         resp.setHeader("Access-Control-Allow-Origin", "*");//解决跨域问题，开发完毕时应该关闭
         resp.getWriter().append(String.valueOf(isSuccess));
+
     }
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws
+            ServletException, IOException {
         this.doPost(req, resp);
+    }
+
+    //sql字符串拼接函数
+    public String sqlBuilder(JSONObject algo_obj, TypicalAlgo typicalAlgo) {
+        StringBuilder sql = new StringBuilder("update typical_algo set ");
+        if (algo_obj.containsKey("id")) {
+            algo_obj.keySet().forEach(key -> {
+                if (!key.equals("id") && !key.equals("tags")) {     //tags在表单数据中传过来了，但是数据库中没有对应的字段
+                    if (key.equals("doc_url")) {
+                        sql.append(key).append("=").append("'").append(transferSlash(typicalAlgo.getDoc_url())).append("'").append(",");
+                    } else {
+                        sql.append(key).append("=").append("'").append(algo_obj.get(key)).append("'").append(",");
+                    }
+
+                }
+            });
+            if (sql.toString().endsWith(",") && sql.length() > 1) {
+                sql.deleteCharAt(sql.length() - 1);
+            }
+
+            sql.append(" where id = ").append(algo_obj.get("id")).append(";");
+            return sql.toString();
+        } else return null;
+    }
+
+    //将str中的斜杠转换为反斜杠
+    public String transferSlash(String str) {
+
+        if (str.contains("\\")) {
+            return str.replace("\\", "\\\\");
+        } else return str;
     }
 }
