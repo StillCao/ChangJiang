@@ -98,4 +98,9 @@ public class NewsTest {
         file.delete();
     }
 
+    @org.junit.Test
+    public void queryNewsById() {
+        System.out.println(new NewsQuery().queryNewsById(10));
+    }
+
 }
