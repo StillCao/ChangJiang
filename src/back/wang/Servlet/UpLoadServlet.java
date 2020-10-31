@@ -1,6 +1,7 @@
 package back.wang.Servlet;
 
 import back.wang.Dao.BasicDataQuery;
+import back.wang.Dao.UpLoadInsert;
 import back.wang.Domain.BasicInfoAll;
 import back.wang.Service.UpLoadService;
 
@@ -222,6 +223,9 @@ public class UpLoadServlet extends HttpServlet {
             return;
         } else {
             int finalBasicId = basicId;
+            if (finalBasic_info.getId() != 0) {      //修改数据时插入关系表，需要先删除此条数据之前关联的记录，然后再插入
+                new UpLoadInsert().deleteRelaChartByBasicInfoId(finalBasic_info.getId());
+            }
             attr_valueList.forEach(attr_value -> {
                 if (service.InsertRelate(attr_value, finalBasicId)) {  //插入数据主题词关系表
                     result.append(attr_value.getV_name()).append("插入数据主题词关系表成功！\n");
@@ -275,8 +279,7 @@ public class UpLoadServlet extends HttpServlet {
 
         if (str.contains("\\")) {
             return str.replace("\\", "\\\\");
-        }
-        else return str;
+        } else return str;
     }
 
 

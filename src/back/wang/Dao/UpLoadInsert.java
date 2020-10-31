@@ -82,4 +82,14 @@ public class UpLoadInsert {
         return count >= 1;
     }
 
+    /**
+     * 删除 rela_chart 关联表中 基础数据关联的所有记录
+     * @param basic_info_id 基础数据id
+     * @return 是否成功删除
+     */
+    public boolean deleteRelaChartByBasicInfoId(int basic_info_id){
+        String sql = "delete from rela_chart where basi_info_id = ?";
+        return template.update(sql,basic_info_id) > 0;
+    }
+
 }

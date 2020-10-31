@@ -251,6 +251,11 @@ public class UpLoadTest {
         System.out.println(new AlgoQuery().deleteRelateByAlgoId(15));
     }
 
+    @org.junit.Test
+    public void DeleteRelaChartByBasicInfoId() {
+        System.out.println(new UpLoadInsert().deleteRelaChartByBasicInfoId(67));
+    }
+
 
 
 
