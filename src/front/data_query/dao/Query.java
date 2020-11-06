@@ -473,7 +473,7 @@ public class Query {
             //1. 定义sql语句
             String sql = "SELECT * FROM basic_info WHERE da_type = ?";
 
-            //            //2. 执行sql语句，得到满足条件的内容
+            //2. 执行sql语句，得到满足条件的内容
             List<Basic_info> infolist = template.query(sql, new BeanPropertyRowMapper<>(Basic_info.class), cate_id);
 
             //3. 用集合存下上步得到的所有数据id
@@ -810,7 +810,7 @@ public class Query {
         }else {
             System.out.println("imglist===============");
             System.out.println(imglist);
-            //联动查询得到的文件列表根据时间采用降序排列
+            //联动查询得到的文件列表根据时间采用升序排列
             //拼接sql语句，最终得到根据参数info_id集合查询涉及其中id的数据基本信息
             String s1 = "SELECT * FROM basic_info WHERE id IN (";
             String s2 = "";
@@ -889,7 +889,7 @@ public class Query {
     }
 
     /**
-     *二次查询，传入之前获取到的文件列表。最重查询的是文件列表，所以调用文件列表查询下的接口
+     *二次查询方式一：，传入之前获取到的文件列表。最终查询的是文件列表，所以调用文件列表查询下的接口
      * @return
      */
     public List<Map> search_sec(String name,String uper_place,int time_l,int time_r,List<Basic_info> infos){
