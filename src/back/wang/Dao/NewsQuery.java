@@ -65,6 +65,15 @@ public class NewsQuery {
     }
 
     /**
+     * @param id news的Id
+     * @return news集合
+     */
+    public News queryNewsById(int id) {
+        String sql = "select * from news where id = ?";
+        return template.queryForObject(sql, new BeanPropertyRowMapper<>(News.class), id);
+    }
+
+    /**
      * 插入一条news
      *
      * @param news

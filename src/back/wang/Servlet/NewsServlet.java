@@ -1,10 +1,16 @@
 package back.wang.Servlet;
 
+import back.wang.Dao.NewsQuery;
 import back.wang.Domain.News;
+import back.wang.Domain.ThematicData;
 import back.wang.Service.NewsService;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+
+import back.wang.Service.ThematicService;
 import front.basic_page.Servlet.BaseServlet;
+
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.beanutils.converters.DateConverter;
@@ -17,6 +23,7 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -61,6 +68,22 @@ public class NewsServlet extends BaseServlet {
         resp.setContentType("text/html;charset=utf-8");
         resp.setHeader("Access-Control-Allow-Origin", "*");//解决跨域问题，开发完毕时应该关闭
         resp.getWriter().append(result);
+    }
+
+
+    /**
+     * 根据ID查询新闻
+     */
+    public void showNewsById(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        resp.setContentType("text/html;charset=utf-8");
+        String idString = req.getParameter("id");
+        int id = Integer.parseInt(idString);
+
+        News news = new NewsQuery().queryNewsById(id);
+        if (news != null){
+            resp.getWriter().append(JSON.toJSONString(news));
+        }
+        resp.setHeader("Access-Control-Allow-Origin", "*");//解决跨域问题，开发完毕时应该关闭
     }
 
     /**
@@ -229,25 +252,24 @@ public class NewsServlet extends BaseServlet {
      * 新闻图片删除
      */
     public void deletePictures(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String picNamesString  = req.getParameter("picNames");
+        String picNamesString = req.getParameter("picNames");
         List<String> picNames = new ArrayList<>();
         NewsService service = new NewsService();
         String rootPath = "C://ftp//ChangJiang";
 //        String rootPath = "D://ftp";
         List<String> result = new ArrayList<>();
-        if (picNamesString.contains(",")){
+        if (picNamesString.contains(",")) {
             String[] picNamesSplits = picNamesString.split(",");
             picNames.addAll(Arrays.asList(picNamesSplits));
-        }
-        else {
+        } else {
             picNames.add(picNamesString);
         }
-        picNames.forEach(picName->{
+        picNames.forEach(picName -> {
             String picPath = rootPath + File.separator + picName;
             String res = picName;
-            if(service.deletePictures(picPath)){
+            if (service.deletePictures(picPath)) {
                 res += "删除成功";
-            }else res += "删除失败";
+            } else res += "删除失败";
             result.add(res);
         });
 

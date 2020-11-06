@@ -60,7 +60,7 @@ public class Upload {
         //关闭输出流
         //删除处理文件上传时生成的临时文件
         //item.delete();
-        String fileUrl = "http://101.37.83.223:8025/rollingData"+filename;
+        String fileUrl = "http://101.37.83.223:8025/rollingData/"+filename;
         return fileUrl;
     }
 }

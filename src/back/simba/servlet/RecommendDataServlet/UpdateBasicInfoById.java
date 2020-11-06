@@ -28,18 +28,9 @@ public class UpdateBasicInfoById extends HttpServlet {
 
         //2.获取post请求参数
         //2.1获取前端传来的json字符串，有属性名使用getParameter，无属性名使用getInputstream
-        StringBuffer sb = new StringBuffer();
-        InputStream is = request.getInputStream();
-        InputStreamReader isr = new InputStreamReader(is);
-        BufferedReader br = new BufferedReader(isr);
-        String s = "";
-        while ((s = br.readLine()) != null){
-            sb.append(s);
-        }
-        String str = sb.toString();
-        System.out.println(str);
+        String arr = request.getParameter("submitArr");
 
-        JSONArray jsonArray = JSONArray.parseArray(str);
+        JSONArray jsonArray = JSONArray.parseArray(arr);
 
 
         //2.2将json字符串转换为JSON对象，调用ObjectMapper类中的readValue方法

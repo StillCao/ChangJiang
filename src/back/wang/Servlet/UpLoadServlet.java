@@ -1,11 +1,16 @@
 package back.wang.Servlet;
 
+import back.wang.Dao.BasicDataQuery;
+import back.wang.Dao.UpLoadInsert;
 import back.wang.Domain.BasicInfoAll;
 import back.wang.Service.UpLoadService;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+
 import front.basic_page.Domain.Attr_value;
+
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -16,6 +21,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,7 +29,7 @@ import java.util.List;
 
 /**
  * 描述:
- * 专题数据上传接口
+ * 基础数据上传接口
  *
  * @author black-leaves
  * @createTime 2020-06-24  9:26
@@ -72,6 +78,7 @@ public class UpLoadServlet extends HttpServlet {
         List<Attr_value> attr_valueList = null;    //JSONString转出的Attr_value列表对象
         String projName = ""; //项目名
         List<String> filePaths = new ArrayList<>();     //非图片文件的存储绝对路径
+        JSONObject basic_infoObj = null;
 
         //item分类处理
         try {
@@ -88,7 +95,7 @@ public class UpLoadServlet extends HttpServlet {
                     String value = item.getString("utf-8");
                     if (name.equals("data")) {
                         JSONObject jsonObject = JSON.parseObject(value);
-                        JSONObject basic_infoObj = jsonObject.getJSONObject("basic_info");
+                        basic_infoObj = jsonObject.getJSONObject("basic_info");
                         JSONArray attr_valueArray = jsonObject.getJSONArray("attr_value");
                         basic_info = JSON.parseObject(basic_infoObj.toJSONString(), BasicInfoAll.class);
                         attr_valueList = JSONObject.parseArray(attr_valueArray.toString(), Attr_value.class);
@@ -192,22 +199,40 @@ public class UpLoadServlet extends HttpServlet {
         }
 
         StringBuilder result = new StringBuilder();
-        int basicId = service.InsertBasic(finalBasic_info);  //插入基本数据
-        if (basicId != 0) {
-            result.append("插入基本信息表成功！\n");
-            if (attr_valueList == null) {
-                result.append("数据主题词为空！上传失败\n");
-                return;
+        int basicId = 0;
+        if (finalBasic_info.getId() != 0) {      //修改数据
+            basicId = finalBasic_info.getId();
+            String sql = sqlBuilder(basic_infoObj, finalBasic_info);
+            if (sql != null) {
+                System.out.println(sql);
+                if (new BasicDataQuery().updateBasicData(sql)) {
+                    result.append("修改基本信息表成功！");
+                }
+            }
+        } else {                                  //新增数据
+            basicId = service.InsertBasic(finalBasic_info);  //插入基本数据
+            if (basicId != 0) {
+                result.append("插入基本信息表成功！\n");
+            } else {
+                result.append("插入基本信息表失败！\n");
+            }
+        }
+
+        if (attr_valueList == null) {
+            result.append("数据主题词为空！上传失败\n");
+            return;
+        } else {
+            int finalBasicId = basicId;
+            if (finalBasic_info.getId() != 0) {      //修改数据时插入关系表，需要先删除此条数据之前关联的记录，然后再插入
+                new UpLoadInsert().deleteRelaChartByBasicInfoId(finalBasic_info.getId());
             }
             attr_valueList.forEach(attr_value -> {
-                if (service.InsertRelate(attr_value, basicId)) {  //插入数据主题词关系表
+                if (service.InsertRelate(attr_value, finalBasicId)) {  //插入数据主题词关系表
                     result.append(attr_value.getV_name()).append("插入数据主题词关系表成功！\n");
                 } else {
                     result.append(attr_value.getV_name()).append("插入数据主题词关系表失败！\n");
                 }
             });
-        } else {
-            result.append("插入基本信息表失败！\n");
         }
 
         resp.setContentType("text/html;charset=utf-8");
@@ -217,8 +242,44 @@ public class UpLoadServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws
+            ServletException, IOException {
         this.doPost(req, resp);
+    }
+
+    //sql字符串拼接函数
+    public String sqlBuilder(JSONObject basic_infoObj, BasicInfoAll finalBasic_info) {
+        StringBuilder sql = new StringBuilder("update basic_info set ");
+        if (basic_infoObj.containsKey("id")) {
+            basic_infoObj.keySet().forEach(key -> {
+                if (!key.equals("id")) {
+                    if (key.equals("sample_url")) {
+                        sql.append(key).append("=").append("'").append(transferSlash(finalBasic_info.getSample_url())).append("'").append(",");
+                    } else if (key.equals("da_url")) {
+                        sql.append(key).append("=").append("'").append(transferSlash(finalBasic_info.getDa_url())).append("'").append(",");
+                    } else if (key.equals("image")) {
+                        sql.append(key).append("=").append("'").append(transferSlash(finalBasic_info.getImage())).append("'").append(",");
+                    } else {
+                        sql.append(key).append("=").append("'").append(basic_infoObj.get(key)).append("'").append(",");
+                    }
+
+                }
+            });
+            if (sql.toString().endsWith(",") && sql.length() > 1) {
+                sql.deleteCharAt(sql.length() - 1);
+            }
+
+            sql.append(" where id = ").append(basic_infoObj.get("id")).append(";");
+            return sql.toString();
+        } else return null;
+    }
+
+    //将str中的斜杠转换为反斜杠
+    public String transferSlash(String str) {
+
+        if (str.contains("\\")) {
+            return str.replace("\\", "\\\\");
+        } else return str;
     }
 
 

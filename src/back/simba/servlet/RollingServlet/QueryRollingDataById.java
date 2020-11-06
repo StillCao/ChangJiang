@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 /**
  *根据id获取某一条数据
@@ -25,7 +26,7 @@ public class QueryRollingDataById extends HttpServlet {
 
         String id = request.getParameter("id");
         int r_id = Integer.parseInt(id);
-        RollingData rollingData = new RollingQuery().queryRollingById(r_id);
+        List<RollingData> rollingData = new RollingQuery().queryRollingById(r_id);
         String result = new ObjectMapper().writeValueAsString(rollingData);
 
         response.setHeader("Access-Control-Allow-Origin","*"); //解决跨域问题，让返回结果可远程调用

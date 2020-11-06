@@ -44,6 +44,15 @@ public class RecommendQuery {
         return res;
     }
 
+    /**
+     * 所有数据的总数
+     * @return
+     */
+    public Integer queryAllBasicInfo(){
+        String sql = "SELECT COUNT(*) FROM basic_info";
+        Integer counts = template.queryForObject(sql, Integer.class);
+        return counts;
+    }
 
     /**
      *
@@ -72,4 +81,20 @@ public class RecommendQuery {
         return isSuccessed;
     }
 
+    /**
+     * 查询被推荐的数据（status=1）的总数
+     * @return
+     */
+    public Map<String,Object> queryAllRecommenedDatas(){
+
+        Map<String,Object> res = new HashMap<>();
+        String sql = "SELECT COUNT(*) FROM basic_info WHERE status = ?";
+        Integer counts = template.queryForObject(sql, Integer.class, 1);
+        res.put("allCounts",counts);
+
+        String sql1 = "SELECT id,name,image,status FROM basic_info WHERE status = ?";
+        List<RecomendData> list = template.query(sql1, new BeanPropertyRowMapper<>(RecomendData.class), 1);
+        res.put("data",list);
+        return res;
+    }
 }

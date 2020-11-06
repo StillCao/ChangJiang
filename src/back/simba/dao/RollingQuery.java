@@ -64,10 +64,10 @@ public class RollingQuery {
      * @param id
      * @return
      */
-    public RollingData queryRollingById(Integer id){
+    public List<RollingData> queryRollingById(Integer id){
 
         String sql = "SELECT * FROM rolling WHERE id = ?";
-        RollingData res = template.queryForObject(sql, RollingData.class);
+        List<RollingData> res = template.query(sql, new BeanPropertyRowMapper<>(RollingData.class), id);
         return res;
     }
 
@@ -80,14 +80,14 @@ public class RollingQuery {
 
         //删除对应的图片
         String sql1 = "SELECT file FROM rolling WHERE id = ?";
-        String filepath = template.queryForObject(sql1, String.class);
-        File file = new File(filepath);
-        boolean b = file.delete();
-        System.out.println("是否删除成功："+b);
+        String filepath = template.queryForObject(sql1, String.class,id);
+        String filename = filepath.substring(filepath.lastIndexOf("/")+1);
+        File file = new File("C:\\ftp\\ChangJiang\\rollingData\\" + filename);
+        file.delete();
 
-
+        //删除表中对应的数据
         String sql = "DELETE FROM rolling WHERE id = ?";
-        int res = template.update(sql);
+        int res = template.update(sql,id);
         Integer flag = 0;
         if (res != 0){
             flag = 1;
