@@ -3,6 +3,7 @@ package back.wang.Test;
 import org.junit.Test;
 
 import back.wang.Dao.BasicDataQuery;
+import back.wang.Dao.DownAimInsert;
 import back.wang.Dao.NewsQuery;
 import back.wang.Domain.News;
 import back.wang.Service.DMService;
@@ -106,6 +107,28 @@ public class DMTest {
     public void deleteShopCarByDataId() {
         System.out.println(new BasicDataQuery().deleteShopCarByDataId(34));
     }
+
+    @Test
+    public void QueryOrderCountByKeyNValuesLike() {
+        System.out.println(new DownAimInsert().QueryOrderCountByKeyNValuesLike("orderCode","test",2));
+    }
+
+    @Test
+    public void QueryOrderCountByStatus() {
+        System.out.println(new DownAimInsert().QueryOrderCountByStatus(2));
+    }
+
+    @Test
+    public void queryOrderByStatusNPage() {
+        System.out.println(new DownAimInsert().queryOrderByStatusNPage(-1,0,1));
+    }
+
+    @Test
+    public void QueryOrderByKeyNValueNPage() {
+        System.out.println(new DownAimInsert().QueryOrderByKeyNValueNPage(2,"orderCode","test",0,10));
+    }
+
+
 
 
 }

@@ -4,9 +4,12 @@ import back.wang.Dao.DownAimInsert;
 import back.wang.Domain.BasicInfoAll;
 import back.wang.Domain.Downaim;
 import back.wang.Domain.Order_confirm;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+
+import back.wang.Service.DownAimService;
 import front.user_io.domain.User;
 
 import javax.servlet.ServletException;
@@ -14,8 +17,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 描述:
@@ -29,43 +34,28 @@ import java.util.List;
 public class ShowDAimServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        Map<String, String[]> map = req.getParameterMap();
+        int currentPage = Integer.parseInt(map.getOrDefault("currentPage", new String[]{"1"})[0]);
+        int currentCount = Integer.parseInt(map.getOrDefault("currentCount", new String[]{"10"})[0]);
         String statusString = req.getParameter("status");
         int status = Integer.parseInt(statusString);
+        String result = "";
 
-        DownAimInsert insert = new DownAimInsert();
-
-        List<Order_confirm> orders = insert.queryOrderByStatus(status);
-        JSONArray array = new JSONArray();
-        orders.forEach(order -> {
-            //object初始化
-            JSONObject object = new JSONObject();
-            object.put("status", status);
-
-            int orderId = order.getId();
-            String orderCode = order.getOrderCode();
-            object.put("id", orderId);
-            object.put("orderCode", orderCode);
-            Order_confirm order_confirm = insert.QueryOrderConfirmAllById(orderId);
-            if (order_confirm == null) {
-                object.put("downaim", "");
-                object.put("user", "");
-            } else {
-                int downAimId = order_confirm.getDown_aim();
-                int userId = order_confirm.getUserId();
-                int dataId = order_confirm.getDataId();
-                Downaim downaim = insert.QueryDownAimById(downAimId);
-                User user = insert.queryUserById(userId);
-                BasicInfoAll basicInfo = insert.queryBasicInfoById(dataId);
-                object.put("downaim", downaim);
-                object.put("user", user);
-                object.put("basicInfo", basicInfo);
+        if (!map.containsKey("key")) {//全部查询
+            result = new DownAimService().queryOrderByPageLike(currentPage, currentCount, "orderStatus", String.valueOf(status), status);
+        } else { //带key值的模糊查询
+            if (!map.containsKey("value")) {
+                resp.getWriter().append("value参数未输入");
+                return;
             }
-            array.add(object);
-        });
+            String key = map.get("key")[0];
+            String value = map.get("value")[0];
+            result = new DownAimService().queryOrderByPageLike(currentPage, currentCount, key, value, status);
+        }
 
         resp.setContentType("text/html;charset=utf-8");
         resp.setHeader("Access-Control-Allow-Origin", "*");//解决跨域问题，开发完毕时应该关闭
-        resp.getWriter().append(JSON.toJSONString(array));
+        resp.getWriter().append(result);
 
     }
 
