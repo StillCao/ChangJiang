@@ -25,11 +25,12 @@ public class Basic_info {
     private String image;
     private String uper_name;
     private String uper_place;
+    private Integer click_count;
 
     public Basic_info() {
     }
 
-    public Basic_info(Integer id, String name, String sploc, String docname, Date up_time, Double point1_lat, Double point1_lon, Double point2_lat, Double point2_lon, String topic_w1, String topic_w2, String topic_w3, String topic_cfi, String da_summ, String da_size, String da_url, Integer up_id, Integer da_type, String image, String uper_name, String uper_place) {
+    public Basic_info(Integer id, String name, String sploc, String docname, Date up_time, Double point1_lat, Double point1_lon, Double point2_lat, Double point2_lon, String topic_w1, String topic_w2, String topic_w3, String topic_cfi, String da_summ, String da_size, String da_url, Integer up_id, Integer da_type, String image, String uper_name, String uper_place, Integer click_count) {
         this.id = id;
         this.name = name;
         this.sploc = sploc;
@@ -51,6 +52,7 @@ public class Basic_info {
         this.image = image;
         this.uper_name = uper_name;
         this.uper_place = uper_place;
+        this.click_count = click_count;
     }
 
     public String getUper_name() {
@@ -219,5 +221,13 @@ public class Basic_info {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public Integer getClick_count() {
+        return click_count;
+    }
+
+    public void setClick_count(Integer click_count) {
+        this.click_count = click_count;
     }
 }
