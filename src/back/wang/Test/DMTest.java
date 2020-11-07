@@ -8,6 +8,7 @@ import back.wang.Dao.NewsQuery;
 import back.wang.Domain.News;
 import back.wang.Service.DMService;
 import front.basic_page.Dao.QueryData;
+import front.user_io.dao.UserQuery;
 
 import java.util.*;
 
@@ -126,6 +127,21 @@ public class DMTest {
     @Test
     public void QueryOrderByKeyNValueNPage() {
         System.out.println(new DownAimInsert().QueryOrderByKeyNValueNPage(2,"orderCode","test",0,10));
+    }
+
+    @Test
+    public void queryUserByNameLike() {
+        System.out.println(new UserQuery().queryUserByNameLike("龙"));
+    }
+
+    @Test
+    public void queryOrderByUid() {
+        System.out.println(new DownAimInsert().queryCountByUidNStatus(8,2));
+    }
+
+    @Test
+    public void QueryIdByNameLike() {
+        System.out.println(new QueryData().queryIdByNameLike("中国东部"));
     }
 
 

@@ -81,9 +81,9 @@ public class DownAimInsert {
     /**
      * @return 根据条件模糊分页查询order_confirm表
      */
-    public List<Order_confirm> QueryOrderByKeyNValueNPage(int orderStatus, String key, String value, int startPos, int count){
+    public List<Order_confirm> QueryOrderByKeyNValueNPage(int orderStatus, String key, String value, int startPos, int count) {
         value = "%" + value + "%";
-        String sql = "SELECT * FROM order_confirm WHERE " + key + " like '" + value + "' and "+ "orderStatus = ? limit ?,?";
+        String sql = "SELECT * FROM order_confirm WHERE " + key + " like '" + value + "' and " + "orderStatus = ? limit ?,?";
         return template.query(sql, new BeanPropertyRowMapper<>(Order_confirm.class), orderStatus, startPos, count);
     }
 
@@ -175,6 +175,70 @@ public class DownAimInsert {
         String sql = "SELECT id,Name,da_size,datm_range from basic_info where id =?";
         try {
             return template.queryForObject(sql, new BeanPropertyRowMapper<>(BasicInfoAll.class), id);
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * 查询对应userId的记录条数
+     *
+     * @param userId
+     * @return
+     */
+    public int queryCountByUidNStatus(int userId, int status) {
+        String sql = "Select count(*) from order_confirm where userId = ? and orderStatus = ?";
+        try {
+            return template.queryForObject(sql, Integer.class, userId, status);
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    /**
+     * 查询对应userId的记录
+     *
+     * @param userId
+     * @return
+     */
+    public List<Order_confirm> queryOrderByUidNStatus(int userId, int status, int startPos, int count) {
+        String sql = "Select * from order_confirm where userId = ? and orderStatus = ? limit ?,?";
+        try {
+            return template.query(sql, new BeanPropertyRowMapper<>(Order_confirm.class), userId, status, startPos, count);
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * 查询对应dataId的记录条数
+     *
+     * @param dataId
+     * @return
+     */
+    public int queryCountByDataIdNStatus(int dataId, int status) {
+        String sql = "Select count(*) from order_confirm where dataId = ? and orderStatus = ?";
+        try {
+            return template.queryForObject(sql, Integer.class, dataId, status);
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    /**
+     * 查询对应dataId的记录
+     *
+     * @param dataId
+     * @return
+     */
+    public List<Order_confirm> queryOrderByDataIdNStatus(int dataId, int status, int startPos, int count) {
+        String sql = "Select * from order_confirm where dataId = ? and orderStatus = ? limit ?,?";
+        try {
+            return template.query(sql, new BeanPropertyRowMapper<>(Order_confirm.class), dataId, status, startPos, count);
         } catch (DataAccessException e) {
             e.printStackTrace();
             return null;

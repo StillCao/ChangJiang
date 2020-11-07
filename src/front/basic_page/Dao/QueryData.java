@@ -293,7 +293,7 @@ public class QueryData {
     /**
      * 根据id更新数据下载量
      *
-     * @param id          数据id
+     * @param id             数据id
      * @param download_count 数据下载量
      * @return 是否修改成功
      */
@@ -362,12 +362,26 @@ public class QueryData {
     /**
      * 查询用户表中的记录条数
      */
-    public int queryUserCount(){
+    public int queryUserCount() {
         String sql = "select count(*) from user";
         try {
             return template.queryForObject(sql, Integer.class);
         } catch (DataAccessException e) {
             return 0;
+        }
+    }
+
+    /**
+     * 根据数据名称模糊查询数据记录条数
+     * @param name 数据名称
+     */
+    public List<Integer> queryIdByNameLike(String name) {
+        name = "%" + name + "%";
+        String sql = "select id from basic_info where name like ?";
+        try {
+            return template.queryForList(sql, Integer.class, name);
+        } catch (DataAccessException e) {
+            return null;
         }
     }
 

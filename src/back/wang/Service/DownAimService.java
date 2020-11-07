@@ -12,6 +12,8 @@ import back.wang.Domain.Order_confirm;
 import org.apache.commons.fileupload.FileItem;
 
 import back.wang.Domain.Page;
+import front.basic_page.Dao.QueryData;
+import front.user_io.dao.UserQuery;
 import front.user_io.domain.User;
 import utils.KeyUtils;
 
@@ -19,6 +21,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -105,7 +108,7 @@ public class DownAimService {
      */
     public String queryOrderByPageLike(int currentPage, int currentCount, String key, String value, int status) {
         DownAimInsert insert = new DownAimInsert();
-        List<Order_confirm> orders = null;
+        List<Order_confirm> orders = new ArrayList<>();
         int totalCount;
         int totalPage;
         int startPosition;
@@ -114,7 +117,60 @@ public class DownAimService {
             totalPage = totalCount % currentCount == 0 ? totalCount / currentCount : totalCount / currentCount + 1;
             startPosition = (currentPage - 1) * currentCount;
             orders = insert.queryOrderByStatusNPage(status, startPosition, currentCount);
-        } else {
+        } else if (key.equals("userName")) {
+            //先模糊查询出userName对应的u_id 列表
+            List<Integer> u_ids = new UserQuery().queryUserByNameLike(value);
+            totalCount = 0;
+            for (Integer u_id : u_ids) {
+                totalCount += insert.queryCountByUidNStatus(u_id, status);
+            }
+            totalPage = totalCount % currentCount == 0 ? totalCount / currentCount : totalCount / currentCount + 1;
+            int leftCount = currentCount;
+            startPosition = (currentPage - 1) * currentCount;
+            int thisCount = 0;
+            int currentPos = startPosition;
+            for (Integer u_id : u_ids) {
+                thisCount += insert.queryCountByUidNStatus(u_id, status);
+                if (currentPos <= thisCount - leftCount) {
+                    List<Order_confirm> order_confirms = insert.queryOrderByUidNStatus(u_id, status, startPosition, leftCount);
+                    orders.addAll(order_confirms);
+                    break;
+                } else if (currentPos > thisCount - leftCount && currentPos < thisCount) {
+                    List<Order_confirm> order_confirms = insert.queryOrderByUidNStatus(u_id, status, startPosition, thisCount - startPosition);
+                    orders.addAll(order_confirms);
+                    leftCount = leftCount - (thisCount - currentPos);
+                    currentPos += (thisCount - currentPos);
+                }
+            }
+        }else if (key.equals("name")) {
+            //先模糊查询出userName对应的u_id 列表
+            List<Integer> data_ids = new QueryData().queryIdByNameLike(value);
+            totalCount = 0;
+            for (Integer data_id : data_ids) {
+                totalCount += insert.queryCountByDataIdNStatus(data_id, status);
+            }
+            totalPage = totalCount % currentCount == 0 ? totalCount / currentCount : totalCount / currentCount + 1;
+            int leftCount = currentCount;
+            startPosition = (currentPage - 1) * currentCount;
+            int thisCount = 0;
+            int currentPos = startPosition;
+            for (Integer data_id : data_ids) {
+                thisCount += insert.queryCountByDataIdNStatus(data_id, status);
+                if (currentPos <= thisCount - leftCount) {
+                    List<Order_confirm> order_confirms = insert.queryOrderByDataIdNStatus(data_id, status, startPosition, leftCount);
+                    orders.addAll(order_confirms);
+                    break;
+                } else if (currentPos > thisCount - leftCount && currentPos < thisCount) {
+                    List<Order_confirm> order_confirms = insert.queryOrderByDataIdNStatus(data_id, status, startPosition, thisCount - startPosition);
+                    orders.addAll(order_confirms);
+                    leftCount = leftCount - (thisCount - currentPos);
+                    currentPos += (thisCount - currentPos);
+                }
+//                else if (startPosition < thisCount)
+            }
+        }
+
+        else {
             totalCount = insert.QueryOrderCountByKeyNValuesLike(key, value, status);
             totalPage = totalCount % currentCount == 0 ? totalCount / currentCount : totalCount / currentCount + 1;
             startPosition = (currentPage - 1) * currentCount;
@@ -122,6 +178,7 @@ public class DownAimService {
         }
 
         JSONArray array = new JSONArray();
+        int finalTotalCount = totalCount;
         orders.forEach(order -> {
             //object初始化
             JSONObject object = new JSONObject();
@@ -129,7 +186,7 @@ public class DownAimService {
             object.put("totalPage", totalPage);
             object.put("currentPage", currentPage);
             object.put("currentCount", currentCount);
-            object.put("totalCount", totalCount);
+            object.put("totalCount", finalTotalCount);
 
             int orderId = order.getId();
             String orderCode = order.getOrderCode();
