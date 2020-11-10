@@ -1,5 +1,6 @@
 package front.data_order.dao;
 
+import back.wang.Domain.News;
 import front.data_order.domain.OrderChart;
 import front.data_order.domain.UserConfi;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -54,6 +55,19 @@ public class OrderManage {
                 "order_confirm AS o LEFT JOIN basic_info AS b on o.dataId = b.id where o.userId = ? and orderStatus = ?;";
         List<OrderChart> orderCharts = template.query(sql, new BeanPropertyRowMapper<>(OrderChart.class), u_id,orderStatus);
         return orderCharts;
+    }
+
+    /**
+     * key 模糊查询
+     *
+     * @param key orderConfirm orderCode
+     * @return 对应account 的 admin
+     */
+    public List<OrderChart> queryWaitingOrderLikeByKey(String key, String value, int orderStatus) {
+        value = "%" + value + "%";
+        String sql ="SELECT  o.orderCode,o.userId,o.dataId,o.orderStatus,b.name,b.da_time,b.sploc,b.da_size from " +
+                "order_confirm AS o LEFT JOIN basic_info AS b on o.dataId = b.id where o." + key + " like '" + value +"' and o.orderStatus = ?;";
+        return template.query(sql, new BeanPropertyRowMapper<>(OrderChart.class),orderStatus);
     }
 
     /**

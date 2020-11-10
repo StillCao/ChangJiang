@@ -60,6 +60,18 @@ public class UserQuery {
         return user;
     }
 
+
+    /**
+     * 模糊查询UserName
+     * @return user
+     */
+
+    public List<Integer> queryUserByNameLike(String userName) {
+        userName = "%" + userName + "%";
+        String sql = "select u_id from user where userName like ?";
+        return template.queryForList(sql, Integer.class, userName);
+    }
+
     /**
      * 5.根据用户id 查询
      * @param id 用户id
