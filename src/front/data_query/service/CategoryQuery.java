@@ -92,7 +92,7 @@ public class CategoryQuery {
         //根据ids3得到最终的数据结果的集合
         List<Map> resMapList = new ArrayList<>();
         try {
-            query.doclist_dyn(true,0,0,ids3);
+            resMapList = query.doclist_dyn(true,0,0,ids3);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
@@ -102,7 +102,7 @@ public class CategoryQuery {
         //3.整合标签集合和数据列表，然后返回
         Map map = new HashMap();
         map.put("docList",resMapList);
-        resMapList.add(map);
+        result.add(map);
         return result;//因为最后一步是标签查询，所以不用再返回标签列表
     }
 
@@ -125,9 +125,6 @@ public class CategoryQuery {
         List<Map> mapList = categoryQuery.CateQueryAndLabel(categoryId, categoryType, linkQueryItem);
         //遍历该集合，根据键"features"找到特定Map中的键值数据集合。
         List<Basic_info> list = new ArrayList<>();//存放数据列表
-//        for (Map map : mapList) {
-//            if (map.containsKey("features")) list = (List<Basic_info>) map.get("features");
-//        }
         list = cQuery.infoFromPreviousResult(mapList);
         //根据数据集合得到id集合，称为ids1
         List<Integer> ids1 = new ArrayList<>();

@@ -60,7 +60,7 @@ public class CateGoryServlet extends HttpServlet {
             finalList = cateQuery.CateQueryAndLabel(categoryId,categoryType,linkQueryItem);
         }
 
-        if (type.equals("3")){//数据分类查询+标签查询+二次查询
+        if (type.equals("4")){//数据分类查询+标签查询+二次查询
             JSONObject secQueryItem = JSONObject.parseObject(request.getParameter("secQueryItem"));
             JSONObject linkQueryItem = JSONObject.parseObject(request.getParameter("linkQueryItem"));
             finalList = cateQuery.CateQueryAndLabelAndSearchSec(categoryId,categoryType,linkQueryItem,secQueryItem);
