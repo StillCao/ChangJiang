@@ -2,8 +2,9 @@ package back.wang.Domain;
 
 
 
-import org.springframework.web.multipart.MultipartFile;
+//import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.Serializable;
 
 /**
@@ -22,7 +23,7 @@ public class Chunk implements Serializable {
     private String relativePath;
     private Integer totalChunks;
     private String type;
-    private MultipartFile file;
+    private File file;
 
     public Long getId() {
         return id;
@@ -104,11 +105,11 @@ public class Chunk implements Serializable {
         this.type = type;
     }
 
-    public MultipartFile getFile() {
+    public File getFile() {
         return file;
     }
 
-    public void setFile(MultipartFile file) {
+    public void setFile(File file) {
         this.file = file;
     }
 }
