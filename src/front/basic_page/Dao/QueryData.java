@@ -373,6 +373,7 @@ public class QueryData {
 
     /**
      * 根据数据名称模糊查询数据记录条数
+     *
      * @param name 数据名称
      */
     public List<Integer> queryIdByNameLike(String name) {
@@ -383,6 +384,17 @@ public class QueryData {
         } catch (DataAccessException e) {
             return null;
         }
+    }
+
+    /**
+     * 根据数据id 修改数据存储路径
+     * @param id 数据id
+     * @param dataPath 数据存储路径
+     * @return 是否修改成功
+     */
+    public boolean updateBasicDataPathById(int id, String dataPath) {
+        String sql = "update basic_info set file_url = ? where id = ?";
+        return template.update(sql, dataPath, id) > 0;
     }
 
 
