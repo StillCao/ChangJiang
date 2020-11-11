@@ -100,18 +100,29 @@ public class ChunksUploader extends HttpServlet {
                             int totalChunks = Integer.parseInt(value);
                             chunk.setTotalChunks(totalChunks);
                             break;
+                        case "filename":
+                            chunk.setFilename(value);
+                            break;
                     }
-                } else {
+                }
+            }
+
+            for (FileItem fileItem : items) {
+                if (!fileItem.isFormField()) { //是文件类型
                     String fileName = "";
                     if (chunk.getChunkNumber() != 0) {
                         fileName = chunk.getChunkNumber() + ".part";
                     } else {
-                        fileName = item.getName();
+                        fileName = fileItem.getName();
                     }
                     chunk.setFilename(fileName);
-                    if (new UpLoadService().SaveFile(item, filePathTemp)) {
+                    File projDir = new File(filePathTemp,fileItem.getName());
+                    if (!projDir.exists()){
+                        projDir.mkdirs();
+                    }
+                    if (new UpLoadService().SaveFile(fileItem, projDir.getPath(),fileName)) {
                         resp.getWriter().append(fileName).append("文件上传成功！");
-                        chunk.setRelativePath(filePathTemp + File.pathSeparator + fileName);
+                        chunk.setRelativePath(projDir.getPath() + File.pathSeparator + fileName);
                     } else {
                         resp.getWriter().append("文件上传失败！");
                     }
@@ -119,7 +130,7 @@ public class ChunksUploader extends HttpServlet {
             }
         }
 
-        resp.getWriter().append("没有跨越!");
+//        resp.getWriter().append("没有跨越!");
         resp.getWriter().append(JSON.toJSONString(chunk));
     }
 
