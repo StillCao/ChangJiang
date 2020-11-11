@@ -116,7 +116,7 @@ public class ChunksUploader extends HttpServlet {
                         fileName = fileItem.getName();
                     }
                     chunk.setFilename(fileName);
-                    File projDir = new File(filePathTemp,fileItem.getName());
+                    File projDir = new File(filePathTemp,chunk.getIdentifier());
                     if (!projDir.exists()){
                         projDir.mkdirs();
                     }
