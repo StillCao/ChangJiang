@@ -21,7 +21,7 @@ public class FileQuery {
         String sql = "SELECT file_url FROM basic_info WHERE id = ?";
         String file_url = template.queryForObject(sql, String.class, id);
         int result = 1;//默认原始数据不为空，返回1
-        if (file_url == null){
+        if (file_url == null || file_url.equals("")){
             result = 0;
         }
         return result;
