@@ -1,16 +1,22 @@
 package front.basic_page.Dao;
 
-import back.wang.Domain.BasicInfoAll;
-import front.basic_page.Domain.*;
-
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import utils.JDBCUtils;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import back.wang.Domain.BasicInfoAll;
+import front.basic_page.Domain.Attr_key;
+import front.basic_page.Domain.Attr_value;
+import front.basic_page.Domain.BasicData;
+import front.basic_page.Domain.BasicInfo;
+import front.basic_page.Domain.News;
+import front.basic_page.Domain.RelateKeyNData;
+import front.basic_page.Domain.TypeLevel1;
+import front.basic_page.Domain.TypeLevel2;
+import utils.JDBCUtils;
 
 public class QueryData {
     JdbcTemplate template = new JdbcTemplate(JDBCUtils.getDataSource());
@@ -373,6 +379,7 @@ public class QueryData {
 
     /**
      * 根据数据名称模糊查询数据记录条数
+     *
      * @param name 数据名称
      */
     public List<Integer> queryIdByNameLike(String name) {
@@ -383,6 +390,27 @@ public class QueryData {
         } catch (DataAccessException e) {
             return null;
         }
+    }
+
+    /**
+     * 根据数据id 修改数据存储路径
+     *
+     * @param id       数据id
+     * @param dataPath 数据存储路径
+     * @return 是否修改成功
+     */
+    public boolean updateBasicDataPathById(int id, String dataPath) {
+        String sql = "update basic_info set file_url = ? where id = ?";
+        return template.update(sql, dataPath, id) > 0;
+    }
+
+    /**
+     * 查询basic_info 所有的数据id 和 数据名称
+     * @return
+     */
+    public List<BasicInfoAll> getAllIdNName() {
+        String sql = "Select id , NAME from basic_info;";
+        return template.query(sql,new BeanPropertyRowMapper<>(BasicInfoAll.class));
     }
 
 

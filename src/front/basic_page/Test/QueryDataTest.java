@@ -160,5 +160,11 @@ public class QueryDataTest {
 
     }
 
+    @org.junit.Test
+    public void GetAllIdNName() {
+        System.out.println(new QueryData().getAllIdNName());
+
+    }
+
 
 }

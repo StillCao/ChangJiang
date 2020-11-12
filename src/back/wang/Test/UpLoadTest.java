@@ -12,14 +12,20 @@ import back.wang.Service.UpLoadService;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+
+import front.basic_page.Dao.QueryData;
 import front.basic_page.Domain.Attr_value;
 import front.basic_page.Domain.BasicData;
 import front.basic_page.Domain.TypeLevel2;
 import front.user_io.dao.UserQuery;
+
+import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 import utils.KeyUtils;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -255,6 +261,35 @@ public class UpLoadTest {
     public void DeleteRelaChartByBasicInfoId() {
         System.out.println(new UpLoadInsert().deleteRelaChartByBasicInfoId(67));
     }
+
+    @org.junit.Test
+    public void mergeChunkFile() throws IOException {
+        String filePath = "D:/fileTest";
+        String filePathTemp = "D:/fileTemp";
+        String filename = "沐川县84投影系列数据.zip";
+        String guid = filename;
+
+        File file = new File(filePathTemp + File.separator + guid);
+        if (file.isDirectory()) {
+            File[] files = file.listFiles();
+            if (files != null && files.length > 0) {
+                File partFile = new File(filePath + File.separator + filename);
+                for (int i = 1; i <= files.length; i++) {
+                    File s = new File(filePathTemp + File.separator + guid, i + ".part");
+                    FileOutputStream destTempfos = new FileOutputStream(partFile, true);
+                    FileUtils.copyFile(s, destTempfos);
+                    destTempfos.close();
+                }
+                FileUtils.deleteDirectory(file);
+            }
+        }
+    }
+
+    @org.junit.Test
+    public void updateBasicDataPathById()  {
+        System.out.println(new QueryData().updateBasicDataPathById(1,"D:\\fileTest"));
+    }
+
 
 
 
