@@ -1,5 +1,6 @@
 package back.wang.Servlet;
 
+import java.io.File;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
@@ -31,14 +32,19 @@ public class DownLoadFile extends HttpServlet {
 
         BasicInfoAll basicInfoAll = new BasicDataQuery().queryDataById(id);
         String filePath = basicInfoAll.getFile_url();
-        String[] splits = filePath.split("\\\\");
-        String name = filePath;
-        if (splits.length != 0){
-            name = splits[splits.length -1];
-        }
-        String downloadFile = new Download().downloadfile(resp, name, filePath);
+        if (filePath != null  && new File(filePath).exists() ){
+            String[] splits = filePath.split("\\\\");
+            String name = filePath;
+            if (splits.length != 0) {
+                name = splits[splits.length - 1];
+            }
+            String downloadFile = new Download().downloadfile(resp, name, filePath);
 
-        resp.getWriter().append(downloadFile);
+            resp.getWriter().append(downloadFile);
+        }
+        else {
+            resp.getWriter().append("该数据的数据文件不存在！");
+        }
     }
 
     @Override
