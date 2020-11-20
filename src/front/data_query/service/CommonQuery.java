@@ -146,18 +146,19 @@ public class CommonQuery {
         //1.通过标签单独查询，得到一个id集合，成为ids
         //1.1准备参数：获取json对象中传递的所有标签，并放入一个集合中
         List<String> labelList = new ArrayList<>();
-        if (linkQueryItem.get("keyWords") != null) labelList.add(linkQueryItem.getString("keyWords"));
-        if (linkQueryItem.get("disciplines") != null) labelList.add(linkQueryItem.getString("disciplines"));
-        if (linkQueryItem.get("placeNames") != null) labelList.add(linkQueryItem.getString("placeNames"));
-        if (linkQueryItem.get("dataTypes") != null) labelList.add(linkQueryItem.getString("dataTypes"));
-        if (linkQueryItem.get("dataProductions") != null) labelList.add(linkQueryItem.getString("dataProductions"));
-        if (linkQueryItem.get("spatialScales") != null) labelList.add(linkQueryItem.getString("spatialScales"));
-        if (linkQueryItem.get("timeResolutions") != null) labelList.add(linkQueryItem.getString("timeResolutions"));
-        if (linkQueryItem.get("spatialResolutions") != null) labelList.add(linkQueryItem.getString("spatialResolutions"));
-        if (linkQueryItem.get("scales") != null) labelList.add(linkQueryItem.getString("scales"));
-        if (linkQueryItem.get("satelliteSensors") != null) labelList.add(linkQueryItem.getString("satelliteSensors"));
+        List<Integer> v_ids = new ArrayList<>();
+        if (linkQueryItem.get("keyWords") != null) {labelList.add(linkQueryItem.getString("keyWords")); v_ids.add(1);}
+        if (linkQueryItem.get("disciplines") != null) {labelList.add(linkQueryItem.getString("disciplines")); v_ids.add(2);}
+        if (linkQueryItem.get("placeNames") != null) {labelList.add(linkQueryItem.getString("placeNames")); v_ids.add(3);}
+        if (linkQueryItem.get("dataTypes") != null) {labelList.add(linkQueryItem.getString("dataTypes")); v_ids.add(4);}
+        if (linkQueryItem.get("dataProductions") != null) {labelList.add(linkQueryItem.getString("dataProductions")); v_ids.add(5);}
+        if (linkQueryItem.get("spatialScales") != null) {labelList.add(linkQueryItem.getString("spatialScales")); v_ids.add(6);}
+        if (linkQueryItem.get("timeResolutions") != null) {labelList.add(linkQueryItem.getString("timeResolutions")); v_ids.add(7);}
+        if (linkQueryItem.get("scales") != null) {labelList.add(linkQueryItem.getString("scales")); v_ids.add(8);}
+        if (linkQueryItem.get("satelliteSensors") != null) {labelList.add(linkQueryItem.getString("satelliteSensors")); v_ids.add(9);}
+        if (linkQueryItem.get("spatialResolutions") != null) {labelList.add(linkQueryItem.getString("spatialResolutions")); v_ids.add(10);}
         //1.2 根据标签集合，单独进行标签查询，得到一个id集合，称为id
-        List<Integer> ids = query.query_link(labelList);
+        List<Integer> ids = query.query_link(labelList, v_ids);
         return ids;
     }
 

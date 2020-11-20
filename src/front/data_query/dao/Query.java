@@ -271,7 +271,7 @@ public class Query {
      * @param value_list
      * @return
      */
-    public List<Integer> query_link(List<String> value_list){
+    public List<Integer> query_link(List<String> value_list, List<Integer> v_k_ids){
 
         //创建一个Lable对象，用于封装每个标签内容的数据总数和名称
         List<Map> maplist = new ArrayList<>();
@@ -281,6 +281,10 @@ public class Query {
                 "\trela_chart t1,attr_value t2 WHERE t1.at_val_id = t2.`v_id` \n" +
                 "AND \n" +
                 "\tt2.`v_name` = '" + value_list.get(0) + "' \n" +
+                /*-----2020-11-19---，传入前端传来的key id的参数*/
+                "AND\n" +
+                "\tt2.v_id_k = ?\n" +
+                /*-----2020-11-19---*/
                 "GROUP BY \n" +
                 "\tt1.basi_info_id";
 
@@ -307,7 +311,7 @@ public class Query {
                 "ORDER BY\n" +
                 "\tt1.basi_info_id";
 
-        List<TempLink> tempList = template.query(sql3, new BeanPropertyRowMapper<>(TempLink.class));
+        List<TempLink> tempList = template.query(sql3,new BeanPropertyRowMapper<>(TempLink.class),v_k_ids.get(0));//传入k_id参数
 
         //确定所有条件满足后的数据id
 
@@ -321,9 +325,9 @@ public class Query {
 
                 //注：字符串匹配最好是用equals方法
                 if(tempList.get(j1).getV_name().equals(value_list.get(j))){
+                    /*2020-11-19 : 在标签内容可能出现重复，唯一标识是id。因此，我要通过v_id来比较，而不是value*/
                     Integer basi_info_id = tempList.get(j1).getBasi_info_id();
-                    System.out.println(basi_info_id);
-                    numlist.add(basi_info_id);
+                    numlist.add(basi_info_id);//numlist里面会出现重复id
                 }
             }
             /*System.out.println("num===========");
