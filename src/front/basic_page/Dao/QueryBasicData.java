@@ -2,8 +2,10 @@ package front.basic_page.Dao;
 
 import front.basic_page.Domain.BasicData;
 import front.basic_page.Domain.User;
+
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+
 import utils.JDBCUtils;
 
 import java.util.List;
@@ -24,8 +26,11 @@ public class QueryBasicData {
     public User queryUserById(int id) {
         String sql = "select id,account,phone,email,workUnit,addr from admin where id = ? ;";
         List<User> userList = template.query(sql, new BeanPropertyRowMapper<>(User.class), id);
-        User user = userList.get(0);
-        return user;
+        if (userList != null && userList.size() > 0) {
+            return userList.get(0);
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -44,10 +49,11 @@ public class QueryBasicData {
 
     /**
      * 3.根据id,查询缩略图
+     *
      * @param id
      * @return 缩略图的id
      */
-    public String queryImage(int id ){
+    public String queryImage(int id) {
         String sql = "select image from basic_info where id = ? ;";
         String imageUrl = template.queryForObject(sql, String.class, id);
         return imageUrl;
