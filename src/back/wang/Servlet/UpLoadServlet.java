@@ -111,8 +111,8 @@ public class UpLoadServlet extends HttpServlet {
             for (FileItem item : items) {   //再循环一次，保存文件
                 if (!item.isFormField()) {  //若item为文件表单项目
                     String picRootDirPath = "C:\\ftp\\ChangJiang\\基础数据上传图片\\";
-                    String picRootUrl = "http://101.37.83.223:8025/基础数据上传图片/";
-                    String rootDirPath = "C:\\Users\\Administrator\\Desktop\\长江中游地学数据集\\";
+                    String picRootUrl = "http://202.114.194.19:8181/基础数据上传图片/";
+                    String rootDirPath = "C:\\ChangJiang\\长江中游地学数据集\\";
 //                    String rootDirPath = "D:\\长江中游地学数据集\\";
                     String fileName = item.getName();
 //                    String projName = item.getName();
