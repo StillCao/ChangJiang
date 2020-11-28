@@ -22,8 +22,8 @@ import front.basic_page.Dao.QueryData;
 
 @WebServlet("/MergeChunksServlet")
 public class MergeChunksServlet extends HttpServlet {
-    private final String filePaths = "D:/fileTest";
-    private final String filePathTemp = "D:/fileTemp";
+    private final String filePaths = "C:/ChangJiang/原始数据集/";
+    private final String filePathTemp = "C:/ChangJiang/fileTemp";
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

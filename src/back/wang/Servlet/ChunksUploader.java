@@ -29,8 +29,8 @@ import back.wang.Service.UpLoadService;
 @WebServlet("/ChunksUploader")
 public class ChunksUploader extends HttpServlet {
 
-    private final String filePath = "D:/fileTest";
-    private final String filePathTemp = "D:/fileTemp";
+    private final String filePath = "C:/ChangJiang/原始数据集/";
+    private final String filePathTemp = "C:/ChangJiang/fileTemp";
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
