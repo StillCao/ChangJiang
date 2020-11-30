@@ -202,9 +202,9 @@ public class NewsServlet extends BaseServlet {
         if (items != null) {
             items.forEach(item -> {
                 if (!item.isFormField()) { //若item为文件表单项目
-                    String rootDirPath = "C:\\ftp\\ChangJiang";
+                    String rootDirPath = "C:\\ftp\\ChangJiang\\新闻图片";
 //                    String rootDirPath = "D:\\ftp\\ChangJiang";
-                    String rootUrl = "http://101.37.83.223:8025/";
+                    String rootUrl = "http://202.114.194.19:8181/新闻图片";
                     String fileName = item.getName();
 
                     File projDir = new File(rootDirPath);
@@ -255,8 +255,8 @@ public class NewsServlet extends BaseServlet {
         String picNamesString = req.getParameter("picNames");
         List<String> picNames = new ArrayList<>();
         NewsService service = new NewsService();
-        String rootPath = "C://ftp//ChangJiang";
-//        String rootPath = "D://ftp";
+        String rootPath = "C://ftp//ChangJiang//新闻图片";
+
         List<String> result = new ArrayList<>();
         if (picNamesString.contains(",")) {
             String[] picNamesSplits = picNamesString.split(",");
