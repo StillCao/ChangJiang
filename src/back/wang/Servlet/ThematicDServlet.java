@@ -87,7 +87,7 @@ public class ThematicDServlet extends BaseServlet {
                 if (!item.isFormField()) { //若item为文件表单项目
                     String rootDirPath = "C:\\ftp\\ChangJiang\\专题数据图片";
 //                    String rootDirPath = "D:\\ftp\\ChangJiang\\专题数据图片";
-                    String rootUrl = "http://101.37.83.223:8025/专题数据图片";
+                    String rootUrl = "http://202.114.194.19:8181/专题数据图片";
                     String fileName = item.getName();
 
                     File projDir = new File(rootDirPath);
