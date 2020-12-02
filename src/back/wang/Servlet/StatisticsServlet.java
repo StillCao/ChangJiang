@@ -62,9 +62,10 @@ public class StatisticsServlet extends HttpServlet {
         resp.getWriter().append("服务量：").append(String.valueOf(serviceCountSum)).append("人次<br/>");
 
         //数据资源量
-        File fileDir = new File("C:\\ftp\\ChangJiang\\数据");
+        File fileOriginDir = new File("C:\\ftp\\ChangJiang\\原始数据集");
+        File fileSampleDir = new File("C:\\ftp\\ChangJiang\\长江中游地学数据集");
 //        File fileDir = new File("D:\\doc");
-        float size = getDirSize(fileDir);
+        float size = getDirSize(fileOriginDir) + getDirSize(fileSampleDir);
         int level = 0;
         while (size >= 1024 && level <= 4) {
             size = size / 1024;
