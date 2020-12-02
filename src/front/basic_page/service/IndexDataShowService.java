@@ -76,7 +76,7 @@ public class IndexDataShowService {
     public String getSubjectData(int num, int type) {
         QueryData queryData = new QueryData();
 
-        List<Attr_value> attr_valueList = queryData.QueryAttrValueByKeyId(type, num);
+        List<Attr_value> attr_valueList = queryData.QueryAttrValueByKeyId(type);
         JSONArray attrValueJsonArray = (JSONArray) JSONArray.toJSON(attr_valueList);
 
         attrValueJsonArray.forEach(attrValueJson -> {
