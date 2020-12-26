@@ -31,6 +31,7 @@ public class ReponseFilter implements Filter {
         res.addHeader("X-Content-Type-Options","nosniff");
         res.addHeader("X-XSS-Protection","1; mode=block");
         res.addHeader("X-Download-Options","noopen");
+        res.addHeader("Set-Cookie", "name=value; HttpOnly");
         //处理cookie问题
         Cookie[] cookies = req.getCookies();
         if (cookies != null) {
