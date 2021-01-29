@@ -85,9 +85,10 @@ public class SpecialServlet extends BaseServlet {
         if (items != null) {
             items.forEach(item -> {
                 if (!item.isFormField()) { //若item为文件表单项目
-                    String rootDirPath = "C:\\ftp\\ChangJiang\\特色数据图片";
-//                    String rootDirPath = "D:\\ftp\\ChangJiang\\特色数据图片";
-                    String rootUrl = "http://202.114.194.19:8181/特色数据图片";
+//                    String rootDirPath = "C:\\ftp\\ChangJiang\\特色数据图片";
+//                    String rootUrl = "http://202.114.194.19:8181/特色数据图片";
+                    String rootDirPath = "C:\\ChangJiang\\apache-tomcat-9.0.41\\webapps\\CJData\\特色数据图片";
+                    String rootUrl = "http://202.114.194.19:8080/CJData/特色数据图片";
                     String fileName = item.getName();
 
                     File projDir = new File(rootDirPath);
@@ -138,7 +139,7 @@ public class SpecialServlet extends BaseServlet {
         String picNamesString = req.getParameter("picNames");
         List<String> picNames = new ArrayList<>();
         NewsService service = new NewsService();
-        String rootPath = "C:\\ftp\\ChangJiang\\特色数据图片";
+        String rootPath = "C:\\ChangJiang\\apache-tomcat-9.0.41\\webapps\\CJData\\特色数据图片";
 //        String rootPath = "D://ftp";
         List<String> result = new ArrayList<>();
         if (picNamesString.contains(",")) {

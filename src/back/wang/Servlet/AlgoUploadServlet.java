@@ -100,9 +100,10 @@ public class AlgoUploadServlet extends HttpServlet {
             }
             for (FileItem item : items) {   //再循环一次，保存文件
                 if (!item.isFormField()) {  //若item为文件表单项目
-                    String docRootDirPath = "C:\\ftp\\ChangJiang\\典型数据文档\\";
-//                    String docRootDirPath = "D:\\ftp\\ChangJiang\\典型数据文档\\";
-                    String docRootUrl = "http://101.37.83.223:8025/典型数据文档/";
+//                    String docRootDirPath = "C:\\ftp\\ChangJiang\\典型数据文档\\";
+//                    String docRootUrl = "http://101.37.83.223:8025/典型数据文档/";
+                    String docRootDirPath = "C:\\ChangJiang\\apache-tomcat-9.0.41\\webapps\\CJData\\典型数据文档\\";
+                    String docRootUrl = "http://202.114.194.19:8080/CJData/典型数据文档/";
                     String fileName = item.getName();
                     String projName = "这是一个默认的项目目录";
                     if (typicalAlgo != null && typicalAlgo.getName() != null && !typicalAlgo.getName().isEmpty()) {

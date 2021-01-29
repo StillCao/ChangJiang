@@ -110,7 +110,7 @@ public class NewsServlet extends BaseServlet {
 
         //前端不会传图片位置这个字段过来，需要手动与title保持一致
         String title = news.getTitle();
-        String folderPath = "C:/ftp/ChangJiang/" + title;
+        String folderPath = "C:/ChangJiang/apache-tomcat-9.0.41/webapps/CJData/新闻图片/" + title;
         news.setLocaladdr(folderPath);
 
         NewsService newsService = new NewsService();
@@ -202,9 +202,10 @@ public class NewsServlet extends BaseServlet {
         if (items != null) {
             items.forEach(item -> {
                 if (!item.isFormField()) { //若item为文件表单项目
-                    String rootDirPath = "C:\\ftp\\ChangJiang\\新闻图片";
-//                    String rootDirPath = "D:\\ftp\\ChangJiang";
-                    String rootUrl = "http://202.114.194.19:8181/新闻图片";
+                    //String rootDirPath = "C:\\ftp\\ChangJiang\\新闻图片";
+                    //String rootUrl = "http://202.114.194.19:8181/新闻图片";
+                    String rootDirPath = "C:\\ChangJiang\\apache-tomcat-9.0.41\\webapps\\CJData\\新闻图片";
+                    String rootUrl = "http://202.114.194.19:8080/CJData/新闻图片";
                     String fileName = item.getName();
 
                     File projDir = new File(rootDirPath);
@@ -255,7 +256,7 @@ public class NewsServlet extends BaseServlet {
         String picNamesString = req.getParameter("picNames");
         List<String> picNames = new ArrayList<>();
         NewsService service = new NewsService();
-        String rootPath = "C://ftp//ChangJiang//新闻图片";
+        String rootPath = "C:/ChangJiang/apache-tomcat-9.0.41/webapps/CJData/新闻图片";
 
         List<String> result = new ArrayList<>();
         if (picNamesString.contains(",")) {

@@ -108,15 +108,15 @@ public class DownAimServlet extends HttpServlet {
 
             for (FileItem item : items) {//先循环一次，找到表单
                 if (!item.isFormField()) { //若item为文件表单项目
-                    String rootDirPath = "C:\\ftp\\ChangJiang\\证明材料\\";
-                    String rootUrl = "http://101.37.83.223:8025/证明材料/";
+//                    String rootDirPath = "C:\\ftp\\ChangJiang\\证明材料\\";
+//                    String rootUrl = "http://101.37.83.223:8025/证明材料/";
+                    String rootDirPath = "C:\\ChangJiang\\apache-tomcat-9.0.41\\webapps\\CJData\\证明材料\\";
+                    String rootUrl = "http://202.114.194.19:8080/CJData/证明材料/";
                     File rootDir = new File(rootDirPath);
                     if (! rootDir.exists()){
                         rootDir.mkdir();
                     }
 
-//                    String rootDirPath = "C:\\Users\\Administrator\\Desktop\\长江中游地学数据集\\";
-//                    String rootDirPath = "D:\\长江中游地学数据集\\";
                     String fileName = item.getName();
                     String subfix = "";
                     String preName = fileName;

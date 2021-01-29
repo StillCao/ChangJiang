@@ -83,7 +83,7 @@ public class AlgoServlet extends BaseServlet {
             TypicalAlgo algo = algoQuery.getAlgoById(id);
             if (algo != null) {
                 AlgoService algoService = new AlgoService();
-                String docRootDirPath = "C:/ftp/ChangJiang/典型数据文档/";
+                String docRootDirPath = "http://202.114.194.19:8080/CJData/典型数据文档/";
                 isSuccess = algoService.deleteAlgo(algo, docRootDirPath);
             }
             resp.setContentType("text/html;charset=utf-8");
