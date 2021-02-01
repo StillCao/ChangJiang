@@ -61,7 +61,7 @@ public class Upload {
         //删除处理文件上传时生成的临时文件
         //item.delete();
         //String fileUrl = "http://101.37.83.223:8025/rollingData/"+filename;
-        String fileUrl = "http://202.114.194.19:8181/rollingData/"+filename;
+        String fileUrl = "http://202.114.194.19:8080/CJData/rollingData/"+filename;
         return fileUrl;
     }
 }

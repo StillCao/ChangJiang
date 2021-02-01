@@ -63,7 +63,7 @@ public class DeployRollingImage extends HttpServlet {
                 String filename = item.getName();//上传文件需要的参数
 
                 //设置临时文件，来缓存上传的文件
-                String savePath = "C:\\ftp\\ChangJiang\\rollingData";
+                String savePath = "C:\\ChangJiang\\apache-tomcat-9.0.41\\webapps\\CJData\\rollingData";
                 File path = new File(savePath);
                 if (!path.exists()) {
                     path.mkdir();
