@@ -32,6 +32,10 @@ public class ReponseFilter implements Filter {
         res.addHeader("X-XSS-Protection","1; mode=block");
         res.addHeader("X-Download-Options","noopen");
         res.addHeader("Set-Cookie", "name=value; HttpOnly");
+        res.addHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
+        res.addHeader("Access-Control-Allow-Headers", "x-requested-with,Authorization,token, content-type"); //这里要加上content-type
+        res.addHeader("Access-Control-Allow-Credentials", "true");
+        res.addHeader("Access-Control-Max-Age", "3600");
         //处理cookie问题
         Cookie[] cookies = req.getCookies();
         if (cookies != null) {
