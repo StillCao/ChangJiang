@@ -40,7 +40,8 @@ public class GetSampleInfo extends HttpServlet {
             String contextPath = req.getContextPath();
             System.out.println("工程名="+contextPath);
 
-            String url= t_str+contextPath+"/DownLoadSample?id="+id;
+//            String url= t_str+contextPath+"/DownLoadSample?id="+id;
+            String url= "https://cjgeodata.cug.edu.cn"+contextPath+"/DownLoadSample?id="+id;
             System.out.println("download_url="+url);
             map.put("downloadURL",url);
         }else{
