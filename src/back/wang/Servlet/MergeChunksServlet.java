@@ -37,6 +37,10 @@ public class MergeChunksServlet extends HttpServlet {
         if (file.isDirectory()) {
             File[] files = file.listFiles();
             if (files != null && files.length > 0) {
+                File dir = new File(filePaths);
+                if (!dir.exists()){
+                    dir.mkdirs();
+                }
                 File partFile = new File(filePaths + File.separator + fileName);
                 for (int i = 1; i <= files.length; i++) {
                     File s = new File(filePathTemp + File.separator + guid, i + ".part");
