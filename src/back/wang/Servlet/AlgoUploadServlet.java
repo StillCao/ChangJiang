@@ -103,7 +103,7 @@ public class AlgoUploadServlet extends HttpServlet {
 //                    String docRootDirPath = "C:\\ftp\\ChangJiang\\典型数据文档\\";
 //                    String docRootUrl = "http://101.37.83.223:8025/典型数据文档/";
                     String docRootDirPath = "C:\\ChangJiang\\apache-tomcat-9.0.41\\webapps\\CJData\\典型数据文档\\";
-                    String docRootUrl = "http://202.114.194.19:8080/CJData/典型数据文档/";
+                    String docRootUrl = "https://202.114.194.19/CJData/典型数据文档/";
                     String fileName = item.getName();
                     String projName = "这是一个默认的项目目录";
                     if (typicalAlgo != null && typicalAlgo.getName() != null && !typicalAlgo.getName().isEmpty()) {

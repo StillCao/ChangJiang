@@ -114,7 +114,7 @@ public class UpLoadServlet extends HttpServlet {
                     //String picRootUrl = "http://202.114.194.19:8181/基础数据上传图片/";
 
                     String picRootDirPath = "C:\\ChangJiang\\apache-tomcat-9.0.41\\webapps\\CJData\\基础数据上传图片\\";
-                    String picRootUrl = "http://202.114.194.19:8080/CJData/基础数据上传图片/";
+                    String picRootUrl = "https://202.114.194.19/CJData/基础数据上传图片/";
                     String rootDirPath = "C:\\ChangJiang\\长江中游地学数据集\\";
 
                     String fileName = item.getName();
