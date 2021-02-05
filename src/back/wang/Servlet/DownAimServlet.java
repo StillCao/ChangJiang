@@ -111,7 +111,7 @@ public class DownAimServlet extends HttpServlet {
 //                    String rootDirPath = "C:\\ftp\\ChangJiang\\证明材料\\";
 //                    String rootUrl = "http://101.37.83.223:8025/证明材料/";
                     String rootDirPath = "C:\\ChangJiang\\apache-tomcat-9.0.41\\webapps\\CJData\\证明材料\\";
-                    String rootUrl = "https://202.114.194.19/CJData/证明材料/";
+                    String rootUrl = "https://cjgeodata.cug.edu.cn/CJData/证明材料/";
                     File rootDir = new File(rootDirPath);
                     if (! rootDir.exists()){
                         rootDir.mkdir();

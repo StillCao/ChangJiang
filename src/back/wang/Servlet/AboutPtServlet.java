@@ -86,7 +86,7 @@ public class AboutPtServlet extends BaseServlet {
 //                    String rootDirPath = "C:\\ftp\\ChangJiang\\关于平台数据图片";
 //                    String rootUrl = "http://101.37.83.223:8025/关于平台数据图片";
                     String rootDirPath = "C:\\ChangJiang\\apache-tomcat-9.0.41\\webapps\\CJData\\关于平台数据图片";
-                    String rootUrl = "https://202.114.194.19/CJData/关于平台数据图片";
+                    String rootUrl = "https://cjgeodata.cug.edu.cn/CJData/关于平台数据图片";
 
                     String fileName = item.getName();
 

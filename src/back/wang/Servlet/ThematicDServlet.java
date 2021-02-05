@@ -88,7 +88,7 @@ public class ThematicDServlet extends BaseServlet {
 //                    String rootDirPath = "C:\\ftp\\ChangJiang\\专题数据图片";
 //                    String rootUrl = "http://202.114.194.19:8181/专题数据图片";
                     String rootDirPath = "C:\\ChangJiang\\apache-tomcat-9.0.41\\webapps\\CJData\\专题数据图片";
-                    String rootUrl = "https://202.114.194.19/CJData/专题数据图片";
+                    String rootUrl = "https://cjgeodata.cug.edu.cn/CJData/专题数据图片";
                     String fileName = item.getName();
 
                     File projDir = new File(rootDirPath);

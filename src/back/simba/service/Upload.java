@@ -62,7 +62,7 @@ public class Upload {
         //item.delete();
         //String fileUrl = "http://101.37.83.223:8025/rollingData/"+filename;
 //        String fileUrl = "http://202.114.194.19:8080/CJData/rollingData/"+filename;
-        String fileUrl = "https://202.114.194.19/CJData/rollingData/"+filename;
+        String fileUrl = "https://cjgeodata.cug.edu.cn/CJData/rollingData/"+filename;
         return fileUrl;
     }
 }
