@@ -152,7 +152,13 @@ public class AdminQuery {
      */
     public DataConnector queryDaConByBasicId(int basic_id) {
         String sql = "select * from da_connnector where basic_id = ?";
-        return template.queryForObject(sql, new BeanPropertyRowMapper<>(DataConnector.class),basic_id);
+        try {
+            return template.queryForObject(sql, new BeanPropertyRowMapper<>(DataConnector.class), basic_id);
+        }
+        catch (DataAccessException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**
