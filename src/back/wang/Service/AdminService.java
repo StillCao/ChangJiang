@@ -2,7 +2,9 @@ package back.wang.Service;
 
 import back.wang.Dao.AdminQuery;
 import back.wang.Domain.Admin;
+import back.wang.Domain.DataConnector;
 import back.wang.Domain.Page;
+
 import com.alibaba.fastjson.JSON;
 
 import java.util.List;
@@ -41,16 +43,18 @@ public class AdminService {
         return JSON.toJSONString(admin);
     }
 
-    /** 根据名称模糊分页查询
+    /**
+     * 根据名称模糊分页查询
+     *
      * @param account 管理员 account
      * @return 根据account查信息
      */
-    public String adminByAccount(String account,int currentPage, int currentCount) {
+    public String adminByAccount(String account, int currentPage, int currentCount) {
         AdminQuery adminQuery = new AdminQuery();
         int totalCount = adminQuery.queryAdminCount();
         int totalPage = totalCount % currentCount == 0 ? totalCount / currentCount : totalCount / currentCount + 1;
         int startPosition = (currentPage - 1) * currentCount;
-        List<Admin> admins = adminQuery.queryAdminByAccountLikeByPage(account,startPosition ,currentCount);
+        List<Admin> admins = adminQuery.queryAdminByAccountLikeByPage(account, startPosition, currentCount);
         Page<Admin> page = new Page<>(currentPage, currentCount, totalPage, totalCount, admins);
         return JSON.toJSONString(page);
     }
@@ -104,11 +108,33 @@ public class AdminService {
 
     /**
      * 管理员登录
+     *
      * @param admin account 和 password 不为空的 admin
      * @return
      */
-    public int adminLogin(Admin admin){
+    public int adminLogin(Admin admin) {
         AdminQuery adminQuery = new AdminQuery();
         return adminQuery.loginAdmin(admin);
+    }
+
+    /**
+     * 数据联系者添加
+     *
+     * @param dataConnector
+     * @return 返回添加状态
+     */
+    public String daConAdd(DataConnector dataConnector) {
+        AdminQuery adminQuery = new AdminQuery();
+        String name = dataConnector.getName();
+        DataConnector isDaCon = adminQuery.queryDaConByName(name);
+        boolean unExited = (isDaCon == null);
+        if (unExited) {
+            if (adminQuery.addDaCon(dataConnector)) {
+                return "1";
+            }
+            else return "添加数据联系者失败！cause:未知";
+
+        }
+        return "添加数据联系者失败！cause:用户名已经存在";
     }
 }

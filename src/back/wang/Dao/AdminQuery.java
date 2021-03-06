@@ -1,10 +1,13 @@
 package back.wang.Dao;
 
 import back.wang.Domain.Admin;
+
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+
+import back.wang.Domain.DataConnector;
 import utils.JDBCUtils;
 
 import java.util.List;
@@ -140,6 +143,47 @@ public class AdminQuery {
             return -1;
         }
 
+    }
+
+    /**
+     * 根据数据id查询对应数据联系者的相关信息
+     *
+     * @param basic_id basic_id
+     */
+    public List<DataConnector> queryDaConByBasicId(int basic_id) {
+        String sql = "select * from da_connnector where basic_id = ?";
+        return template.query(sql, new BeanPropertyRowMapper<>(DataConnector.class),basic_id);
+    }
+
+    /**
+     * 插入一条联系者数据到表中
+     * @param dataConnector DataConnector对象
+     * @return 是否插入成功
+     */
+    public boolean addDaCon(DataConnector dataConnector){
+        String sql = "insert into da_connnector values(null,?,?,?,?,?,?)";
+         try {
+            template.update(sql, dataConnector.getBasic_id(), dataConnector.getBasic_name(), dataConnector.getName(), dataConnector.getPhone(), dataConnector.getUnit(), dataConnector.getMail_address());
+            return true;
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
+     * name 精确查询
+     *
+     * @param name DataConnector name
+     * @return 对应name 的 DataConnector
+     */
+    public DataConnector queryDaConByName(String name) {
+        String sql = "select * from da_connnector where name = ?";
+        try {
+            return template.queryForObject(sql, new BeanPropertyRowMapper<>(DataConnector.class), name);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
 
