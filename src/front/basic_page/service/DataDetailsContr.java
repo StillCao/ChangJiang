@@ -1,5 +1,7 @@
 package front.basic_page.service;
 
+import back.wang.Dao.AdminQuery;
+import back.wang.Domain.DataConnector;
 import front.basic_page.Dao.QueryBasicData;
 import front.basic_page.Domain.BasicData;
 import front.basic_page.Domain.DataDetails;
@@ -20,11 +22,13 @@ public class DataDetailsContr {
         QueryBasicData queryBasicData = new QueryBasicData();
         //查询基础数据信息
         BasicData basicData = queryBasicData.queryBasicDataById(id);
-        int up_id = basicData.getUp_id();
+//        int up_id = basicData.getUp_id();
         //查询上传者信息
-        User user = queryBasicData.queryUserById(up_id);
+//        User user = queryBasicData.queryUserById(up_id);
+        DataConnector dataConnector = new AdminQuery().queryDaConByBasicId(id);
         //将查询结果封装为JavaBean对象
-        DataDetails dataDetails = new DataDetails(basicData, user);
+//        DataDetails dataDetails = new DataDetails(basicData, user);
+        DataDetails dataDetails = new DataDetails(basicData, dataConnector);
         return dataDetails;
     }
 }

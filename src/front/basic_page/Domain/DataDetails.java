@@ -1,16 +1,29 @@
 package front.basic_page.Domain;
 
+import back.wang.Domain.DataConnector;
+
 /**
  * Fun:
  * Created by CW on 2020/6/17 5:06 下午
+ * Modified by wwx on 2021/03/06
  */
 public class DataDetails {
     private BasicData basicData;
-    private User user;
 
-    public DataDetails(BasicData basicData, User user) {
+    public DataConnector getDataConnector() {
+        return dataConnector;
+    }
+
+    public void setDataConnector(DataConnector dataConnector) {
+        this.dataConnector = dataConnector;
+    }
+
+    //    private User user;
+    private DataConnector dataConnector;
+
+    public DataDetails(BasicData basicData, DataConnector dataConnector) {
         this.basicData = basicData;
-        this.user = user;
+        this.dataConnector = dataConnector;
     }
 
     public DataDetails() {
@@ -24,19 +37,19 @@ public class DataDetails {
         this.basicData = basicData;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
+//    public User getUser() {
+//        return user;
+//    }
+//
+//    public void setUser(User user) {
+//        this.user = user;
+//    }
 
     @Override
     public String toString() {
         return "DataDetails{" +
                 "basicData=" + basicData +
-                ", user=" + user +
+                ", dataConnector=" + dataConnector +
                 '}';
     }
 }

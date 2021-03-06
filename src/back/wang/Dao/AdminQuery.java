@@ -150,9 +150,9 @@ public class AdminQuery {
      *
      * @param basic_id basic_id
      */
-    public List<DataConnector> queryDaConByBasicId(int basic_id) {
+    public DataConnector queryDaConByBasicId(int basic_id) {
         String sql = "select * from da_connnector where basic_id = ?";
-        return template.query(sql, new BeanPropertyRowMapper<>(DataConnector.class),basic_id);
+        return template.queryForObject(sql, new BeanPropertyRowMapper<>(DataConnector.class),basic_id);
     }
 
     /**
