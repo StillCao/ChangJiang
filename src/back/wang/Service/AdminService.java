@@ -125,16 +125,24 @@ public class AdminService {
      */
     public String daConAdd(DataConnector dataConnector) {
         AdminQuery adminQuery = new AdminQuery();
-        String name = dataConnector.getName();
-        DataConnector isDaCon = adminQuery.queryDaConByName(name);
-        boolean unExited = (isDaCon == null);
-        if (unExited) {
-            if (adminQuery.addDaCon(dataConnector)) {
-                return "1";
-            }
-            else return "添加数据联系者失败！cause:未知";
+        if (adminQuery.addDaCon(dataConnector)) {
+            return "1";
+        } else return "0";
+    }
 
+    /**
+     * 数据联系者添加
+     *
+     * @param dataConnector
+     * @return 返回修改状态
+     */
+    public String daConUpdate(DataConnector dataConnector) {
+        if (dataConnector.getBasic_id() <= 0) {
+            return "0，Basic_ID不存在！";
         }
-        return "添加数据联系者失败！cause:用户名已经存在";
+        AdminQuery adminQuery = new AdminQuery();
+        if (adminQuery.updateDataConByBasicID(dataConnector)) {
+            return "1";
+        } else return "0";
     }
 }

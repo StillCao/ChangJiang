@@ -97,5 +97,17 @@ public class AdminQueryTest {
         System.out.println(dataConnector.toString());
     }
 
+    @org.junit.Test
+    public void updateDataConByBasicID() {
+       DataConnector dataConnector = new DataConnector();
+        dataConnector.setBasic_id(2);
+        dataConnector.setBasic_name("1e12eqwasda");
+        dataConnector.setName("哈啊啊");
+        dataConnector.setPhone("123567323212");
+        dataConnector.setMail_address("1750546526@qq.com");
+        dataConnector.setUnit("中国地质大学（武汉） 信息工程学院");
+        System.out.println(new AdminQuery().updateDataConByBasicID(dataConnector));
+    }
+
 
 }

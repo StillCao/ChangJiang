@@ -192,5 +192,21 @@ public class AdminQuery {
         }
     }
 
+   /**
+     * 修改联系者数据
+     * @param dataConnector DataConnector对象
+     * @return 是否修改成功
+     */
+    public boolean updateDataConByBasicID(DataConnector dataConnector){
+        String sql = "update da_connnector Set basic_name = ?,name = ?,unit = ?,phone = ?,mail_address = ? where basic_id = ?";
+         try {
+            template.update(sql, dataConnector.getBasic_name(),dataConnector.getName(),dataConnector.getUnit(),dataConnector.getPhone(),dataConnector.getMail_address(),dataConnector.getBasic_id());
+            return true;
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 
 }
