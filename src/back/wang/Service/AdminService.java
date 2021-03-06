@@ -125,9 +125,19 @@ public class AdminService {
      */
     public String daConAdd(DataConnector dataConnector) {
         AdminQuery adminQuery = new AdminQuery();
-        if (adminQuery.addDaCon(dataConnector)) {
-            return "1";
-        } else return "0";
+        int basic_id = dataConnector.getBasic_id();
+        if (basic_id <= 0) {
+            return "0,cause:basic_id 不正确！";
+        }
+        DataConnector isDaCon = adminQuery.queryDaConByBasicId(basic_id);
+        boolean unExited = (isDaCon == null);
+        if (unExited) {
+            if (adminQuery.addDaCon(dataConnector)) {
+                return "1";
+            } else return "0";
+        }
+        return "0，cause:basic_id已经存在";
+
     }
 
     /**
