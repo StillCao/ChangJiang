@@ -2,6 +2,7 @@ package utils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Base64;
 import java.util.Date;
 import java.util.Random;
 
@@ -35,6 +36,47 @@ public class KeyUtils {
         ///return  timeMillis + String.valueOf(r);
         // 17位时间+9位随机数
         return timeStr + r;
+    }
+
+    public static String encryptPhone(String phone) {
+        if (phone.length() < 11) {
+            return phone;
+        }
+        String str1 = phone.substring(0, 6);
+        String str2 = phone.substring(6);
+        int num1 = Integer.parseInt(str1) * 5;
+        StringBuilder sb2 = new StringBuilder();
+        for (int i = 0; i < str2.length(); i++) {
+            int t = Integer.parseInt(String.valueOf(str2.charAt(i))) + 1;
+            if (t == 10) {
+                t = 0;
+            }
+            sb2.append(t);
+        }
+        return num1 + sb2.toString();
+    }
+
+    public static String decodePhone(String word) {
+        String str1 = word.substring(0, 6);
+        String str2 = word.substring(6);
+        int num1 = Integer.parseInt(str1) / 5;
+        StringBuilder sb2 = new StringBuilder();
+        for (int i = 0; i < str2.length(); i++) {
+            int t = Integer.parseInt(String.valueOf(str2.charAt(i))) - 1;
+            if (t == -1) {
+                t = 9;
+            }
+            sb2.append(t);
+        }
+        return num1 + sb2.toString();
+
+    }
+
+    public static int decodeBase64Id(String base64Id){
+        byte[] decodeRs = Base64.getDecoder().decode(base64Id);
+        String temp = new String(decodeRs);
+        String idString = temp.substring(1,temp.length() - 1);
+        return Integer.parseInt(idString);
     }
 }
 

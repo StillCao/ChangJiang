@@ -3,12 +3,15 @@ package back.wang.Dao;
 import org.junit.Test;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 
 import back.wang.Domain.TypicalAlgo;
 import back.wang.Domain.TypicalAlgoTags;
 import back.wang.Service.AlgoService;
+import utils.KeyUtils;
 
 
 /**
@@ -185,5 +188,24 @@ public class AlgoQueryTest {
         System.out.println(algoQuery.deleteRelate(7));
     }
 
+    @Test
+    public void phoneTest(){
+        String phone = "15927121358";
+        System.out.println(KeyUtils.encryptPhone(phone));
+        String code = "79635532469";
+        System.out.println(KeyUtils.decodePhone(code));
+
+    }
+
+    @Test
+    public void base64Test(){
+        String id = "c1j";
+        byte[] encodeRs = Base64.getEncoder().encode(id.getBytes(StandardCharsets.UTF_8));
+//        byte[] decodeRs = Base64.getDecoder().decode(encodeRs);
+//        System.out.println(new String(encodeRs));
+//        System.out.println(new String(decodeRs));
+
+        System.out.println(KeyUtils.decodeBase64Id(new String(encodeRs)));
+    }
 
 }

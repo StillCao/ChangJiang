@@ -4,6 +4,7 @@ import front.data_query.domain.User;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import utils.JDBCUtils;
+import utils.KeyUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -84,10 +85,14 @@ public class QueryUsers {
     public Map getUserById(int id){
 
         //1. 创建sql语句，查询结果
-        String sql = "SELECT * FROM user WHERE u_id = ?";
+        String sql = "SELECT userName,email,phone,workUnit FROM user WHERE u_id = ?";
 
         //2. 执行sql语句
         List<User> list = template.query(sql, new BeanPropertyRowMapper<>(User.class), id);
+
+        list.forEach( u ->{
+            u.setPhone(KeyUtils.encryptPhone(u.getPhone()));
+        });
 
         //3. 用Map集合封装结果
         Map map = new HashMap();

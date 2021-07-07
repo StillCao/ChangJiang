@@ -2,6 +2,7 @@ package front.data_query.servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import front.data_query.dao.QueryUsers;
+import utils.KeyUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -20,7 +21,8 @@ public class QueryById extends HttpServlet {
 
         //2. 获取请求参数
         String id = req.getParameter("id");
-        int u_id = Integer.parseInt(id);
+//        int u_id = Integer.parseInt(id);
+        int u_id = KeyUtils.decodeBase64Id(id);
 
         //3. 封装请求结果
         Map map = new QueryUsers().getUserById(u_id);
